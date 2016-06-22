@@ -1,0 +1,401 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"for",
+				"foreach	foreach …"
+			],
+			[
+				"str_re",
+				"str_replace"
+			],
+			[
+				"var_du",
+				"var_dump_pre	php.var_dump_pre"
+			],
+			[
+				"strto",
+				"strtolower"
+			],
+			[
+				"sw",
+				"switch	switch …"
+			],
+			[
+				"array_re",
+				"array_replace_recursive"
+			],
+			[
+				"requir",
+				"require_once"
+			],
+			[
+				"is_a",
+				"is_array"
+			],
+			[
+				"var_dump",
+				"var_dump_pre	php.var_dump_pre"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 392.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 440.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/home/khanhdtp/Projects/pk-zf-cms/www",
+		"/home/khanhdtp/Projects/pk-zf-cms/www/application",
+		"/home/khanhdtp/Projects/pk-zf-cms/www/application/sites",
+		"/home/khanhdtp/Projects/pk-zf-cms/www/application/sites/backend",
+		"/home/khanhdtp/Projects/pk-zf-cms/www/application/sites/backend/default",
+		"/home/khanhdtp/Projects/pk-zf-cms/www/application/sites/frontend/default",
+		"/home/khanhdtp/Projects/pk-zf-cms/www/library",
+		"/home/khanhdtp/Projects/pk-zf-cms/www/library/K111",
+		"/home/khanhdtp/Projects/pk-zf-cms/www/library/K111/Application",
+		"/home/khanhdtp/Projects/pk-zf-cms/www/library/K111/Application/Module",
+		"/home/khanhdtp/Projects/pk-zf-cms/www/library/K111/Controller",
+		"/home/khanhdtp/Projects/pk-zf-cms/www/public_html"
+	],
+	"file_history":
+	[
+		"/home/khanhdtp/Projects/pk-zf-cms/www/application/sites/backend/Bootstrap.php",
+		"/home/khanhdtp/Projects/pk-zf-cms/www/library/K111/Application/Module/Bootstrap.php",
+		"/home/khanhdtp/Projects/pk-zf-cms/www/library/K111/Application/Bootstrap/Bootstrap.php",
+		"/home/khanhdtp/Projects/pk-zf-cms/www/application/sites/frontend/default/Bootstrap.php",
+		"/home/khanhdtp/Projects/pk-zf-cms/www/application/sites/frontend/Bootstrap.php",
+		"/home/khanhdtp/Projects/pk-zf-cms/www/library/Zend/Application/Bootstrap/Bootstrap.php",
+		"/home/khanhdtp/Projects/pk-zf-cms/www/application/sites/backend/default/Bootstrap.php",
+		"/home/khanhdtp/Projects/pk-zf-cms/www/application/configs/application.php",
+		"/home/khanhdtp/Projects/pk-zf-cms/www/library/K111/AssetsFinder.php",
+		"/home/khanhdtp/Projects/pk-zf-cms/www/library/K111/Application/Resource/AssetsFinder.php",
+		"/home/khanhdtp/.config/sublime-text-3/Packages/User/php.z_d.sublime-snippet",
+		"/home/khanhdtp/Projects/pk-zf-cms/www/library/K111/Assets/Finder.php",
+		"/home/khanhdtp/Projects/pk-zf-cms/www/library/K111/Controller/Action.php",
+		"/home/khanhdtp/Projects/pk-zf-cms/www/public_html/index.php",
+		"/home/khanhdtp/Projects/pk-zf-cms/www/library/K111/Application/Resource/CheckDbConnection.php",
+		"/home/khanhdtp/Projects/pk-zf-cms/www/application/sites/backend/default/controllers/IndexController.php",
+		"/home/khanhdtp/Projects/pk-zf-cms/www/library/Zend/Controller/Action.php",
+		"/home/khanhdtp/Projects/pk-zf-cms/www/application/configs/__apps.php",
+		"/home/khanhdtp/Projects/pk-zf-cms/www/application/configs/frontend.php",
+		"/home/khanhdtp/Projects/pk-zf-cms/www/application/configs/backend.php",
+		"/home/khanhdtp/Projects/rakuda/src/includes/hotels_mypage_favorite_view_list .php",
+		"/home/khanhdtp/Projects/rakuda/src/htdocs/private/index.php",
+		"/home/khanhdtp/Projects/rakuda/src/lib/class/MyFavoriteView.php",
+		"/home/khanhdtp/Projects/rakuda/src/lib/private/index.php",
+		"/home/khanhdtp/Projects/rakuda/src/lib/class/AddFavorite.php",
+		"/home/khanhdtp/Projects/rakuda/src/lib/class/Kaiin.php",
+		"/home/khanhdtp/Projects/rakuda/src/etc/testing/config_base.php",
+		"/home/khanhdtp/Projects/rakuda/src/etc/development/config_base.php",
+		"/home/khanhdtp/Projects/rakuda/src/www/.htaccess",
+		"/home/khanhdtp/Projects/rakuda/src/etc/config.php",
+		"/home/khanhdtp/Projects/rakuda/src/lib/class/Prefectures.php",
+		"/home/khanhdtp/Projects/rakuda/src/lib/class/Database.php",
+		"/home/khanhdtp/Projects/rakuda/src/lib/index.php",
+		"/home/khanhdtp/Projects/rakuda/src/htdocs/index.php",
+		"/home/khanhdtp/Projects/rakuda/src/etc/config_base.php",
+		"/home/khanhdtp/Projects/rakuda/src/bin/biglobe/biglobe.php",
+		"/home/khanhdtp/Projects/rakuda/src/htdocs/search/map/detail.php",
+		"/home/khanhdtp/Projects/rakuda/src/htdocs/ranking/index.php",
+		"/home/khanhdtp/Projects/rakuda/src/htdocs/css/hotels/hotel_access.css",
+		"/home/khanhdtp/Projects/rakuda/src/includes/hotels_side_evaluation.php",
+		"/home/khanhdtp/Projects/rakuda/src/lib/hotels/voice.php",
+		"/home/khanhdtp/Projects/rakuda/src/lib/class/Voice.php",
+		"/home/khanhdtp/Projects/rakuda/src/htdocs/hotels/voice.php",
+		"/home/khanhdtp/.config/sublime-text-3/Packages/User/php.var_dump_pre.sublime-snippet",
+		"/home/khanhdtp/Projects/rakuda/src/htdocs/voice/index.php",
+		"/home/khanhdtp/Projects/rakuda/src/htdocs/css/hotels/hotel_voice.css",
+		"/home/khanhdtp/Projects/rakuda/src/includes/head_common_css.php",
+		"/home/khanhdtp/Projects/rakuda/src/www/_.htaccess",
+		"/home/khanhdtp/Projects/rakuda/src/etc/functions.php",
+		"/home/khanhdtp/Projects/rakuda/src/etc/development/config_base.php.example",
+		"/home/khanhdtp/Projects/rakuda/src/etc/production/config_base.php",
+		"/home/khanhdtp/Projects/rakuda/src/www/index.php"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 93.0,
+		"where_history":
+		[
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": true,
+		"find_history":
+		[
+			"$assetsPath",
+			"compilePath",
+			"fullAssetsPath",
+			"getFullPath",
+			"return $this\n    }",
+			"site",
+			"Assets",
+			"assets",
+			"Upload",
+			"upload",
+			"$data['siteConfigs']",
+			"$",
+			"$requestUri",
+			"$pref",
+			"hotels_mypage_favorite_view_list",
+			"hotels_mypage_favorite_view_list .php",
+			"include_once(",
+			"$voicePoint",
+			"$key",
+			"(\n",
+			"n getVoicePicture",
+			"etVoicePicture",
+			"$pic",
+			"\n\n$key",
+			"evaluation_star",
+			"$scriptFile",
+			"$logicFile"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"$filesPath",
+			"compileAssetsPath",
+			"assetsPath",
+			"compilePath",
+			"return $this;\n    }",
+			"type",
+			"Site",
+			"site",
+			"Assets",
+			"assets",
+			"$siteConfigs",
+			"$data['",
+			"$REQUEST_URI"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 26.0
+	},
+	"input":
+	{
+		"height": 33.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 112.0
+	},
+	"pinned_build_system": "",
+	"project": "pk-zf-cms.sublime-project",
+	"replace":
+	{
+		"height": 64.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"bootstrap/bootstrap.php",
+				"library/Zend/Application/Bootstrap/Bootstrap.php"
+			],
+			[
+				"/assetsfinder",
+				"library/K111/Application/Resource/AssetsFinder.php"
+			],
+			[
+				"zend/application/resource/db",
+				"library/Zend/Application/Resource/Db.php"
+			],
+			[
+				"zend/controller/a",
+				"library/Zend/Controller/Action.php"
+			],
+			[
+				"classaddfavorite",
+				"lib/class/AddFavorite.php"
+			],
+			[
+				"classkaiin",
+				"lib/class/Kaiin.php"
+			],
+			[
+				"classmyfavoriteview",
+				"lib/class/MyFavoriteView.php"
+			],
+			[
+				"hotels_mypage_favorite_view_list",
+				"includes/hotels_mypage_favorite_view_list .php"
+			],
+			[
+				"htdocs/privae",
+				"htdocs/private/index.php"
+			],
+			[
+				"classk",
+				"lib/class/Kaiin.php"
+			],
+			[
+				"lib/private",
+				"lib/private/index.php"
+			],
+			[
+				"etc/config.php",
+				"etc/config.php"
+			],
+			[
+				"classdatabase",
+				"lib/class/Database.php"
+			],
+			[
+				"classprefectures",
+				"lib/class/Prefectures.php"
+			],
+			[
+				"hotel_side_e",
+				"includes/hotels_side_evaluation.php"
+			],
+			[
+				"htdocs/hotels/voice",
+				"htdocs/hotels/voice.php"
+			],
+			[
+				"htdocs/css/hotels/voice.css",
+				"htdocs/css/hotels/hotel_voice.css"
+			],
+			[
+				"head_common",
+				"includes/head_common_css.php"
+			],
+			[
+				"htdocs/index.php",
+				"htdocs/index.php"
+			],
+			[
+				"lib/index",
+				"lib/index.php"
+			],
+			[
+				"functions.php",
+				"etc/functions.php"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+		"last_automatic_layout":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		]
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 325.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

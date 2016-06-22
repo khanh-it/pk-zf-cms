@@ -1,13 +1,14 @@
 <?php
 /**
  */
-class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
+class Bootstrap extends K111_Application_Bootstrap_Bootstrap
 {
 	/**
 	 * Test database connection.
 	 * @return bool
 	 */
 	protected function _initTestDbConnect() {
+		return;
 		try {
 			$this->bootstrap('db');
 			$db = $this->getResource('db');
