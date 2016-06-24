@@ -1,0 +1,42 @@
+<?php
+/**
+ * 
+ */
+// 
+$assetsFinder = K111_AssetsFinder::getInstance();
+?>
+<!DOCTYPE >
+<html>
+<head>
+<?php 
+// Meta
+$this->doctype(Zend_View_Helper_Doctype::XHTML1_RDFA);
+$this->HeadMeta()
+	->appendName('keywords', 'website keywords')
+	->appendName('description', 'website description')
+	->appendName('viewport', 'width=device-width, initial-scale=1')
+	->appendHttpEquiv('Content-Type', 'text/html; charset=UTF-8')
+;
+echo $this->HeadMeta() . "\n";
+// Title
+$this->HeadTitle("{$_SERVER['SERVER_NAME']}")
+	->setSeparator(' / ')
+;
+echo $this->HeadTitle() . "\n";
+
+// HeadStyle # inline style; 
+$this->headStyle()->append(<<<InStyle
+	@-ms-viewport{
+	  width: device-width;
+	}
+InStyle
+);
+?>
+</head>
+<body>
+	
+	
+<?php // HeadScript ?>
+
+</body>
+</html>

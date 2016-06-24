@@ -45,16 +45,92 @@ $configs = array(
 		//),
 		
 		'resources' => array(
+		// +++ Layout
+			'layout' => array(
+				'layout' => 'default',
+				'layoutPath' => "{$data['app_path']}/sites/{$data['app_site']}/_layouts/scripts",
+			),
+		// End.Layout
 		// +++ Multi modules
 			'modules' => true,
-
+		// End.Multi modules
+		// +++ Front controller
 			'frontController' => array(
+			// Register custom action helpers.
+				'actionHelperPaths' => array(
+					'K111_Controller_Action_Helper' => 'K111/Controller/Action/Helper'
+				),
+			// 
 				'moduleDirectory' => "{$data['app_path']}/sites/{$data['app_site']}/",
+			// 
 				'params' => array(
 					'displayExceptions' => false
+				),
+			//
+				'env' => APPLICATION_ENV
+			),
+		// Edn.Front controller
+		// +++ Cache manager
+			'cacheManager' => array(
+			// Used to cache hole page.
+				'page' => array(
+					'frontend' => array(
+						'name' => 'Core',
+						'customFrontendNaming' => false,
+						'options' => array(
+							'lifetime' => (5 * 60),
+							'automatic_serialization' => false
+						),
+					),
+					'backend' => array(
+						'name' => 'File',
+						'customBackendNaming' => false,
+						'options' => array(
+							'cache_dir' => "{$data['app_path']}/../data/cache/pages",
+						)
+					),
+					// Lazy load;
+					'frontendBackendAutoload' => false
+				),
+			// Used to cache data only
+				'data' => array(
+					'frontend' => array(
+						'name' => 'Core',
+						'customFrontendNaming' => false,
+						'options' => array(
+							'lifetime' => (30 * 60),
+							'automatic_serialization' => true
+						),
+					),
+					'backend' => array(
+						'name' => 'File',
+						'customBackendNaming' => false,
+						'options' => array(
+							'cache_dir' => "{$data['app_path']}/../data/cache/data",
+						)
+					),
+					// Lazy load;
+					'frontendBackendAutoload' => false
+				), 
+			),
+		// End.Cache manager;
+		// +++ Log
+			'log' => array(
+				'timestampFormat' => 'Y-m-d',
+				array(
+					'writerName' => 'Stream',
+					'writerParams' => array(
+						'stream' => "{$data['app_path']}/../data/logs/{$data['app_site']}.log",
+						'mode' => 'a'
+					),
+					//'filterName' => 'Priority',
+					//'filterParams' => array('priority' => 4),
+					//'formatterName' => 'Simple',
+					//'formatterParams' => array('format' => '%timestamp%: %message% -- %info%'),
 				)
 			),
-			
+		// End.Log	
+		// +++ Database	
 			'db' => array(
 				'adapter' => 'PDO_MYSQL',
 				'params' => array(
@@ -62,12 +138,14 @@ $configs = array(
 					'username' => 'root',
 					'password' => '',
 					'dbname' => 'db_pk_zf_cms'
-				)
+				),
+				'isDefaultTableAdapter' => true
 			),
-
+		// End.Database
+		// +++ K111_Application_Resource_CheckDbConnection
 			//'K111_Application_Resource_CheckDbConnection' => true,
-
-			//
+		// End.K111_Application_Resource_CheckDbConnection
+		// +++ K111_Application_Resource_AssetsFinder
 			'K111_Application_Resource_AssetsFinder' => array(
 				'document_root' => DOCUMENT_ROOT,
 				'upload_dir' => "/upload/{$data['app_site']}",
@@ -82,6 +160,7 @@ $configs = array(
 					'lib' => 'lib'
 				)
 			),
+		// End.K111_Application_Resource_AssetsFinder
 		)
 	),
 // +++ `development` section

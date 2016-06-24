@@ -20,4 +20,11 @@
  * @license    
  */
 abstract class K111_Controller_Action extends Zend_Controller_Action
-{}
+{
+	/**
+	 * @proxy Proxy to $this->getFrontController()->getParam('bootstrap'); 
+	 */
+	public function getBootstrap() {
+		return $this->getFrontController()->getParam('bootstrap');
+	}
+}

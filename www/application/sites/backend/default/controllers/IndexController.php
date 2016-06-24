@@ -11,6 +11,5 @@ class IndexController extends K111_Controller_Action
 	{
 		//
 		$this->view->readme = file_get_contents($READMEPath = APPLICATION_PATH . '/../README.txt');
-		
 	}
 }

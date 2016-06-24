@@ -1,4 +1,0 @@
-2016-06-03T18:28:51+02:00 INFO (6): {"REMOTE_ADDR":"127.0.0.1","SERVER_ADDR":"127.0.0.1","SERVER_NAME":"localhost","REQUEST_TIME":1464971331}
-2016-06-03T18:28:51+02:00 INFO (6): {"status":0,"message":"Missing required params. Param `building_id` must be supplied or 2 params `building_name` and `building_address`!"}
-2016-06-03T18:49:10+02:00 INFO (6): {"REMOTE_ADDR":"127.0.0.1","SERVER_ADDR":"127.0.0.1","SERVER_NAME":"localhost","REQUEST_TIME":1464972550}
-2016-06-03T18:49:10+02:00 INFO (6): {"status":1,"data":"Booking with room number: `102` is succeed!"}
