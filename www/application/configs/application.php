@@ -63,11 +63,17 @@ $configs = array(
 			// 
 				'moduleDirectory' => "{$data['app_path']}/sites/{$data['app_site']}/",
 			// 
+                'plugins' => array(
+                    'K111_Controller_Plugin_SystemHooks'
+                ),
+			// 
 				'params' => array(
-					'displayExceptions' => false
+					'displayExceptions' => false,
+                // Flag: enviroment modes?
+				    'isEnvDevelopment' => ('development' == APPLICATION_ENV),
+				    'isEnvProduction' => ('production' == APPLICATION_ENV),
+				    'isEnvTesting' => ('testing' == APPLICATION_ENV)
 				),
-			//
-				'env' => APPLICATION_ENV
 			),
 		// Edn.Front controller
 		// +++ Cache manager

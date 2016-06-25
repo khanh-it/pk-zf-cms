@@ -14,7 +14,6 @@ define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV')
 // Detect `site`!
 require_once APPLICATION_PATH . '/configs/__apps.php';
 
-
 // Typically, you will also want to add your library directory
 // to the include_path, particularly if it contains your ZF installed
 set_include_path(

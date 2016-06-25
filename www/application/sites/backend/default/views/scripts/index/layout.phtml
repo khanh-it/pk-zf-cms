@@ -1,0 +1,18 @@
+<?php
+/**
+ * Layout's components
+ * @author khanhdtp
+ */
+// Layout's components.
+$components = (array)$this->components;
+// 
+foreach ($components as $component => $html) {
+    // Buffer start;
+    ob_start();
+    // Render view's html
+    require "layout[{$component}].phtml";
+    // Get html buffer
+    $components[$component] = $html. ob_get_clean(); 
+}
+// 
+$this->layout()->components = $components;
