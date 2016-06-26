@@ -1,0 +1,39 @@
+<?php
+/**
+ * Layout script: layout component # messages
+ * @author khanhdtp 2016-06-26
+ */
+// Define vars
+$layoutMessages = array();
+// Get layout messages from Registry (if any);
+if (Zend_Registry::isRegistered('layout-messages')) {
+    $layoutMessages = array_merge($layoutMessages, (array)Zend_Registry::get('layout-messages'));
+}
+
+// Get layout messages from flash messages (if any)
+$layoutMessages = array_merge(  
+    $layoutMessages,
+    $this->curController->getHelper('flashMessenger')->getMessages('layout-messages')
+);
+
+// Loop
+foreach ($layoutMessages as $message):
+    $message = trim($message);
+    $msgType = (0 === strpos($message, '[danger]'))
+        ? 'danger' : (
+            (0 === strpos($message, '[warning]'))
+            ? 'warning' : (
+                (0 === strpos($message, '[success]'))
+                ? 'success' : 'info'
+            )
+        )
+    ;
+?>
+    <div class="clearfix callout callout-<?php echo $msgType; ?>"><?php 
+        echo str_replace(array('[info]', '[danger]', '[warning]', '[success]'), array(''), $message); 
+    ?></div>
+<?php
+endforeach;
+
+// Unset data;
+unset($layoutMessages, $message, $msgType);

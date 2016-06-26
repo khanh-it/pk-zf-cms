@@ -26,9 +26,56 @@
 class K111_Application_Module_Bootstrap extends Zend_Application_Module_Bootstrap
 {
     /**
+     * Helper: convert a CamelCase string into a camel_case string 
+     * @param unknown $str
+     * @return string
+     */
+    public static function fromCamelCase($str) {
+        preg_match_all('!([A-Z][A-Z0-9]*(?=$|[A-Z][a-z0-9])|[A-Za-z][a-z0-9]+)!', $str, $matches);
+        $ret = $matches[0];
+        foreach ($ret as &$match) {
+            $match = $match == strtoupper($match) ? strtolower($match) : lcfirst($match);
+        }
+        return implode('_', $ret);
+    }
+    
+    /**
+     * Module's name undercore
+     * @var string
+     */
+    protected $_moduleNameUC = '';
+    
+    /**
+     * @var Default navigation's static file name.
+     */
+    protected $_nav_filename_static = 'nav.static.php';
+    
+    /**
+     * @var Default navigation's dynamic file name.
+     */
+    protected $_nav_filename_dynamic = 'nav.dynamic.php';
+    
+    /**
+     * Load navigation?
+     * @var bool
+     */
+    protected $_loadNavigation = false;
+    
+    /**
+     * Loaded navigation data.
+     * @var array
+     */
+    protected static $_dataNavigation = array();
+    
+    /**
      * @var K111_EventManager_EventManager
      */
     protected $_eventManager;
+    
+    /**
+     * @var array
+     */
+    protected static $_instances;
     
     /**
      * Constructor
@@ -37,10 +84,70 @@ class K111_Application_Module_Bootstrap extends Zend_Application_Module_Bootstra
      */
     public function __construct($application)
     {
-        // 
+        // Call to parent's constructor 
         parent::__construct($application);
         
-        //
+        // Get K111_EventManager_EventManager
         $this->_eventManager = K111_EventManager_EventManager::getInstance();
+        
+        // Format module's name from CamelCase to camel_case.
+        $this->_moduleNameUC = self::fromCamelCase($this->getModuleName());
+        
+        // Store module's bootstrap instances for later access.
+        self::$_instances[get_called_class()] = $this;
+        
+        // Load navigation?
+        if ($this->_loadNavigation) {
+            $this->_loadNavigation();
+        }
+    }
+    
+    /**
+     * Set navigation data.
+     * 
+     * @param array $dataNavigation Data navigation
+     * @return void
+     */
+    public static function setDataNavigation($dataNavigation) {
+        self::$_dataNavigation = array_replace_recursive(
+            self::$_dataNavigation, $dataNavigation
+        );
+    }
+    
+    /**
+     * Get navigation data.
+     * @return array
+     */
+    public static function getDataNavigation() {
+        return self::$_dataNavigation;
+    }
+    
+    /**
+     * Do load module's navigation
+     * @return this
+     */
+    protected function _loadNavigation() {
+        // Get navigation directory.
+        $navDir = Zend_Controller_Front::getInstance()
+            ->getModuleDirectory($this->_moduleNameUC)
+            . '/configs/'
+        ;
+        
+        // Load navigation's static file.
+        self::setDataNavigation(require "{$navDir}/{$this->_nav_filename_static}");
+
+        // Load navigation's dynamic file.
+        $this->_eventManager->attach('__SYSTEM__.dispatchLoopStartup', function(Zend_EventManager_Event $e) use ($navDir) {
+            // Call helper: check if current request for current module?
+            $isMCAMatch = $e->getTarget()->isMCAMatch(array(
+                'module' => $this->_moduleNameUC 
+            ));
+            if ($isMCAMatch) {
+                self::setDataNavigation(require "{$navDir}/{$this->_nav_filename_dynamic}");
+            }
+        });
+        
+        // Return
+        return $this;
     }
 }

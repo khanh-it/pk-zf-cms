@@ -1,11 +1,39 @@
+<?php
+/**
+ * Layout script: layout component # breadcrums
+ * @author khanhdtp 2016-06-26
+ */
+?>
 <!-- Page header, + Breadcrumb -->
-    <section class="content-header">
-      <h1>
-        Page Header
-        <small>Optional description</small>
-      </h1>
-      <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
-        <li class="active">Here</li>
-      </ol>
-    </section>
+<section class="content-header">
+    <?php
+        // Page's title
+        $pageTitle = trim($this->layout()->pageTitle);
+        echo $pageTitle ? "<h1>{$pageTitle}</h1>" : '';
+            
+        // Page's description
+        $pageDescr = trim($this->layout()->pageDescription);
+        echo $pageDescr ? "<small>{$pageDescr}</small>" : '';
+        
+        // Unset data
+        unset($pageTitle, $pageDescr);
+    ?>
+    <?php 
+		$html = (string)$this->setEscape('trim')->navigation()->breadcrumbs()
+            ->setSeparator('</li><li>')
+            ->setLinkLast(true)
+    		->render(
+    		    new Zend_Navigation(K111_Application_Module_Bootstrap::getDataNavigation()),
+    		    array()
+    		)
+        ;
+		$html = trim(str_replace(
+		    array('[', ']'), 
+		    array('<', '>'), 
+		    $html
+        ));
+		echo $html ? "<ol class=\"breadcrumb\"><li>{$html}</li></ol>" : '';
+		// Unset data; 
+		unset($html);
+	?>
+</section>

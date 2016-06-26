@@ -20,6 +20,7 @@ class IndexController extends K111_Controller_Action
 	 */
 	public function indexAction()
 	{
+	    \Zend_Debug::dump($this->_authIdentity);
 		//
 		$this->view->readme = file_get_contents($READMEPath = APPLICATION_PATH . '/../README.txt');
 	}
@@ -35,8 +36,12 @@ class IndexController extends K111_Controller_Action
 	protected static $_LAYOUT_COMPONENTS = array(
     // +++ 
         'header' => '',
+    // +++
+        'messages' => '',
 	// +++ 
 	   'breadcrumb' => '',
+    // +++
+	    'toolbars' => '',
     // +++ 
         'left_sidebar' => '',
     // +++
@@ -56,7 +61,7 @@ class IndexController extends K111_Controller_Action
 	    if (!is_array($vData['components'])) {
 	        $vData['components'] = self::$_LAYOUT_COMPONENTS;
 	    }
-
+	    
 	    // Render VIEW;
 	    $this->view->assign($vData);
 	}

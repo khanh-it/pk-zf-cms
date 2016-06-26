@@ -45,8 +45,19 @@ class K111_Controller_Plugin_SystemHooks extends Zend_Controller_Plugin_Abstract
      * Helper: check current request (module/controller/action) is matched?
      * @return bool
      */
-    public function isMCAMatch(Zend_Controller_Request_Abstract $request, array $params = array()) {
-        die();
+    public function isMCAMatch(array $params = array(), $request = null) {
+        if (!($request instanceof Zend_Controller_Request_Abstract)) {
+            $request = $this->getRequest();
+        }
+        
+        // Define result var
+        $result = $params['module'] == $request->getModuleName()
+            && (!$params['controller'] || $params['controller'] == $request->getControllerName())
+            && (!$params['action'] || $params['action'] == $request->getActionName())
+        ;
+        
+        // Return;
+        return $result;
     }
     
     /**

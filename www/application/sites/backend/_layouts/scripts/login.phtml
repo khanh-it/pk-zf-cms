@@ -1,6 +1,7 @@
 <?php
 /**
- * 
+ * Layout script: login
+ * @author khanhdtp
  */
 // Get Zend_Controller_Front;
 $front = Zend_Controller_Front::getInstance();
@@ -11,11 +12,8 @@ $assetsMinStr = $isEnvProduction ? '.min' : '';
 
 // Get K111_AssetsFinder;
 $assetsFinder = K111_AssetsFinder::getInstance();
-
-// Load layout's components
-$this->action('layout', $front->getDefaultControllerName(), $front->getDefaultModule(), array());
 ?>
-<!DOCTYPE >
+<!DOCTYPE>
 <html>
 <head>
 <?php 
@@ -71,57 +69,11 @@ echo $this->HeadStyle()->appendStyle($msViewport, array(
 unset($msViewport);
 ?>
 </head>
-<body class="skin-blue layout-boxed sidebar-collapse sidebar-mini">
-    <div class="wrapper">
-    <?php 
-        // Component: header;
-        echo $this->layout()->components['header'];
-        // Component: left sidebar;
-        echo $this->layout()->components['left_sidebar'];
+<body class="clearfix skin-blue">
+    <?php
+        // Page's content;
+        echo $this->layout()->content;
     ?>
-        <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper">
-            <?php
-                // Component: page header, +breadcrumb;
-                echo $this->layout()->components['breadcrumb'];
-            ?>
-            <?php
-                // Component: page's messages;
-                echo $this->layout()->components['messages'];
-            ?>
-            <!-- Main content -->
-            <section class="content">
-            <?php 
-                // Component: page's messages;
-                echo $this->layout()->components['toolbars'];
-            ?>
-                <div class="box box-solid">
-                <?php
-                    // Page's content;
-                    echo $this->layout()->content;
-                ?>
-                </div>
-            <?php
-                // Component: page's messages;
-                echo $this->layout()->components['toolbars'];
-            ?>
-            </section>
-            <!-- /.content -->
-            <?php
-                // Component: page header, +breadcrumb;
-                echo $this->layout()->components['breadcrumb'];
-            ?>
-        </div>
-        <!-- /.content-wrapper -->
-    <?php 
-        // Component: control sidebar;
-        echo $this->layout()->components['right_sidebar'];
-        
-        // Component: footer;
-        echo $this->layout()->components['footer'];
-    ?>
-    </div>
-    <!-- ./wrapper -->
 <?php 
 // HeadScript
 $this->HeadScript()

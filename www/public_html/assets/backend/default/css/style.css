@@ -1,1 +1,10 @@
-@charset 'UTF-8'
+
+body {
+	background-color: #FCFCFC
+}
+
+/* Bootstrap 3 - theme */
+/* +++ nagigation bar */
+.navbar-default {background-color: #fff;margin-bottom: 10px;}
+/* +++ hide unnecessary icons on breadcrums */
+.content-header a > i:last-child {display:none;}
