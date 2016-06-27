@@ -20,7 +20,19 @@ class GroupController extends K111_Controller_Action
 	 */
 	public function indexAction()
 	{
+		$date = Zend_Date::now();
+		
 	    //phpinfo();die();
+	    
+	    $groupDbTable = new Default_Model_DbTable_Group();
+		
+		$groupRow = $groupDbTable->fetchRow(array(
+			'code = ?' => 'ADMIN'
+		));
+		
+		var_dump($date->get('YYYY-MM-dd HH:mm:ss'));
+		
+	    die('test');
 	}
 	
 	/**

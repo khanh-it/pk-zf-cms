@@ -20,7 +20,11 @@ $configs = array(
 			//	
 			'display_startup_errors' => false,
 			//
-			'display_errors' => false
+			'display_errors' => false,
+			// Set default timezone;
+			'date' => array(
+				'timezone' => 'Asia/Ho_Chi_Minh'
+			)
 		),
 		
 		'includePaths' => array(
