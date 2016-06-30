@@ -1,0 +1,21 @@
+<?php
+/**
+ * Script view: group # create
+ * @author khanhdtp
+ */
+// Set page's title
+$this->layout()->pageTitle = $this->translate('Thêm mới nhóm tài khoản');
+
+// Toolbars 
+$this->Bt3NavLinks(array(
+    $this->Bt3NavLinks()->iconSaveAndNew(),
+    $this->Bt3NavLinks()->iconSaveAndClose(),
+    $this->Bt3NavLinks()->iconClose()
+));
+?>
+<div class="container pull-left">
+<?php 
+    // Render form
+    echo $this->form;
+?>
+</div>

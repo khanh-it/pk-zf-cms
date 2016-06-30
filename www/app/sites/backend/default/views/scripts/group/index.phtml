@@ -1,0 +1,94 @@
+<?php
+/**
+ * Script view: list group 
+ * @author khanhdtp
+ */
+// Get Zend_Controller_Front;
+$front = Zend_Controller_Front::getInstance();
+
+// Set page's title
+$this->layout()->pageTitle = $this->translate('Danh mục nhóm tài khoản');
+
+// Toolbars
+$this->Bt3NavLinks(array(
+    $this->Bt3NavLinks()->iconNew(),
+    $this->Bt3NavLinks()->iconDelete()
+));
+
+// Filter form;
+echo $this->Bt3FilterForm()->render($this->form, $this->formSearch);
+?>
+<div class="box">
+	<div class="box-header">
+		<div class="box-title"><span class="label label-info"><?php
+		  echo $this->translate('Tổng số dòng') . ': ' . ($totalItemsCount = count($this->paginator)) . '.' 
+		?></span></div>
+	</div>
+	<!-- /.box-header -->
+	<div class="box-body no-padding table-responsive">
+		<table class="table table-bordered table-striped table-hover">
+            <thead>
+                <tr>
+					<th width="30">No.</th>
+					<th>[]</th>
+					<th><?php echo $this->translate('Mã nhóm tài khoản'); ?></th>
+					<th><?php echo $this->translate('Tên nhóm tài khoản'); ?></th>
+					<th><?php echo $this->translate('Ghi chú'); ?></th>
+                    <th><?php echo $this->translate('Kích hoạt?'); ?></th>
+					<th><?php echo $this->translate('Q.Lý?'); ?></th>
+				</tr>
+            </thead>
+            <tbody>
+        <?php
+            if ($totalItemsCount):
+                //
+                $no = 0;
+                //
+                foreach ($this->paginator as $item):
+        ?>
+				<tr>
+					<td align="center"><?php echo ++$no; ?></td>
+					<td align="center">[]</td>
+					<td><?php echo $item->code; ?></td>
+					<td><?php echo $item->name; ?></td>
+					<td><?php echo $item->note; ?></td>
+					<td><?php echo $item->active; ?></td>
+					<td></td>
+				</tr>
+        <?php 
+                endforeach;
+            endif;
+        ?>
+			</tbody>
+		</table>
+	</div>
+	<!-- /.box-body -->
+	<div class="box-footer clearfix">
+        <div class="pull-right">
+            <?php
+                echo $this->paginationControl($this->paginator); 
+            ?>
+        </div>
+	</div>
+</div>
+<?php
+// CSS:
+// +++ Inline style;
+$inlineStyle = <<<inlineStyle
+inlineStyle;
+// +++
+$this->HeadStyle()->appendStyle($inlineStyle, array(
+    'media' => 'all'
+));
+unset($inlineStyle);
+
+// CSS:
+// +++ Inline script;
+$inlineScript = <<<inlineScript
+(function($){
+    
+})(jQuery);
+inlineScript;
+// +++
+$this->InlineScript()->appendScript($inlineScript);
+unset($inlineScript);

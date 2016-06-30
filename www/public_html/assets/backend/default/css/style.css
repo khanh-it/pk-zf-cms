@@ -8,3 +8,11 @@ body {
 .navbar-default {background-color: #fff;margin-bottom: 10px;}
 /* +++ hide unnecessary icons on breadcrums */
 .content-header a > i:last-child {display:none;}
+/* +++ toolbars-wrapper */
+.toolbars-wrapper:last-child > .navbar {margin-bottom:0}
+/* +++ body-wrapper */
+#body-wrapper {margin-bottom:10px;}
+
+/* Form, form elements */
+form label.control-label {font-weight: 600;}
+form label.control-label.required::after {content: " (*)";color: red;}

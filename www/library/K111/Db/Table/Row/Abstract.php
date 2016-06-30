@@ -8,7 +8,7 @@
  *
  * @category   K111
  * @package    K111_Db
- * @subpackage K111_Db_Row
+ * @subpackage K111_Db_Table_Row
  * @copyright  Free
  * @license    
  * @version    
@@ -17,7 +17,7 @@
 /**
  * @category   K111
  * @package    K111_Db
- * @subpackage K111_Db_Row
+ * @subpackage K111_Db_Table_Row
  * @copyright  Free
  * @license    
  */

@@ -6,7 +6,7 @@ define('DOCUMENT_ROOT', realpath(dirname(__FILE__)));
 define('PROJECT_ROOT', DOCUMENT_ROOT . '/../');
 
 // Define path to application directory
-define('APPLICATION_PATH', PROJECT_ROOT . '/application');
+define('APPLICATION_PATH', PROJECT_ROOT . '/app');
 
 // Define application environment
 define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'production'));
