@@ -1,6 +1,6 @@
 /*
-SQLyog Ultimate v12.09 (64 bit)
-MySQL - 10.1.13-MariaDB : Database - db_pk_zf_cms
+SQLyog Ultimate v11.3 (64 bit)
+MySQL - 10.1.10-MariaDB : Database - db_pk_zf_cms
 *********************************************************************
 */
 
@@ -66,11 +66,11 @@ CREATE TABLE `tbl_group` (
   KEY `GROUP__LAST_MODIFIED_ACCOUNT` (`last_modified_account_id`),
   CONSTRAINT `GROUP__CREATE_ACCOUNT` FOREIGN KEY (`create_account_id`) REFERENCES `tbl_account` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `GROUP__LAST_MODIFIED_ACCOUNT` FOREIGN KEY (`last_modified_account_id`) REFERENCES `tbl_account` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='Tbl, manage account''s groups!';
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COMMENT='Tbl, manage account''s groups!';
 
 /*Data for the table `tbl_group` */
 
-insert  into `tbl_group`(`id`,`code`,`name`,`note`,`acl`,`active`,`draft`,`create_account_id`,`created_time`,`last_modified_account_id`,`last_modified_time`) values (1,'ADMIN','Administrator','Built-in group',NULL,1,NULL,1,'2016-06-27 10:19:24',NULL,'0000-00-00 00:00:00');
+insert  into `tbl_group`(`id`,`code`,`name`,`note`,`acl`,`active`,`draft`,`create_account_id`,`created_time`,`last_modified_account_id`,`last_modified_time`) values (1,'ADMIN','Administrator','Built-in group',NULL,1,NULL,1,'2016-06-27 10:19:24',NULL,'0000-00-00 00:00:00'),(2,'B\"O\'D','Board of Director','@author khanhdtp',NULL,1,NULL,1,NULL,NULL,NULL),(3,'MOD','Moderator','@author khanhdtp',NULL,1,NULL,1,NULL,NULL,NULL),(4,'USER','Users','',NULL,1,NULL,1,'2016-06-28 23:32:24',NULL,NULL),(5,'PUBLISHER','PUBLISHER','',NULL,1,NULL,1,'2016-06-28 23:33:20',NULL,NULL),(6,'OTHERS','Khác','',NULL,1,NULL,1,'2016-06-28 23:33:49',NULL,NULL),(8,'BOD-Dup','Duplicate of Board of Director','@author khanhdtp',NULL,1,NULL,1,'2016-06-29 21:18:58',NULL,NULL);
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
