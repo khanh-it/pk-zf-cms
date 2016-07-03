@@ -114,7 +114,7 @@ class App_View_Helper_Bt3NavLinks extends Zend_View_Helper_Abstract {
         // Tag # A;
         $href = $attrs['href'] ? $attrs['href'] : 'javascript:void(0);';
         $label = $attrs['label'];
-        $icon = $attrs['icon'] ? "glyphicon glyphicon-{$attrs['icon']}" : '';
+        $icon = $attrs['icon'];
         unset($attrs['href'], $attrs['label'], $attrs['icon']);
         // +++ 
         $aAttrs = array();
@@ -138,7 +138,7 @@ class App_View_Helper_Bt3NavLinks extends Zend_View_Helper_Abstract {
      * @param array $attrs An array of attrs
      * @return string 
      */
-    public function iconNew($href = null, $label = null, $icon = 'plus-sign', $attrs = array()) {
+    public function iconNew($href = null, $label = null, $icon = 'glyphicon glyphicon-plus-sign', $attrs = array()) {
         // Format data;
         // +++ Href
         $href = is_null($href) ? $this->view->url(self::$_urlParamsCreate) : $href;
@@ -156,7 +156,7 @@ class App_View_Helper_Bt3NavLinks extends Zend_View_Helper_Abstract {
      * @param array $attrs An array of attrs
      * @return string
      */
-    public function iconDelete($href = null, $label = null, $icon = 'minus-sign', $attrs = array()) {
+    public function iconDelete($href = null, $label = null, $icon = 'glyphicon glyphicon-minus-sign', $attrs = array()) {
         // Format data;
         // +++ Href
         $href = is_null($href) ? $this->view->url(self::$_urlParamsDelete) : $href;
@@ -174,7 +174,7 @@ class App_View_Helper_Bt3NavLinks extends Zend_View_Helper_Abstract {
      * @param array $attrs An array of attrs
      * @return string
      */
-    public function iconEdit($href = null, $label = null, $icon = 'edit', $attrs = array()) {
+    public function iconEdit($href = null, $label = null, $icon = 'glyphicon glyphicon-edit', $attrs = array()) {
         // Format data;
         // +++ Href
         $href = is_null($href) ? $this->view->url(self::$_urlParamsEdit) : $href;
@@ -192,7 +192,7 @@ class App_View_Helper_Bt3NavLinks extends Zend_View_Helper_Abstract {
      * @param array $attrs An array of attrs
      * @return string 
      */
-    public function iconTrash($href = null, $label = null, $icon = 'trash', $attrs = array()) {
+    public function iconTrash($href = null, $label = null, $icon = 'glyphicon glyphicon-trash', $attrs = array()) {
         // Format data;
         // +++ Href
         $href = is_null($href) ? $this->view->url(self::$_urlParamsTrash) : $href;
@@ -210,7 +210,7 @@ class App_View_Helper_Bt3NavLinks extends Zend_View_Helper_Abstract {
      * @param array $attrs An array of attrs
      * @return string
      */
-    public function iconClose($href = null, $label = null, $icon = 'remove-sign', $attrs = array()) {
+    public function iconClose($href = null, $label = null, $icon = 'glyphicon glyphicon-remove-sign', $attrs = array()) {
         // Format data;
         // +++ Href
         $href = is_null($href) ? $this->view->url(self::$_urlParamsIndex) : $href;
@@ -228,7 +228,7 @@ class App_View_Helper_Bt3NavLinks extends Zend_View_Helper_Abstract {
      * @param array $attrs An array of attrs
      * @return string
      */
-    public function iconBack($href = null, $label = null, $icon = 'arrow-left', $attrs = array()) {
+    public function iconBack($href = null, $label = null, $icon = 'glyphicon glyphicon-arrow-left', $attrs = array()) {
         // Format data;
         // +++ Href
         $href = is_null($href) ? ($_SERVER['HTTP_REFERER']
@@ -248,7 +248,7 @@ class App_View_Helper_Bt3NavLinks extends Zend_View_Helper_Abstract {
      * @param array $attrs An array of attrs
      * @return string
      */
-    public function iconSave($href = null, $label = null, $icon = 'floppy-saved', $attrs = array()) {
+    public function iconSave($href = null, $label = null, $icon = 'glyphicon glyphicon-floppy-saved', $attrs = array()) {
         // Format data;
         // +++ Href
         $href = is_null($href) ? $this->_buildHrefAction('save') : $href;
@@ -266,7 +266,7 @@ class App_View_Helper_Bt3NavLinks extends Zend_View_Helper_Abstract {
      * @param array $attrs An array of attrs
      * @return string
      */
-    public function iconSaveAndNew($href = null, $label = null, $icon = 'floppy-open', $attrs = array()) {
+    public function iconSaveAndNew($href = null, $label = null, $icon = 'glyphicon glyphicon-floppy-open', $attrs = array()) {
         // Format data;
         // +++ Href
         $href = is_null($href) ? $this->_buildHrefAction('save_n_new') : $href;
@@ -284,7 +284,7 @@ class App_View_Helper_Bt3NavLinks extends Zend_View_Helper_Abstract {
      * @param array $attrs An array of attrs
      * @return string
      */
-    public function iconSaveAndClose($href = null, $label = null, $icon = 'floppy-disk', $attrs = array()) {
+    public function iconSaveAndClose($href = null, $label = null, $icon = 'glyphicon glyphicon-floppy-disk', $attrs = array()) {
         // Format data;
         // +++ Href
         $href = is_null($href) ? $this->_buildHrefAction('save_n_close') : $href;

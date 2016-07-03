@@ -2,5 +2,12 @@
  *
  */
 (function($){
-	console.log('project start');
+/* Table list rows */
+	$tblDataList = $('#tbl-data-list');
+	//
+	$tblDataList
+		.on()
+	;
+	
+/* ./Table list rows */
 })(jQuery);

@@ -26,34 +26,53 @@ echo $this->Bt3FilterForm()->render($this->form, $this->formSearch);
 	</div>
 	<!-- /.box-header -->
 	<div class="box-body no-padding table-responsive">
-		<table class="table table-bordered table-striped table-hover">
+		<table id="tbl-data-list" class="table table-bordered table-striped table-hover">
             <thead>
                 <tr>
-					<th width="30">No.</th>
-					<th>[]</th>
+					<th width="10">No.</th>
+					<th width="10" class="text-center">
+						<?php echo $this->Bt3ManageTools()->mToolCheckerToggler(); ?>
+					</th>
 					<th><?php echo $this->translate('Mã nhóm tài khoản'); ?></th>
 					<th><?php echo $this->translate('Tên nhóm tài khoản'); ?></th>
 					<th><?php echo $this->translate('Ghi chú'); ?></th>
-                    <th><?php echo $this->translate('Kích hoạt?'); ?></th>
-					<th><?php echo $this->translate('Q.Lý?'); ?></th>
+                    <th width="10"><?php echo $this->translate('K.Hoạt?'); ?></th>
+					<th width="10"><?php echo $this->translate('Q.Lý?'); ?></th>
 				</tr>
             </thead>
             <tbody>
         <?php
             if ($totalItemsCount):
+				// Manage tools 
+				$manageBtnLinks = array(
+					'detail' => $this->Bt3ManageTools()->mBtnDetail(),
+					'edit' => $this->Bt3ManageTools()->mBtnEdit(),
+					'delete' => $this->Bt3ManageTools()->mBtnDelete(),
+				);
                 //
                 $no = 0;
                 //
                 foreach ($this->paginator as $item):
         ?>
 				<tr>
-					<td align="center"><?php echo ++$no; ?></td>
-					<td align="center">[]</td>
+					<td align="center" class="nowrap"><?php echo ++$no; ?></td>
+					<td align="center" class="nowrap">
+						<?php echo $this->Bt3ManageTools()->mToolChecker($item->id); ?>
+					</td>
 					<td><?php echo $item->code; ?></td>
 					<td><?php echo $item->name; ?></td>
 					<td><?php echo $item->note; ?></td>
-					<td><?php echo $item->active; ?></td>
-					<td></td>
+					<td align="center" class="nowrap"><?php echo $this->Bt3ManageTools()->mBtnActiveToggler($item->active); ?></td>
+					<td class="nowrap">
+					<?php
+						$manageBtns = array(
+							'__detail_' => str_replace(array('__id__'), array($item->id), $manageBtnLinks['detail']),
+							'__update_' => str_replace(array('__id__'), array($item->id), $manageBtnLinks['edit']),
+							'__delete_' => str_replace(array('__id__'), array($item->id), $manageBtnLinks['delete'])
+						);
+						echo implode("\n", $manageBtns);
+					?>
+					</td>
 				</tr>
         <?php 
                 endforeach;
