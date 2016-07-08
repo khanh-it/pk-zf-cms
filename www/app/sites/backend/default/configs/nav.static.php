@@ -7,13 +7,13 @@ return array(
 // SECTION #
     //'default' => array(
     // dashboard
-        'dashboard-header' => array(
-            'label' => '[i class="fa fa-link"][/i] PK-ZF-CMS # MAIN NAVIGATION',
+        /*'dashboard-header' => array(
+            'label' => '[i class="zmdi zmdi-layers"][/i] PK-ZF-CMS # MAIN NAVIGATION',
             'class' => 'li-header',
             'uri' => '' // Noted: an empty string!
-        ),
+        ),*/
         'dashboard' => array(
-            'label' => '[i class="fa fa-link"][/i] [span]Dashboard[/span]',
+            'label' => '[i class="zmdi zmdi-home"][/i] [span]Dashboard[/span]',
             'title' => 'Dashboard',
             'module' => ''
         ),
@@ -21,27 +21,27 @@ return array(
 
     // system
         // #label
-        'system-label' => array(
-            'label' => '[i class="fa fa-link"][/i] HỆ THỐNG',
+        /*'system-label' => array(
+            'label' => '[i class="zmdi zmdi-layers"][/i] HỆ THỐNG',
             'class' => 'li-header',
             'uri' => ''
-        ),
+        ),*/
         // group
         'group' => array(
-            'label' => '[i class="fa fa-link"][/i] [span]Nhóm tài khoản[/span] [i class="fa fa-angle-left pull-right"][/i]',
+            'label' => '[i class="zmdi zmdi-layers"][/i] [span]Nhóm tài khoản[/span] [i class="fa fa-angle-left pull-right"][/i]',
             'class' => '',
             'uri' => '#',
             'pages' => array(
                 // 
                 'index' => array(
-                    'label' => '[i class="fa fa-link"][/i] [span]Danh mục[/span]',
+                    'label' => '[i class="zmdi zmdi-layers"][/i] [span]Danh mục[/span]',
                     'module' => 'default',
                     'controller' => 'group',
                     'action' => 'index',
                 ),
                 //
                 'insert' => array(
-                    'label' => '[i class="fa fa-link"][/i] [span]Thêm mới[/span]',
+                    'label' => '[i class="zmdi zmdi-layers"][/i] [span]Thêm mới[/span]',
                     'module' => 'default',
                     'controller' => 'group',
                     'action' => 'insert',
@@ -51,20 +51,20 @@ return array(
         // end.group
         // account
         'account' => array(
-            'label' => '[i class="fa fa-link"][/i] [span]Tài khoản[/span] [i class="fa fa-angle-left pull-right"][/i]',
+            'label' => '[i class="zmdi zmdi-layers"][/i] [span]Tài khoản[/span] [i class="fa fa-angle-left pull-right"][/i]',
             'class' => '',
             'uri' => '#',
             'pages' => array(
                 //
                 'index' => array(
-                'label' => '[i class="fa fa-link"][/i] [span]Danh mục[/span]',
+                'label' => '[i class="zmdi zmdi-layers"][/i] [span]Danh mục[/span]',
                     'module' => 'default',
                     'controller' => 'account',
                     'action' => 'index',
                 ),
                 //
                 'insert' => array(
-                    'label' => '[i class="fa fa-link"][/i] [span]Thêm mới[/span]',
+                    'label' => '[i class="zmdi zmdi-layers"][/i] [span]Thêm mới[/span]',
                     'module' => 'default',
                     'controller' => 'account',
                     'action' => 'insert',

@@ -28,6 +28,10 @@ class GroupController extends K111_Controller_Action
 	     
 	    // Define var # form;
 	    $vData['form'] = $form = new Default_Form_Group_Index();
+		// +++ 
+		
+		// +++ 
+		$vData['form']->populate($params); 
 	    
 	    // Fetch data;
 	    $groupDbTable = new Default_Model_DbTable_Group();

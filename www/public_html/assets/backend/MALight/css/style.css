@@ -1,0 +1,7 @@
+/* Bootstrap 3 - theme */
+body {font-family: Tahoma,Helvetica Neue,Helvetica,Arial,sans-serif, sans-serif;}
+.nowrap {white-space: nowrap;}
+
+.breadcrumb {margin-bottom: 20px;}
+
+.block-header .actions>li>a {width: auto;}

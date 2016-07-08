@@ -29,7 +29,7 @@ foreach ($layoutMessages as $message):
         )
     ;
 ?>
-    <div class="clearfix callout callout-<?php echo $msgType; ?>"><?php 
+    <div class="clearfix callout callout-<?php echo $msgType; ?> alert alert-<?php echo $msgType; ?>"><?php 
         echo str_replace(array('[info]', '[danger]', '[warning]', '[success]'), array(''), $message); 
     ?></div>
 <?php
