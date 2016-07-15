@@ -93,21 +93,8 @@ echo $this->Bt3FilterForm()->render($this->form, $this->formSearch);
 <?php
 // CSS:
 // +++ Inline style;
-$inlineStyle = <<<inlineStyle
-inlineStyle;
-// +++
-$this->HeadStyle()->appendStyle($inlineStyle, array(
-    'media' => 'all'
-));
-unset($inlineStyle);
+$this->HeadStyleAction($this->curRequest);
 
 // CSS:
 // +++ Inline script;
-$inlineScript = <<<inlineScript
-(function($){
-    
-})(jQuery);
-inlineScript;
-// +++
-$this->InlineScript()->appendScript($inlineScript);
-unset($inlineScript);
+$this->HeadScriptAction($this->curRequest);
