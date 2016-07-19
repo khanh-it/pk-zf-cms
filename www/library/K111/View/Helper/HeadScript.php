@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 
  * Helper for setting and retrieving script elements for HTML head section
@@ -55,6 +56,7 @@
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/someObject/2.2/object.js"></script>
 <script type="text/javascript">
     //<![CDATA[
+
 		$(document).ready(function() {
 			$('#ajaxWait').ajaxStart(function() {
 		      $(this).show();
@@ -65,31 +67,45 @@
 			try { init(); } catch(e) {}
 		});
 	    //]]>
+
 </script>
+
  * Sometimes you need the ability to control how script files are combined together, or need several javascript 
  * files that should not be compressed. 
+
  $view->headScript()
                 ->appendFile('js/js1.js')
                 ->appendFile('js/js2.js')
                 ->appendFile('js/js3.js', 'text/javascript', array('minify_split_after' => true));
                 ->appendFile('js/js4js')
+
+
  * These files will be transformed to 
+
 <script text="javascript" src="/min/?f=js/js1.js,js/js2.js,js/js3.js">
 <script text="javascript" src="/min/?f=js/js4.js">
+
  * It also supports "minify_split_before" and "minify_disabled" that turns compression off for specific script.
+
  $view->headScript()
                 ->appendFile('js/js1.js', 'text/javascript', array('minify_disabled' => true))
                 ->appendFile('js/js2.js')
                 ->appendFile('js/js3.js', 'text/javascript', array('minify_split_before' => true));
                 ->appendFile('js/js4js')
+
 <script type="text/javascript" src="/js/js1.js"></script>
 <script text="javascript" src="/min/?f=js/js2.js">
 <script text="javascript" src="/min/?f=js/js3.js,js/js4.js">
+
  * Use this trick to enable/disable minify depending on the config file
+
         if ($config->minifyJavascriptAndCSS) {
             $view->registerHelper(new Zend_View_Helper_MinifyHeadScript(), 'headScript');
             $view->registerHelper(new Zend_View_Helper_MinifyHeadLink(), 'headLink');
         }     
+
+
+
  * 
  * 
  *
@@ -101,7 +117,7 @@
  * @author     Rob "Bubba" Hines
  *
  */
-class Zend_View_Helper_MinifyHeadScript extends Zend_View_Helper_HeadScript {
+class K111_View_Helper_HeadScript extends Zend_View_Helper_HeadScript {
 	
 	/**
 	 * 
@@ -120,6 +136,12 @@ class Zend_View_Helper_MinifyHeadScript extends Zend_View_Helper_HeadScript {
 //	protected $_regKey = 'RC_View_Helper_MinifyHeadScript';
 	
 	/**
+	 * Enable or disable minify?
+	 * @var bool
+	 */
+	public static $minify = true;
+	
+	/**
 	 * Return headScript object
 	 *
 	 * Returns headScript helper object; optionally, allows specifying a script
@@ -132,7 +154,7 @@ class Zend_View_Helper_MinifyHeadScript extends Zend_View_Helper_HeadScript {
 	 * @param  string $type 			Script type and/or array of script attributes
 	 * @return Zend_View_Helper_HeadScript
 	 */
-	public function minifyHeadScript($mode = Zend_View_Helper_HeadScript::FILE, $spec = null, $placement = 'APPEND', array $attrs = array(), $type = 'text/javascript') {
+	public function headScript($mode = Zend_View_Helper_HeadScript::FILE, $spec = null, $placement = 'APPEND', array $attrs = array(), $type = 'text/javascript') {
 		return parent::headScript($mode, $spec, $placement, $attrs, $type);
 	}
 	
@@ -151,12 +173,18 @@ class Zend_View_Helper_MinifyHeadScript extends Zend_View_Helper_HeadScript {
 	 * @return string
 	 */
 	public function toString($indent = null) {
+		
+		// Disable?
+		if (!self::$minify) {
+			return parent::toString($indent);
+		}
+		die('MinifyHeadScript');
+		
 		// An array of Script Items to be rendered
 		$items = array();
 		
 		// An array of Javascript Items
 		$scripts = array();
-		
 		
 		// Any indentation we should use.
 		$indent = (null !== $indent) ? $this->getWhitespace($indent) : $this->getIndent();
@@ -173,11 +201,6 @@ class Zend_View_Helper_MinifyHeadScript extends Zend_View_Helper_HeadScript {
 		
 		$this->getContainer()->ksort();
         $groupIndex = 0;
-        
-        // -- minify
-        if ( !class_exists('JSMin') ) require LIBRARY_PATH .'/MinifyHtml/lib/Minify/JSMin.php';//PUBLIC_PATH .'/min/lib/JSMin.php';
-        
-        // -- loop
 		foreach ($this as $i => $item) {
             if ($this->_isNeedToMinify($item)) {
                 if (!empty($item->attributes['minify_split_before']) || !empty($item->attributes['minify_split'])) {
@@ -190,7 +213,6 @@ class Zend_View_Helper_MinifyHeadScript extends Zend_View_Helper_HeadScript {
                     $scripts = array();
                 }
             } else {
-                $item->source = JSMin::minify($item->source);
                 if ($scripts) {
                     $items[] = $this->_generateMinifyItem($scripts);
                     $scripts = array();
@@ -204,7 +226,7 @@ class Zend_View_Helper_MinifyHeadScript extends Zend_View_Helper_HeadScript {
         
 		return $indent . implode($this->_escape($this->getSeparator()) . $indent, $items);
 	}
-	
+    
     protected function _isNeedToMinify($item)
     {
         return isset($item->attributes ['src']) 
@@ -243,7 +265,8 @@ class Zend_View_Helper_MinifyHeadScript extends Zend_View_Helper_HeadScript {
 	 *
 	 * @return string
 	 */
-	public function getBaseUrl($isFontEnd = true) {
-		return ($isFontEnd ? '' : Zend_Controller_Front::getInstance()->getBaseUrl());
+	public function getBaseUrl() {
+		return Zend_Controller_Front::getInstance()->getBaseUrl();
 	}
+
 }

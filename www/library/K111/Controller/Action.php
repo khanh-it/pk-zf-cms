@@ -52,8 +52,8 @@ abstract class K111_Controller_Action extends Zend_Controller_Action
 	    // Assign view's default vars
 	    $this->view->assign(array(
 	        'curController' => $this,
-	        'curRequest' => $this,
-	        'curResponse' => $this
+	        'curRequest' => $request,
+	        'curResponse' => $response
 	    ));
 	}
 	
