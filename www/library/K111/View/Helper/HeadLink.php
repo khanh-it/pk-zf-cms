@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 
  * Helper for setting and retrieving Link elements for HTML head section
@@ -40,6 +41,7 @@
    <link href="http://example.com/js/sample.css" media="screen" rel="stylesheet" type="text/css" />
    <link href="/favicon.ico" rel="shortcut icon" />
    <!--[if lt IE 7]> <link href="/css/ie6.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
+
  *
  *
  * @see        http://code.google.com/p/minify/
@@ -50,7 +52,7 @@
  * @author     Rob "Bubba" Hines
  *
  */
-class Zend_View_Helper_MinifyHeadLink extends Zend_View_Helper_HeadLink {
+class K111_View_Helper_HeadLink extends Zend_View_Helper_HeadLink {
 	/**
 	 * 
 	 * The folder to be appended to the base url to find minify on your server.
@@ -73,6 +75,13 @@ class Zend_View_Helper_MinifyHeadLink extends Zend_View_Helper_HeadLink {
 	 * @var array
 	 */
 	protected $_cssExtensions = array(".css", ".css1", ".css2", ".css3");
+	
+	/**
+	 * Enable or disable minify?
+	 * @var bool
+	 */
+	public static $minify = true; 
+	
 	/**
 	 * Returns current object instance. Optionally, allows passing array of
 	 * values to build link.
@@ -82,7 +91,7 @@ class Zend_View_Helper_MinifyHeadLink extends Zend_View_Helper_HeadLink {
 	 * @param string $placement
 	 * @return Zend_View_Helper_HeadLink
 	 */
-	public function minifyHeadLink(array $attributes = null, $placement = Zend_View_Helper_Placeholder_Container_Abstract::APPEND) {
+	public function headLink(array $attributes = null, $placement = Zend_View_Helper_Placeholder_Container_Abstract::APPEND) {
 		return parent::headLink($attributes, $placement);
 	}
 	
@@ -101,6 +110,12 @@ class Zend_View_Helper_MinifyHeadLink extends Zend_View_Helper_HeadLink {
 	 */
 	public function toString($indent = null) {
 		
+		// Disable?
+		if (!self::$minify) {
+			return parent::toString($indent);
+		}
+		die('MinifyHeadLink');
+		
 		$indent = (null !== $indent) ? $this->getWhitespace($indent) : $this->getIndent();
 		$trimmedBaseUrl = trim($this->getBaseUrl(), '/');
 		
@@ -108,7 +123,6 @@ class Zend_View_Helper_MinifyHeadLink extends Zend_View_Helper_HeadLink {
 		$stylesheets = array();
 		$this->getContainer()->ksort();
 		foreach ( $this as $item ) {
-		    
 			if ($item->type == 'text/css' && $item->conditionalStylesheet === false && strpos($item->href, 'http://') === false && $this->isValidStyleSheetExtension($item->href)) {
 				$stylesheets [$item->media] [] = str_replace($this->getBaseUrl(), '', $item->href);
 			} else {
@@ -183,7 +197,8 @@ class Zend_View_Helper_MinifyHeadLink extends Zend_View_Helper_HeadLink {
 	 *
 	 * @return string
 	 */
-    public function getBaseUrl($isFontEnd = true) {
-		return ($isFontEnd ? '' : Zend_Controller_Front::getInstance()->getBaseUrl());
+	public function getBaseUrl() {
+		return Zend_Controller_Front::getInstance()->getBaseUrl();
 	}
+
 }

@@ -3,10 +3,13 @@
 define('DOCUMENT_ROOT', realpath(dirname(__FILE__)));
 
 // Define path to project directory
-define('PROJECT_ROOT', DOCUMENT_ROOT . '/../');
+define('PROJECT_ROOT', DOCUMENT_ROOT . '/..');
 
 // Define path to application directory
 define('APPLICATION_PATH', PROJECT_ROOT . '/app');
+
+// Define path to library directory
+define('LIBRARY_PATH', PROJECT_ROOT . '/library');
 
 // Define application environment
 define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'production'));
@@ -16,12 +19,7 @@ require_once APPLICATION_PATH . '/configs/__apps.php';
 
 // Typically, you will also want to add your library directory
 // to the include_path, particularly if it contains your ZF installed
-set_include_path(
-	implode(PATH_SEPARATOR, array(
-		dirname(dirname(__FILE__)) . '/library',
-		get_include_path()
-	))
-);
+set_include_path(implode(PATH_SEPARATOR, array(LIBRARY_PATH, get_include_path())));
  
 /** Zend_Application */
 require_once 'Zend/Application.php';

@@ -1,108 +1,151 @@
 <?php
 /**
-* @category   ZF
-* @package    ZF_View
-* @subpackage Helper
-* @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
-* @version    $Id: Url.php 23775 2011-03-01 17:25:24Z ralph $
-* @license    http://framework.zend.com/license/new-bsd     New BSD License
-*/
-
-/**
- * Zend_View_Helper_Abstract.php
- */
-require_once 'Zend/View/Helper/Abstract.php';
-
-/**
- * Helper for making easy links and getting urls that depend on the routes and router
+ * pk-zf-cms (Zend Framework powered)
  *
- * @uses Zend_View_Helper_Abstract
- * @package ZF_View
- * @subpackage Helper
- * @copyright Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
- * @license http://framework.zend.com/license/new-bsd New BSD License
+ * LICENSE
+ *
+ * Free
+ *
+ * @category   K111
+ * @package    K111_View_Helper
+ * @copyright  Free
+ * @license    
+ * @version    
  */
-class ZF_View_Helper_HeadStyleAction extends Zend_View_Helper_Abstract {
-	/**
-	 * Hang so dinh dang file
-	 * 
-	 * @var string
-	 */
-	const _suffixFile = '.css';
-	/**
-	 * Hang so ten folder chua file
-	 * 
-	 * @var string
-	 */
-	const _folderAssest = 'assets';
+
+/**
+ * Append (or prepend) css content (from string or file) using headStyle helper.
+ *
+ * @category   K111
+ * @package    K111_View_Helper
+ * @copyright  Free
+ * @license    
+ */
+class App_View_Helper_HeadStyleAction extends Zend_View_Helper_Abstract {
 	
 	/**
-	 * Lay noi dung file .
-	 * css
-	 * 
-	 * @param Zend_Controller_Request_Abstract || string $request        	
-	 * @param array $params        	
-	 * @param array $options        	
-	 * @return mixed
+	 * @var string Default css asset subfix. 
 	 */
-	public function headStyleAction( $request, $params = array(), $options = array()) {
-	    // -- Case: $request is string
-	    if ( is_string($request) ){
-	        $fileContent = $request;
-	    }else {
-	         
-	        if ( !($request instanceof Zend_Controller_Request_Abstract) ){
-	            throw new Exception('Argument 1 passed to ZF_View_Helper_HeadStyleAction::headStyleAction() must be an instance of Zend_Controller_Request_Abstract', 500);
-	        }
-    		// Lay thong tin module, controller, action
-    		$moduleName = $options ['module'] ? $options ['module'] : $request->getModuleName ();
-    		$controllerName = $options ['controller'] ? $options ['controller'] : $request->getControllerName ();
-    		$actionName = $options ['action'] ? $options ['action'] : $request->getActionName ();
-    		// Lay noi dung file
-    		$fileContent = $this->getFileContent ( $moduleName, $controllerName, $actionName );
-	    }
-		// Truyen du lieu vao noi dung file
-		if (count ( $params )) {
-			$fileContent = str_replace ( array_keys ( $params ), array_values ( $params ), $fileContent );
-		}
-		
-		// Neu lay noi dung => tra ve chuoi
-		if (true === $options ['getContent']) {
-			return $fileContent;
-		}
-		// -- minify
-		if ( !class_exists('CSSmin') ) require LIBRARY_PATH .'/MinifyHtml/lib/Minify/CSSmin.php';//require PUBLIC_PATH .'/min/lib/CSSmin.php';
-		$minCss = new CSSmin();
-		// Chen noi dung file vao js
-		$this->view->headStyle()->appendStyle ( $minCss->run($fileContent), array(
-		    'media' => 'all'
-		  ), array ( 'getContent' => true ) 
-		);
+	public static $suffix = '.css';
+	
+	/**
+	 * @var string Default css asset folder name.
+	 */
+	public static $folderAssets = 'assets';
+	
+	/**
+	 * @var object Css minifier
+	 */
+	protected static $_minifier = null;
+	 
+	/**
+	 * Set class's css minifier
+	 * @return void
+	 */
+	public static function setMinifier($minifier) {
+		self::$_minifier = $minifier;
 	}
 	
 	/**
-	 * Lay noi dung file
-	 *
-	 * @param string $moduleName
-	 *        	Ten module
-	 * @param string $controllerName
-	 *        	Ten controller
-	 * @param string $actionName
-	 *        	Ten action
-	 *        	
+	 * Proxy helper, minify css assets
+	 * @param $content string Css file content
 	 * @return string
 	 */
-	public function getFileContent($moduleName, $controllerName, $actionName) {
-		// Lay duong dan file
-		$filePath = realpath ( APPLICATION_PATH . '/sites/' . APPLICATION_SITE . "/$moduleName/views/" . self::_folderAssest . "/$controllerName/$actionName" . self::_suffixFile );
+	public static function minify($content) {
+		if (self::$_minifier) {
+			return call_user_func(self::$_minifier, $content);
+		}
+		return $content;
+	}
+	
+	/**
+	 * @var Zend_Controller_Front
+	 */
+	protected $_front = null;
+	
+	/**
+	 * Constructor
+	 * @return void
+	 */
+	public function __construct() {
+		$this->_front = Zend_Controller_Front::getInstance();
+	}
+	
+	/**
+	 * Append (or prepend) css content (from string or file) using headStyle helper. 
+	 * 
+	 * @param $request Zend_Controller_Request_Abstract||string|array        	
+	 * @param array $data 
+	 * @param array $options
+	 * @param array $append
+	 * @return mixed
+	 */
+	public function headStyleAction($request = null, $data = array(), $options = array(), $append = true) 
+	{
+		// Style content
+		$style = '';
 		
-		// Neu file ton tai lay noi dung file
-		if ($filePath) {
-			// Return
-			return file_get_contents ( $filePath );
+		// Case: $request is string
+		if (is_string($request)) {
+	        $style = $request;
+		// Case: get, + format options by request (if any) 
+	    } elseif ($request instanceof Zend_Controller_Request_Abstract) {
+			// Get, + format options
+    		$options['module'] 		= $options['module'] ? $options['module'] : $request->getModuleName();
+    		$options['controller'] 	= $options['controller'] ? $options['controller'] : $request->getControllerName();
+    		$options['action'] 		= $options['action'] ? $options['action'] : $request->getActionName();
+			
+        } elseif (is_array($request)) {
+			$options = $request;
+		}
+		// Get asset file content.
+		if ($options['module'] && $options['controller'] &&  $options['action']) 
+		{
+			// Get asset file content.
+			$style = $this->getFileContent($options['module'], $options['controller'], $options['action']);
+			// Add extra params
+			if (count($data)) {
+				$style = str_replace(array_keys($data), array_values($data), $style);
+			}
+			// Neu lay noi dung => tra ve chuoi
+			if (true === $options['getContent']) {
+				return $style;
+			}
 		}
 		
-		return '';
+		// Set content, + minify (if any)
+		if ($style) {
+			if ($append) {
+				$this->view->headStyle()->appendStyle(self::minify($style), array('media' => 'all'));	
+			} else {
+				$this->view->headStyle()->prependStyle(self::minify($style), array('media' => 'all'));
+			}
+		}
+		
+		// Return
+		return $this;
+	}
+	
+	/**
+	 * Get asset css file content
+	 *
+	 * @param string $moduleName Module's name
+	 * @param string $controllerName Controller's name
+	 * @param string $actionName Action's name
+	 * @return string
+	 */
+	public function getFileContent($moduleName, $controllerName, $actionName) 
+	{
+		// Get file's directory.
+		$fileDir = $this->_front->getControllerDirectory();
+		$fileDir = $fileDir[$moduleName];
+		
+		// Get file's fullpath, + read file's content.
+		$file = "{$fileDir}/../views/" . self::$folderAssets . "/{$controllerName}/{$actionName}" . self::$suffix;
+		if (!realpath($file)) {
+			trigger_error("[HSA] File `$file` not found!", E_USER_WARNING);
+		} else {
+			return file_get_contents($file);	
+		}
 	}
 }
-?>

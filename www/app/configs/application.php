@@ -7,6 +7,8 @@
 $data = array(
 // +++ 
 	'app_path' => APPLICATION_PATH,
+// +++ 
+	'lib_path' => LIBRARY_PATH,
 // +++
 	'app_site' => APPLICATION_SITE,
 // +++
@@ -44,9 +46,9 @@ $configs = array(
 
 		//
 		// Not works :(
-		//'pluginPaths' => array(
-		//	'K111_Application_Resource' => 'K111/Application/Resource/'
-		//),
+		'pluginPaths' => array(
+			'K111_Application_Resource' => "{$data['lib_path']}/K111/Application/Resource/"
+		),
 		
 		'resources' => array(
 		// +++ Layout
@@ -76,7 +78,12 @@ $configs = array(
                 // Flag: enviroment modes?
 				    'isEnvDevelopment' => ('development' == APPLICATION_ENV),
 				    'isEnvProduction' => ('production' == APPLICATION_ENV),
-				    'isEnvTesting' => ('testing' == APPLICATION_ENV)
+				    'isEnvTesting' => ('testing' == APPLICATION_ENV),
+				// Minify?
+					'minifyHeadLink' => !isset($_GET['minHeadLink']),
+					'minifyHeadScript' => !isset($_GET['minHeadScript']),
+					'minifyHeadStyleAction' => !isset($_GET['minHeadStyleAction']),
+					'minifyHeadScriptAction' => !isset($_GET['minHeadScriptAction'])
 				),
 			),
 		// Edn.Front controller
@@ -156,7 +163,8 @@ $configs = array(
             'view' => array(
             // Register view's helper;
                 'helperPath' => array(
-                    'App_View_Helper' => "{$data['app_path']}/views/helpers/"
+                    'App_View_Helper' => "{$data['app_path']}/views/helpers/",
+                    'K111_View_Helper' => "{$data['lib_path']}/K111/View/Helper"
                 )
             ),
 		// View
