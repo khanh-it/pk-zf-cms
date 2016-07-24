@@ -18,22 +18,22 @@ $this->Bt3NavLinks(array(
 // Filter form;
 echo $this->Bt3FilterForm()->render($this->form, $this->formSearch);
 ?>
-<div class="box">
-	<div class="box-header">
-		<div class="box-title"><span class="label label-info"><?php
+<div class="card">
+	<div class="card-header">
+		<h2 class="box-title"><span class=""><?php
 		  echo $this->translate('Tổng số dòng') . ': ' . ($totalItemsCount = count($this->paginator)) . '.' 
-		?></span></div>
+		?></span></h2>
 	</div>
 	<!-- /.box-header -->
-	<div class="box-body no-padding table-responsive">
-		<table id="tbl-data-list" class="table table-bordered table-striped table-hover">
+	<div class="card-body table-responsive">
+		<table id="tbl-data-list" class="table table-bordered table-condensed table-hover">
             <thead>
                 <tr>
 					<th width="10">No.</th>
 					<th width="10" class="text-center">
 						<?php echo $this->Bt3ManageTools()->mToolCheckerToggler(); ?>
 					</th>
-					<th><?php echo $this->translate('Mã nhóm tài khoản'); ?></th>
+					<th><?php echo $this->Bt3ManageTools()->mToolSorter($this->translate('Mã nhóm tài khoản'), 'group_id'); ?></th>
 					<th><?php echo $this->translate('Tên nhóm tài khoản'); ?></th>
 					<th><?php echo $this->translate('Ghi chú'); ?></th>
                     <th width="10"><?php echo $this->translate('K.Hoạt?'); ?></th>

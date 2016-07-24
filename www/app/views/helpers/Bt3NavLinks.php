@@ -80,7 +80,7 @@ class App_View_Helper_Bt3NavLinks extends Zend_View_Helper_Abstract {
      * @var string Icon's template
      */
     public static $_iconHtml = '<li {{li_attrs}}>
-    <a href="{{href}}" {{a_attrs}}><i class="{{icon}}"></i> <span>{{label}}</span></a>
+    <a class="btn bgm-blue waves-effect" href="{{href}}" {{a_attrs}}><span class="{{icon}}"></span> {{label}}</a>
 </li>';
     
     /**

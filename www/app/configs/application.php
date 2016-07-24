@@ -54,7 +54,7 @@ $configs = array(
 		// +++ Layout
 			'layout' => array(
 				'layout' => 'default',
-				'layoutPath' => "{$data['app_path']}/sites/{$data['app_site']}/_layouts/scripts",
+				'layoutPath' => "{$data['app_path']}/sites/{$data['app_site']}/_layouts/scripts/MALight",
 			),
 		// End.Layout
 		// +++ Multi modules
@@ -177,13 +177,14 @@ $configs = array(
 				'upload_dir' => "/upload/{$data['app_site']}",
 				'assets_dir' => '/assets',
 				'site_dir' => "/{$data['app_site']}",
-				'skin_dir' => "/default",
+				'skin_dir' => "/MALight",
 				'types' => array(
 					'js' => 'js',
 					'css' => 'css',
 					'file' => 'file',
 					'img' => 'img',
-					'lib' => 'lib'
+					'media' => 'media',
+					'lib' => 'vendors'
 				)
 			),
 		// End.K111_Application_Resource_AssetsFinder

@@ -54,6 +54,54 @@ class App_View_Helper_Bt3ManageTools extends Zend_View_Helper_Abstract {
 	/**
      * @var string
      */
+    public static $_mToolSorterHtml = '<div class="clearfix">
+    <div class="pull-left">
+    	<a href="?{{href}}">{{label}}</a> {{btn_reset}}
+    </div>
+    <div class="pull-right">
+    	<i class="{{icon_sort}}"></i>
+    </div>
+</div>';
+	/**
+	 * Manage tool # checker toggler
+	 * @return string
+	 */
+	public function mToolSorter($label, $sortField, $icon = array(
+		'ASC' => 'glyphicon glyphicon-sort-by-attributes', 
+		'DESC' => 'glyphicon glyphicon-sort-by-attributes-alt'
+	)) {
+		// Format data;
+		$sortKey = '__sort'; $spliter = '-.-';
+		// +++ 
+		$href = $_GET;
+		// +++
+		$sortBy = explode($spliter, (string)$href[$sortKey]);
+		$isEmptySort = !!($sortBy = (string)array_pop($sortBy));
+		$sortBy = ('ASC' == $sortBy) ? 'DESC' : 'ASC';
+		if (!$isEmptySort) {
+			$hrefReset = $_GET;
+			unset($hrefReset[$sortKey]);
+			$hrefReset = http_build_query($hrefReset);
+		}
+		// +++>
+		$href[$sortKey] = "{$sortField}{$spliter}{$sortBy}";
+		
+		return str_replace(
+			array('{{href}}', '{{label}}', '{{btn_reset}}', '{{icon_sort}}'),
+			array(
+				http_build_query($href),
+				htmlspecialchars($label),
+				!$hrefReset ? '' 
+					: "<a href=\"?{$hrefReset}\"></a>",
+				$icon[$sortBy]
+			), 
+			self::$_mToolSorterHtml
+		);
+	}
+	
+	/**
+     * @var string
+     */
     public static $_mToolCheckerTogglerHtml = '<input id="{{id}}" type="checkbox" class="{{class}}" onchange="(function(jQ){
 	var checked = jQ(this).is(\':checked\');
 	jQ(this).parents(\'table\').find(\'>tbody>tr>td :checkbox.mtool-checker\')
@@ -79,7 +127,10 @@ class App_View_Helper_Bt3ManageTools extends Zend_View_Helper_Abstract {
 	/**
      * @var string
      */
-    public static $_mToolCheckerHtml = '<input id="{{id}}" name="{{name}}" type="checkbox" class="{{class}}" value="{{value}}" />';
+    public static $_mToolCheckerHtml = '<div class="checkbox">
+	<label><input id="{{id}}" name="{{name}}" type="checkbox" class="{{class}}" value="{{value}}" />
+	<i class="input-helper"></i></label>
+</div>';
 	/**
 	 * Manage tool # checker
 	 * @return string

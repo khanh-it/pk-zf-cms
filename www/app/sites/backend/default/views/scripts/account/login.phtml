@@ -11,71 +11,119 @@ $this->action('layout', $front->getDefaultControllerName(), $front->getDefaultMo
     'components' => array('messages' => '')
 ));
 ?>
-<div id="frm-container" class="container">
-    <div class="col-xs-10 col-xs-push-1 col-sm-8 col-sm-push-2">
-        <!-- Layout messages -->
+<div id="frm-container" class="login-content">
+    <!-- Login -->
+    <div class="lc-block toggled" id="l-login">
+    	<!-- Layout messages -->
         <?php 
             // Layout component: messages;
             echo $this->layout()->components['messages'];
         ?>
         <!-- ./Layout messages -->
-    	<!-- Horizontal Form -->
-    	<div class="box box-info">
-    		<div class="box-header with-border">
-    			<h3 class="box-title"><?php echo $this->translate('Đăng nhập hệ thống'); ?></h3>
-    		</div>
-    		<!-- /.box-header -->
-    		<!-- form start -->
-    		<form id="frm-login" class="form-horizontal" method="post" enctype="application/x-www-form-urlencoded">
-                <input type="hidden" id="security" name="security" value="<?php echo $this->security; ?>" >
-    			<div class="box-body">
-    				<div class="form-group">
-    					<label for="username" class="col-sm-2 control-label"><?php echo $this->translate('Tên đăng nhập'); ?></label>
-    					<div class="col-sm-10">
-    						<input type="text" maxlength="250" class="form-control" 
-    						  id="username" name="username" required="required" 
-    						  placeholder="<?php echo $this->translate('Nhập tên đăng nhập'); ?>"
-    						  value="<?php echo htmlspecialchars($_POST['username']); ?>"
-                            />
-    					</div>
-    				</div>
-    				<div class="form-group">
-    					<label for="password" class="col-sm-2 control-label"><?php echo $this->translate('Mật khẩu'); ?></label>
-    					<div class="col-sm-10">
-    						<input type="password" maxlength="50" class="form-control" 
-    						  id="password" name="password" required="required" 
-    						  placeholder="<?php echo $this->translate('Nhập mật khẩu'); ?>"
-    						  value="<?php echo htmlspecialchars($_POST['password']); ?>"
-    						/>
-    					</div>
-    				</div>
-    				<div class="form-group">
-    					<div class="col-sm-offset-2 col-sm-10">
-    						<div class="checkbox">
-    							<label><input type="checkbox" id="remember" name="remember" <?php echo $_POST['remember'] ? 'checked="checked"' : ''; ?> > Remember me</label>
-    						</div>
-    					</div>
-    				</div>
-    			</div>
-    			<!-- /.box-body -->
-    			<div class="box-footer">
-    				<button type="reset" class="btn btn-default"><?php echo $this->translate('Nhập lại'); ?></button>
-    				<button type="submit" class="btn btn-info pull-right"><?php echo $this->translate('Đăng nhập'); ?></button>
-    			</div>
-    			<!-- /.box-footer -->
-    		</form>
-    	</div>
-    	<!-- /.box -->
-    </div>
-    <!-- /.box -->
-</div>
+        <!-- form start -->
+   		<form id="frm-login" class="form-horizontal" method="post" enctype="application/x-www-form-urlencoded">
+   			<input type="hidden" id="security" name="security" value="<?php echo $this->security; ?>" >
+	        <div class="lcb-form">
+	            <div class="input-group m-b-20">
+	                <span class="input-group-addon"><i class="zmdi zmdi-account"></i></span>
+	                <div class="fg-line">
+	                    <input type="text" maxlength="250" class="form-control" 
+						  id="username" name="username" required="required" 
+						  placeholder="<?php echo $this->translate('Tên đăng nhập'); ?>"
+						  value="<?php echo htmlspecialchars($_POST['username']); ?>"
+                        />
+	                </div>
+	            </div>
+	
+	            <div class="input-group m-b-20">
+	                <span class="input-group-addon"><i class="zmdi zmdi-male"></i></span>
+	                <div class="fg-line">
+	                    <input type="password" maxlength="50" class="form-control" 
+						  id="password" name="password" required="required" 
+						  placeholder="<?php echo $this->translate('Mật khẩu'); ?>"
+						  value="<?php echo htmlspecialchars($_POST['password']); ?>"
+						/>
+	                </div>
+	            </div>
+	
+	            <div class="checkbox">
+	                <label>
+	                	<input type="checkbox" id="remember" name="remember" <?php echo $_POST['remember'] ? 'checked="checked"' : ''; ?> >
+						<i class="input-helper"></i>
+	                	Keep me signed in
+	                </label>
+	            </div>
+	            <button type="submit" class="btn btn-login btn-success btn-float">
+	            	<i class="zmdi zmdi-arrow-forward"></i>
+	            </button>
+	        </div>
 
+	        <div class="lcb-navigation hidden">
+	            <a href="#" data-ma-action="login-switch" data-ma-block="#l-register"><i class="zmdi zmdi-plus"></i> <span>Register</span></a>
+	            <a href="#" data-ma-action="login-switch" data-ma-block="#l-forget-password"><i>?</i> <span>Forgot Password</span></a>
+	        </div>
+		</form>
+    </div>
+
+    <!-- Register -->
+    <div class="lc-block hidden" id="l-register">
+        <div class="lcb-form">
+            <div class="input-group m-b-20">
+                <span class="input-group-addon"><i class="zmdi zmdi-account"></i></span>
+                <div class="fg-line">
+                    <input type="text" class="form-control" placeholder="Username">
+                </div>
+            </div>
+
+            <div class="input-group m-b-20">
+                <span class="input-group-addon"><i class="zmdi zmdi-email"></i></span>
+                <div class="fg-line">
+                    <input type="text" class="form-control" placeholder="Email Address">
+                </div>
+            </div>
+
+            <div class="input-group m-b-20">
+                <span class="input-group-addon"><i class="zmdi zmdi-male"></i></span>
+                <div class="fg-line">
+                    <input type="password" class="form-control" placeholder="Password">
+                </div>
+            </div>
+
+            <a href="#" class="btn btn-login btn-success btn-float"><i class="zmdi zmdi-check"></i></a>
+        </div>
+
+        <div class="lcb-navigation">
+            <a href="#" data-ma-action="login-switch" data-ma-block="#l-login"><i class="zmdi zmdi-long-arrow-right"></i> <span>Sign in</span></a>
+            <a href="#" data-ma-action="login-switch" data-ma-block="#l-forget-password"><i>?</i> <span>Forgot Password</span></a>
+        </div>
+    </div>
+
+    <!-- Forgot Password -->
+    <div class="lc-block hidden" id="l-forget-password">
+        <div class="lcb-form">
+            <p class="text-left">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eu risus. Curabitur commodo lorem fringilla enim feugiat commodo sed ac lacus.</p>
+
+            <div class="input-group m-b-20">
+                <span class="input-group-addon"><i class="zmdi zmdi-email"></i></span>
+                <div class="fg-line">
+                    <input type="text" class="form-control" placeholder="Email Address">
+                </div>
+            </div>
+
+            <a href="#" class="btn btn-login btn-success btn-float"><i class="zmdi zmdi-check"></i></a>
+        </div>
+
+        <div class="lcb-navigation">
+            <a href="#" data-ma-action="login-switch" data-ma-block="#l-login"><i class="zmdi zmdi-long-arrow-right"></i> <span>Sign in</span></a>
+            <a href="#" data-ma-action="login-switch" data-ma-block="#l-register"><i class="zmdi zmdi-plus"></i> <span>Register</span></a>
+        </div>
+    </div>
+</div>
 <?php
 // CSS:
 // +++ Inline style;
 $inlineStyle = <<<inlineStyle
-/* Let login form has margin to the top */
-#frm-container{margin-top:100px;}
+
 inlineStyle;
 // +++
 $this->HeadStyle()->appendStyle($inlineStyle, array(

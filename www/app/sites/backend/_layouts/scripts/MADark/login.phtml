@@ -1,0 +1,98 @@
+<?php
+/**
+ * Layout script: login
+ * @author khanhdtp
+ */
+// Get Zend_Controller_Front;
+$front = Zend_Controller_Front::getInstance();
+// Flag: is in production mode?
+$isEnvProduction = $front->getParam('isEnvProduction');
+// Assets minify string;
+$assetsMinStr = $isEnvProduction ? '.min' : '';  
+
+// Get K111_AssetsFinder;
+$assetsFinder = K111_AssetsFinder::getInstance();
+?>
+<!DOCTYPE>
+<html>
+<head>
+<?php 
+// Meta
+$headMeta = <<<HeadMeta
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+HeadMeta;
+$this->doctype(Zend_View_Helper_Doctype::XHTML1_RDFA);
+$this->HeadMeta()
+	->appendName('keywords', 'website keywords')
+	->appendName('description', 'website description')
+	->appendName('viewport', 'width=device-width, initial-scale=1')
+	->appendHttpEquiv('Content-Type', 'text/html; charset=UTF-8')
+;
+echo $this->HeadMeta() . "\n{$headMeta}\n";
+unset($headMeta);
+// Title
+$this->HeadTitle("{$_SERVER['SERVER_NAME']}")
+	->setSeparator(' / ')
+;
+echo $this->HeadTitle() . "\n";
+
+// Headlink
+$this->HeadLink()
+// +++ Bootstrap framework
+    //->appendStylesheet($assetsFinder->files("bootstrap/css/bootstrap{$assetsMinStr}.css", 'lib'))
+    //->appendStylesheet($assetsFinder->files("bootstrap/css/bootstrap-theme{$assetsMinStr}.css", 'lib'))
+// +++ Vendor CSS
+    ->appendStylesheet($assetsFinder->files("bower_components/animate.css/animate.min.css", 'lib'))
+    ->appendStylesheet($assetsFinder->files("bower_components/material-design-iconic-font/dist/css/material-design-iconic-font.min.css", 'lib'))
+// +++ AdminLTE
+    ->appendStylesheet($assetsFinder->files("app_1.min.css", 'css'))
+    ->appendStylesheet($assetsFinder->files("app_2.min.css", 'css'))
+// +++
+    //->appendStylesheet($assetsFinder->files("style{$assetsMinStr}.css", 'css'))
+;
+echo $this->HeadLink();
+
+// HeadStyle # inline style;
+// +++ 
+$msViewport = <<<HeadStyle
+	@-ms-viewport{
+	  width: device-width;
+	}
+HeadStyle;
+// +++ 
+echo $this->HeadStyle()->appendStyle($msViewport, array(
+    'media' => 'all'
+));
+unset($msViewport);
+?>
+</head>
+<body class="clearfix skin-blue">
+    <?php
+        // Page's content;
+        echo $this->layout()->content;
+    ?>
+<?php 
+// HeadScript
+$this->HeadScript()
+// +++ jQuery
+    ->appendFile($assetsFinder->files("bower_components/jquery/dist/jquery.min.js", 'lib'))
+// +++ Bootstrap
+    ->appendFile($assetsFinder->files("bower_components/bootstrap/dist/js/bootstrap.min.js", 'lib'))
+// +++ HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries
+// +++ WARNING: Respond.js doesn't work if you view the page via file://
+    //->appendFile($assetsFinder->files("html5shiv/html5shiv-3.7.3{$assetsMinStr}.js", 'js'), 'if lt IE 9')
+    //->appendFile($assetsFinder->files("respond/respond-1.4.2{$assetsMinStr}.js", 'js'), 'if lt IE 9')
+// +++ AdminLTE App 
+    ->appendFile($assetsFinder->files("bower_components/Waves/dist/waves.min.js", 'lib'))
+// +++ project's main file
+	->appendFile($assetsFinder->files("app.min.js", 'js'))
+    //->appendFile($assetsFinder->files("script{$assetsMinStr}.js", 'js'))
+;
+echo $this->HeadScript();
+
+// InlineScript # inline script;
+echo $this->InlineScript();
+?>
+</body>
+</html>

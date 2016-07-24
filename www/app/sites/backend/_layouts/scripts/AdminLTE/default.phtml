@@ -1,0 +1,143 @@
+<?php
+/**
+ * 
+ */
+// Get Zend_Controller_Front;
+$front = Zend_Controller_Front::getInstance();
+// Flag: is in production mode?
+$isEnvProduction = $front->getParam('isEnvProduction');
+// Assets minify string;
+$assetsMinStr = $isEnvProduction ? '.min' : '';  
+
+// Get K111_AssetsFinder;
+$assetsFinder = K111_AssetsFinder::getInstance();
+
+// Load layout's components
+$this->action('layout', $front->getDefaultControllerName(), $front->getDefaultModule(), array());
+?>
+<!DOCTYPE >
+<html>
+<head>
+<?php 
+// Meta
+$headMeta = <<<HeadMeta
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+HeadMeta;
+$this->doctype(Zend_View_Helper_Doctype::XHTML1_RDFA);
+$this->HeadMeta()
+	->appendName('keywords', 'website keywords')
+	->appendName('description', 'website description')
+	->appendName('viewport', 'width=device-width, initial-scale=1')
+	->appendHttpEquiv('Content-Type', 'text/html; charset=UTF-8')
+;
+echo $this->HeadMeta() . "\n{$headMeta}\n";
+unset($headMeta);
+// Title
+$this->HeadTitle("{$_SERVER['SERVER_NAME']}")
+	->setSeparator(' / ')
+;
+echo $this->HeadTitle() . "\n";
+
+// Headlink
+$this->HeadLink()
+// +++ Bootstrap framework
+    ->appendStylesheet($assetsFinder->files("bootstrap/css/bootstrap{$assetsMinStr}.css", 'lib'))
+    // use AdminLTE theme framework
+    //->appendStylesheet($assetsFinder->files("bootstrap/css/bootstrap-theme{$assetsMinStr}.css", 'lib'))
+// +++ Font awesome
+    ->appendStylesheet($assetsFinder->files("font-awesome/css/font-awesome{$assetsMinStr}.css", 'lib'))
+// +++ ionicons
+    ->appendStylesheet($assetsFinder->files("ionicons/css/ionicons{$assetsMinStr}.css", 'lib'))
+// +++ AdminLTE
+    ->appendStylesheet($assetsFinder->files("AdminLTE{$assetsMinStr}.css", 'css'))
+    ->appendStylesheet($assetsFinder->files("AdminLTE-skins/_all-skins{$assetsMinStr}.css", 'css'))
+// +++
+    ->appendStylesheet($assetsFinder->files("style{$assetsMinStr}.css", 'css'))
+;
+echo $this->HeadLink();
+
+// HeadStyle # inline style;
+// +++ 
+$msViewport = <<<HeadStyle
+	@-ms-viewport{
+	  width: device-width;
+	}
+HeadStyle;
+// +++ 
+echo $this->HeadStyle()->appendStyle($msViewport, array(
+    'media' => 'all'
+));
+unset($msViewport);
+?>
+</head>
+<body class="skin-blue sidebar-mini sidebar-collapse">
+    <div class="wrapper">
+    <?php 
+        // Component: header;
+        echo $this->layout()->components['header'];
+        // Component: left sidebar;
+        echo $this->layout()->components['left_sidebar'];
+    ?>
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <?php
+                // Component: page header, +breadcrumb;
+                echo $this->layout()->components['breadcrumb'];
+            ?>
+            <!-- Main content -->
+            <section class="content">
+            <?php
+                // Component: page's messages;
+                echo $this->layout()->components['messages'];
+                // Component: page's messages;
+                echo $this->layout()->components['toolbars'];
+            ?>
+                <div id="body-wrapper" class="panel panel-default">
+                    <div class="panel-body">
+                    <?php
+                        // Page's content;
+                        echo $this->layout()->content;
+                    ?>
+                    </div>
+                </div>
+            <?php
+                // Component: page's messages;
+                echo $this->layout()->components['toolbars'];
+            ?>
+            </section>
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+    <?php 
+        // Component: control sidebar;
+        echo $this->layout()->components['right_sidebar'];
+        
+        // Component: footer;
+        echo $this->layout()->components['footer'];
+    ?>
+    </div>
+    <!-- ./wrapper -->
+<?php 
+// HeadScript
+$this->HeadScript()
+// +++ jQuery
+    ->appendFile($assetsFinder->files("jQuery/jquery-2.2.4{$assetsMinStr}.js", 'lib'))
+// +++ Bootstrap
+    ->appendFile($assetsFinder->files("bootstrap/js/bootstrap{$assetsMinStr}.js", 'lib'))
+// +++ HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries
+// +++ WARNING: Respond.js doesn't work if you view the page via file://
+    ->appendFile($assetsFinder->files("html5shiv/html5shiv-3.7.3{$assetsMinStr}.js", 'js'), 'if lt IE 9')
+    ->appendFile($assetsFinder->files("respond/respond-1.4.2{$assetsMinStr}.js", 'js'), 'if lt IE 9')
+// +++ AdminLTE App 
+    ->appendFile($assetsFinder->files("AdminLTE{$assetsMinStr}.js", 'js'))
+// +++ project's main file
+    ->appendFile($assetsFinder->files("script{$assetsMinStr}.js", 'js'))
+;
+echo $this->HeadScript();
+
+// InlineScript # inline script;
+echo $this->InlineScript();
+?>
+</body>
+</html>
