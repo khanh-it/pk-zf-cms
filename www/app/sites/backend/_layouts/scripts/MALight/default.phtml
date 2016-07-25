@@ -83,23 +83,23 @@ unset($msViewport);
             echo $this->layout()->components['breadcrumb'];
         ?>
 	    <!-- Main content -->
-		<section id="content">
-			<div id="body-wrapper" class="container">
+		<section id="content" class="clearfix">
             <?php
                 // Component: page's messages;
                 echo $this->layout()->components['messages'];
                 // Component: page's messages;
                 echo $this->layout()->components['toolbars'];
             ?>
-            <?php
-                // Page's content;
-                echo $this->layout()->content;
-            ?>
+            <div id="body-wrapper" class="m-t-30">
+	            <?php
+	                // Page's content;
+	                echo $this->layout()->content;
+	            ?>
+			</div>
             <?php
                 // Component: page's messages;
                 echo $this->layout()->components['toolbars'];
             ?>
-	        </div>
         </section>
 		<!-- /.content -->
     </section>

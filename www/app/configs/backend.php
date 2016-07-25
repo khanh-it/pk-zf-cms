@@ -19,5 +19,8 @@ $configs = array(
 	'production' => array(),
 );
 
+// Define constants
+require_once 'constant/backend.php';
+
 // Return;
 return array_replace_recursive($configs['__default'], (array)$configs[APPLICATION_ENV]);

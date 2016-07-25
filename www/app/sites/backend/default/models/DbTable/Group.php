@@ -49,7 +49,6 @@ class Default_Model_DbTable_Group extends K111_Db_Table
      * 
      */
     public function buildFetchDataSelector(array $options = array(), array $order = array()) {
-        
         // 
         $select = $this->select();
         
@@ -72,6 +71,28 @@ class Default_Model_DbTable_Group extends K111_Db_Table
         
         // Return;
         return $select;
-    } 
+    }
+
+	/**
+	 * Check data exist by code
+	 * 
+	 * @param $code string Code
+	 * @param $options array An array of options
+	 * @return bool
+	 */
+	public function checkExistsByCode($code, array $options = array()) {
+		//
+		$where = array(
+        	'code = ?' => $code
+		);
+		// +++ 
+		$options['exclude_id'] = array_filter((array)$options['exclude_id']);
+		if ($options['exclude_id']) {
+			$where['id NOT IN (?)'] = $options['exclude_id'];
+		}
+		
+		// Return;
+		return !!$this->fetchRow($where);
+	}
 // +++ End.Repo helpers
 }

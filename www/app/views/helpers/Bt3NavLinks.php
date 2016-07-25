@@ -36,15 +36,15 @@ class App_View_Helper_Bt3NavLinks extends Zend_View_Helper_Abstract {
     /**
      * @var string
      */
-    public static $_urlParamsIndex = array('action' => null);
+    public static $_urlParamsIndex = array('action' => null, 'id' => null);
     /**
      * @var string
      */
-    public static $_urlParamsCreate = array('action' => 'create');
+    public static $_urlParamsCreate = array('action' => 'create', 'id' => null);
     /**
      * @var string
      */
-    public static $_urlParamsEdit = array('action' => 'edit');
+    public static $_urlParamsUpdate = array('action' => 'update');
     /**
      * @var string
      */
@@ -80,7 +80,7 @@ class App_View_Helper_Bt3NavLinks extends Zend_View_Helper_Abstract {
      * @var string Icon's template
      */
     public static $_iconHtml = '<li {{li_attrs}}>
-    <a class="btn bgm-blue waves-effect" href="{{href}}" {{a_attrs}}><span class="{{icon}}"></span> {{label}}</a>
+    <a href="{{href}}" {{a_attrs}}><span class="{{icon}}"></span> {{label}}</a>
 </li>';
     
     /**
@@ -141,9 +141,11 @@ class App_View_Helper_Bt3NavLinks extends Zend_View_Helper_Abstract {
     public function iconNew($href = null, $label = null, $icon = 'glyphicon glyphicon-plus-sign', $attrs = array()) {
         // Format data;
         // +++ Href
-        $href = is_null($href) ? $this->view->url(self::$_urlParamsCreate) : $href;
+        $href = $href ?: $this->view->url(self::$_urlParamsCreate);
         // +++ Label
-        $label = is_null($label) ? $this->view->translate('Thêm') : $label;
+        $label = $label ?: $this->view->translate('Thêm');
+		// ++++ A tag's atributes
+		$attrs['class'] = $attrs['class'] ?: 'btn btn-success waves-effect';
         // Return;
         return $this->icon(array_merge($attrs, array('href' => $href, 'label' => $label, 'icon' => $icon)));
     }
@@ -159,9 +161,12 @@ class App_View_Helper_Bt3NavLinks extends Zend_View_Helper_Abstract {
     public function iconDelete($href = null, $label = null, $icon = 'glyphicon glyphicon-minus-sign', $attrs = array()) {
         // Format data;
         // +++ Href
-        $href = is_null($href) ? $this->view->url(self::$_urlParamsDelete) : $href;
+        $href = $href ?: $this->view->url(self::$_urlParamsDelete);
         // +++ Label
-        $label = is_null($label) ? $this->view->translate('Hủy') : $label;
+        $label = $label ?: $this->view->translate('Hủy');
+		// ++++ A tag's atributes
+		$attrs['class'] = $attrs['class'] ?: 'btn btn-danger waves-effect';
+		$attrs['data-nlink'] = $attrs['data-nlink'] ?: 'delete';
         // Return;
         return $this->icon(array_merge($attrs, array('href' => $href, 'label' => $label, 'icon' => $icon)));
     }
@@ -177,9 +182,11 @@ class App_View_Helper_Bt3NavLinks extends Zend_View_Helper_Abstract {
     public function iconEdit($href = null, $label = null, $icon = 'glyphicon glyphicon-edit', $attrs = array()) {
         // Format data;
         // +++ Href
-        $href = is_null($href) ? $this->view->url(self::$_urlParamsEdit) : $href;
+        $href = $href ?: $this->view->url(self::$_urlParamsUpdate);
         // +++ Label
-        $label = is_null($label) ? $this->view->translate('Cập nhật') : $label;
+        $label = $label ?: $this->view->translate('Cập nhật');
+		// ++++ A tag's atributes
+		$attrs['class'] = $attrs['class'] ?: 'btn btn-primary waves-effect';
         // Return;
        return $this->icon(array_merge($attrs, array('href' => $href, 'label' => $label, 'icon' => $icon)));
     }
@@ -195,9 +202,11 @@ class App_View_Helper_Bt3NavLinks extends Zend_View_Helper_Abstract {
     public function iconTrash($href = null, $label = null, $icon = 'glyphicon glyphicon-trash', $attrs = array()) {
         // Format data;
         // +++ Href
-        $href = is_null($href) ? $this->view->url(self::$_urlParamsTrash) : $href;
+        $href = $href ?: $this->view->url(self::$_urlParamsTrash);
         // +++ Label
-        $label = is_null($label) ? $this->view->translate('Thùng rác') : $label;
+        $label = $label ?: $this->view->translate('Thùng rác');
+		// ++++ A tag's atributes
+		$attrs['class'] = $attrs['class'] ?: 'btn btn-warning waves-effect';
         // Return;
         return $this->icon(array_merge($attrs, array('href' => $href, 'label' => $label, 'icon' => $icon)));
     }
@@ -213,9 +222,11 @@ class App_View_Helper_Bt3NavLinks extends Zend_View_Helper_Abstract {
     public function iconClose($href = null, $label = null, $icon = 'glyphicon glyphicon-remove-sign', $attrs = array()) {
         // Format data;
         // +++ Href
-        $href = is_null($href) ? $this->view->url(self::$_urlParamsIndex) : $href;
+        $href = $href ?: $this->view->url(self::$_urlParamsIndex);
         // +++ Label
-        $label = is_null($label) ? $this->view->translate('Đóng') : $label;
+        $label = $label ?: $this->view->translate('Đóng');
+		// ++++ A tag's atributes
+		$attrs['class'] = $attrs['class'] ?: 'btn btn-default waves-effect';
         // Return;
         return $this->icon(array_merge($attrs, array('href' => $href, 'label' => $label, 'icon' => $icon)));
     }
@@ -235,7 +246,9 @@ class App_View_Helper_Bt3NavLinks extends Zend_View_Helper_Abstract {
             ? $_SERVER['HTTP_REFERER'] : 'javascript:history.back();'
         ) : $href;
         // +++ Label
-        $label = is_null($label) ? $this->view->translate('Trở lại') : $label;
+        $label = $label ?: $this->view->translate('Trở lại');
+		// ++++ A tag's atributes
+		$attrs['class'] = $attrs['class'] ?: 'btn btn-default waves-effect';
         // Return;
         return $this->icon(array_merge($attrs, array('href' => $href, 'label' => $label, 'icon' => $icon)));
     }
@@ -251,9 +264,11 @@ class App_View_Helper_Bt3NavLinks extends Zend_View_Helper_Abstract {
     public function iconSave($href = null, $label = null, $icon = 'glyphicon glyphicon-floppy-saved', $attrs = array()) {
         // Format data;
         // +++ Href
-        $href = is_null($href) ? $this->_buildHrefAction('save') : $href;
+        $href = $href ?: $this->_buildHrefAction('save');
         // +++ Label
-        $label = is_null($label) ? $this->view->translate('Lưu') : $label;
+        $label = $label ?: $this->view->translate('Lưu');
+		// ++++ A tag's atributes
+		$attrs['class'] = $attrs['class'] ?: 'btn btn-primary waves-effect';
         // Return;
         return $this->icon(array_merge($attrs, array('href' => $href, 'label' => $label, 'icon' => $icon)));
     }
@@ -269,9 +284,11 @@ class App_View_Helper_Bt3NavLinks extends Zend_View_Helper_Abstract {
     public function iconSaveAndNew($href = null, $label = null, $icon = 'glyphicon glyphicon-floppy-open', $attrs = array()) {
         // Format data;
         // +++ Href
-        $href = is_null($href) ? $this->_buildHrefAction('save_n_new') : $href;
+        $href = $href ?: $this->_buildHrefAction('save_n_new');
         // +++ Label
-        $label = is_null($label) ? $this->view->translate('Lưu &amp; Thêm mới') : $label;
+        $label = $label ?: $this->view->translate('Lưu &amp; Thêm mới');
+		// ++++ A tag's atributes
+		$attrs['class'] = $attrs['class'] ?: 'btn btn-primary waves-effect';
         // Return;
         return $this->icon(array_merge($attrs, array('href' => $href, 'label' => $label, 'icon' => $icon)));
     }
@@ -287,9 +304,31 @@ class App_View_Helper_Bt3NavLinks extends Zend_View_Helper_Abstract {
     public function iconSaveAndClose($href = null, $label = null, $icon = 'glyphicon glyphicon-floppy-disk', $attrs = array()) {
         // Format data;
         // +++ Href
-        $href = is_null($href) ? $this->_buildHrefAction('save_n_close') : $href;
+        $href = $href ?: $this->_buildHrefAction('save_n_close');
         // +++ Label
-        $label = is_null($label) ? $this->view->translate('Lưu &amp; Đóng') : $label;
+        $label = $label ?: $this->view->translate('Lưu &amp; Đóng');
+		// ++++ A tag's atributes
+		$attrs['class'] = $attrs['class'] ?: 'btn btn-primary waves-effect';
+        // Return;
+        return $this->icon(array_merge($attrs, array('href' => $href, 'label' => $label, 'icon' => $icon)));
+    }
+	
+	/**
+     * Icon apply
+     * @param nul|string $href A tag's href
+     * @param nul|string $label Icon's label
+     * @param nul|string $icon Icon's class
+     * @param array $attrs An array of attrs
+     * @return string
+     */
+    public function iconApply($href = null, $label = null, $icon = 'glyphicon glyphicon-floppy-saved', $attrs = array()) {
+        // Format data;
+        // +++ Href
+        $href = $href ?: $this->_buildHrefAction('apply');
+        // +++ Label
+        $label = $label ?: $this->view->translate('Lưu');
+		// ++++ A tag's atributes
+		$attrs['class'] = $attrs['class'] ?: 'btn btn-primary waves-effect';
         // Return;
         return $this->icon(array_merge($attrs, array('href' => $href, 'label' => $label, 'icon' => $icon)));
     }

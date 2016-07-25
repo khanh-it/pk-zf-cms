@@ -1,7 +1,21 @@
 /* Bootstrap 3 - theme */
+/* +++ */
 body {font-family: Tahoma,Helvetica Neue,Helvetica,Arial,sans-serif, sans-serif;}
 .nowrap {white-space: nowrap;}
-
+/* +++ breadcrumb */
 .breadcrumb {margin-bottom: 20px;}
+/* +++ toolbars */
+.block-header .actions>li>a {width: auto;height: auto;}
 
-.block-header .actions>li>a {width: auto;}
+/* +++ MA overwrites */
+.checkbox {margin: 0px;}
+.checkbox label {padding-left:18px;}
+.table>tbody>tr>td:first-child, .table>tbody>tr>th:first-child, .table>tfoot>tr>td:first-child, .table>tfoot>tr>th:first-child, .table>thead>tr>td:first-child, .table>thead>tr>th:first-child {padding-left:20px;}
+.table>tbody>tr>td:last-child, .table>tbody>tr>th:last-child, .table>tfoot>tr>td:last-child, .table>tfoot>tr>th:last-child, .table>thead>tr>td:last-child, .table>thead>tr>th:last-child {padding-right:20px;}
+
+/* body-wrapper */
+#body-wrapper {}
+
+/* Form, form elements */
+form label.control-label {font-weight: 600;}
+form label.control-label.required::after {content: " (*)";color: red;}

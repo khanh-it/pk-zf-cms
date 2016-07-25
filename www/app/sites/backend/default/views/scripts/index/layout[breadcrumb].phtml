@@ -5,6 +5,7 @@
  */
 ?>
 <!-- Breadcrumb -->
+<ol class="breadcrumb">
 <?php 
 	$html = (string)$this->setEscape('trim')->navigation()->breadcrumbs()
         ->setSeparator('</li><li>')
@@ -19,8 +20,9 @@
 	    array('<', '>'), 
 	    $html
     ));
-	echo $html ? "<ol class=\"breadcrumb\"><li>{$html}</li></ol>" : '';
+	echo $html ? "<li>{$html}</li>" : '';
 	// Unset data; 
 	unset($html);
 ?>
+</ol>
 <!-- ./Breadcrumb -->

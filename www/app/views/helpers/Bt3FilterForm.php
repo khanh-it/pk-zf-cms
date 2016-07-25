@@ -60,7 +60,7 @@ class App_View_Helper_Bt3FilterForm extends Zend_View_Helper_Abstract {
             $eleOrder = (int)(PHP_INT_MAX / 2);
             // 
             $elementsLeft->addElement('button', '__btn-submit', array(
-                'label' => '<span class="' . $this->_submitBtnIcon . '"></span>&nbsp;',
+                'label' => '<span class="' . $this->_submitBtnIcon . '"></span>',
                 'attribs' => array(
                     'class' => 'btn-primary',
                     'type' => 'submit',
@@ -69,7 +69,7 @@ class App_View_Helper_Bt3FilterForm extends Zend_View_Helper_Abstract {
                 'order' => --$eleOrder
             ));
             $elementsLeft->addElement('button', '__btn-reset', array(
-                'label' => '<span class="' . $this->_resetBtnIcon . '"></span>&nbsp;',
+                'label' => '<span class="' . $this->_resetBtnIcon . '"></span>',
                 'attribs' => array(
                     'type' => 'reset',
                     'escape' => false

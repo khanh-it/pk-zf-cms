@@ -36,10 +36,19 @@ class K111_Db_Table_Row_BitStat extends K111_Db_Table_Row_Abstract
      * Return bit stat
      * @return array
      */
-    public static function returnBitStats() {
-        return array(
+    public static function returnBitStats(array $options = array()) {
+        $return = array(
             self::STAT_YES => 'Yes',
             self::STAT_NO => 'No'
         );
+		if ($options['prepend_label'] || $options['append_label']) {
+			foreach ($return as $key => $value) {
+				$return[$key] = ($options['prepend_label'] ? "{$options['prepend_label']} " : '') 
+	            	. $value . ($options['append_label'] ? " {$options['append_label']}" : '')
+	            ;
+			}
+		}
+		
+		return $return;
     }
 }

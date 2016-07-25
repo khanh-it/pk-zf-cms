@@ -23,8 +23,8 @@ foreach ($layoutMessages as $message):
         ? 'danger' : (
             (0 === strpos($message, '[warning]'))
             ? 'warning' : (
-                (0 === strpos($message, '[success]'))
-                ? 'success' : 'info'
+                (0 === strpos($message, '[info]'))
+                ? 'info' : 'success'
             )
         )
     ;
