@@ -21,6 +21,107 @@
 	;
 /* ./Filter form */
 
+// Admin panel //
+	$(function(){
+		// Define vars
+		// 
+		var $adminForm = $('#admin-form');
+		// 
+		var $tblDataList = $('#tbl-data-list');
+		// 
+		var $filterForm = $('#filter-form');
+		
+		/**
+		 * Helper: check/uncheck all checkbox elements on ata list table.
+		 */
+		$adminForm.on('click', '#cbk-checkall', function(evt){
+			var $this = $(this), isChecked = $this.is(':checked');
+			//
+			$(this).parents('table').find('> tbody input[type="checkbox"][name^="id"]')
+				.attr('checked', isChecked)
+				.prop('checked', isChecked)
+			;
+		});
+		
+		/**
+		 * Notify, confim when delete data.
+		 */
+		$adminForm
+			.on('click', 'a.mtool-btn-delete_all', function(evt){
+				// preventDefault
+				evt.preventDefault();
+				// 
+				var $ckbEles = $tblDataList.find('> tbody input[type="checkbox"][name^="id"]:checked');
+				// Case: no elements checked. 
+				if (!$ckbEles.length) {
+					swal(
+						$.EVATranslate('Delete confirmation!'),
+						$.EVATranslate('Please check at least one item below!')
+					);
+					return false;
+				}
+				// Case: has elements checked
+				var $this = $(this);
+				swal({
+					title: $.EVATranslate('Delete confirmation!'),
+					text: $.EVATranslate('Do you want to remove the checked item(s)?'),
+					type: "warning",
+					showCancelButton: true,
+					confirmButtonClass: "btn-danger",
+					//confirmButtonText: "Yes, delete it!",
+					closeOnConfirm: false
+				}, function(){
+					// Submit form
+					$adminForm.attr({
+						'action': $this.attr('href')
+					}).submit();
+				});
+			})
+			.on('click', 'a.mtool-btn-delete', function(evt){
+				// preventDefault
+				evt.preventDefault();
+				// Confirm
+				var $this = $(this);
+				swal({
+					title: $.EVATranslate('Delete confirmation!'),
+					text: $.EVATranslate('Do you want to remove the checked item?'),
+					type: "warning",
+					showCancelButton: true,
+					confirmButtonClass: "btn-danger",
+					//confirmButtonText: "Yes, delete it!",
+					closeOnConfirm: false
+				}, function(){
+					// 
+					var ckbSelector = 'input[type="checkbox"][name^="id"]';
+					var $ckbEles = $tblDataList.find('> tbody ' + ckbSelector)
+						.attr('checked', false)
+						.prop('checked', false)
+					;
+					$ckbEles.parents('tr').has($this).find(ckbSelector)
+						.attr('checked', true)
+						.prop('checked', true)
+					;
+					// Submit form
+					$adminForm.attr({
+						'action': $this.attr('href')
+					}).submit();
+				});
+			})
+		;
+		
+		
+		/**
+		 * Helper: reset form's elements values;
+		 */
+		$filterForm.on('click', 'a.mtool-btn-reseter', function(evt){
+			// preventDefault
+			evt.preventDefault();
+			//
+			$(this).parents('form').find('[name]').val('');	
+		});
+	});
+// ./Admin panel.
+
 // Admin form /
 	// Define, get elements 
 	// +++ 
