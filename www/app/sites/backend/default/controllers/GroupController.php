@@ -41,10 +41,6 @@ class GroupController extends K111_Controller_Action
 		// +++ Fill form's data;
 		$vData['form']->populate($params);
 		
-		if ($this->_request->isPost()) {
-			\Zend_Debug::dump($this->_request->getPost());die();
-		}
-	    
 	    // Fetch data;
 	    // +++  
 	    $selector = $this->_repo->buildFetchDataSelector($params);
@@ -310,6 +306,10 @@ class GroupController extends K111_Controller_Action
         );
 		
 		// Redirect
+		if ($_SERVER['HTTP_REFERER']) {
+			header("Location: {$_SERVER['HTTP_REFERER']}");
+			die();
+		}
 		$this->_helper->redirector(
             null,
             $this->_request->getControllerName(),

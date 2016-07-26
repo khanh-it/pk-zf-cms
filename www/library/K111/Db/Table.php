@@ -23,7 +23,6 @@
  */
 class K111_Db_Table extends Zend_Db_Table_Abstract
 {
-
     /**
      * __construct() - For concrete implementation of Zend_Db_Table
      *

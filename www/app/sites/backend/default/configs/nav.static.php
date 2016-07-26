@@ -44,7 +44,7 @@ return array(
                     'label' => '[i class="zmdi zmdi-layers"][/i] [span]Thêm mới[/span]',
                     'module' => 'default',
                     'controller' => 'group',
-                    'action' => 'insert',
+                    'action' => 'create',
                 )
             )
         ),

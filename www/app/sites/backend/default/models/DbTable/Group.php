@@ -24,16 +24,6 @@ class Default_Model_DbTable_Group extends K111_Db_Table
     protected $_rowClass = 'Default_Model_DbTable_Row_Group';
     
     /**
-     * @var int 1 (active yes)
-     */
-    const ACTIVE_YES = 1;
-    /**
-     * @var int 1 (active no)
-     */
-    const ACTIVE_NO = 0;
-    
-    
-    /**
      * Reference map
      */
     protected $_referenceMap = array(
@@ -41,12 +31,21 @@ class Default_Model_DbTable_Group extends K111_Db_Table
             'columns' => 'create_account_id',
             'refTableClass' => 'Default_Model_DbTable_Account',
             'refColumns' => array('id')
+        ),
+        'LastModifier' => array(
+            'columns' => 'last_modified_account_id',
+            'refTableClass' => 'Default_Model_DbTable_Account',
+            'refColumns' => array('id')
         )
     );
 
 // +++ Repo helpers
     /**
-     * 
+     * Build fetch all data selector
+	 * 
+	 * @param array $options An array of options
+	 * @param array $order Order array
+	 * @return Zend_Db_Table_Selector
      */
     public function buildFetchDataSelector(array $options = array(), array $order = array()) {
         // 
@@ -54,7 +53,7 @@ class Default_Model_DbTable_Group extends K111_Db_Table
         
         // Filter data;
         $dbA = $select->getAdapter();
-        // +++ 
+        // +++ keyword
         $options['keyword'] = trim($options['keyword']);
         if ($options['keyword']) {
             $subOrWhere = array(
@@ -65,6 +64,16 @@ class Default_Model_DbTable_Group extends K111_Db_Table
                 ->where(implode(' OR ', $subOrWhere))
                 ->bind(array(
                     'keyword' => "%{$options['keyword']}%"
+                ))
+            ;
+        }
+		// +++ active?
+        $options['active'] = trim($options['active']);
+        if ('' != $options['active']) {
+            $select
+                ->where('active = :active', $options['active'])
+                ->bind(array(
+                    'active' => $options['active']
                 ))
             ;
         }

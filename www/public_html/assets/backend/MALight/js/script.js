@@ -2,7 +2,9 @@
  *
  */
 (function($){
-	
+	/**
+	 * 
+	 */
 	$.simpleTranslate = $.simpleTranslate || function(phrase){
 		return phrase; 
 	};
@@ -25,14 +27,11 @@
 	var $adminForm = $('#admin-form');
 	// +++ 
 	var $tblDataList = $('#tbl-data-list');
-// ./Admin form /
-
 
 	$adminForm
 	// Delete all
 		
 	// ./Delete all
-	
 	
 	
 	// Active/Unactive
@@ -61,7 +60,58 @@
 				//evt.stopPropagation();
 			}
 		})
-	
 	;
+	// ./Active/Unactive
 	
+// ./Admin form /
+	
+// KCFinder //
+	/**
+	 * 
+	 */
+	function openKCFinder_singleFile() {
+		window.KCFinder = {};
+		window.KCFinder.callBack = function(url) {
+			// Actions with url parameter here
+			window.KCFinder = null;
+		};
+		window.open('/assets/backend/MALight/vendors/kcfinder/browse.php', 'kcfinder_single');
+	}
+ 	/**
+	 * 
+	 */
+	function openKCFinder_multipleFiles() {
+		window.KCFinder = {};
+		window.KCFinder.callBackMultiple = function(files) {
+			for (var i; i < files.length; i++) {
+				// Actions with files[i] here
+			}
+			window.KCFinder = null;
+	    };
+		window.open('assets/backend/MALight/vendors/kcfinder/browse.php', 'kcfinder_multiple');
+	}
+	/**
+	 * 
+	 */
+	$(document).on('click', '.kcfinder-picker, .kcfinder-clear', function(evt){
+		//
+		var $this = $(this), 
+			$input = $(this).parent().find('[data-kcfinder]')
+		;
+		// 
+		if ($this.is('.kcfinder-clear')) {
+			$input.val('');
+		// 
+		} else if ($this.is('.kcfinder-picker')) {
+			//KCFinderType
+			if ($input.is('input[type="text"]')) {
+				openKCFinder_singleFile();
+			} else if ($input.is('textarea')) {
+				
+			}
+			$input.val('');
+			
+		} 
+	});
+// ./KCFinder //	
 })(jQuery);

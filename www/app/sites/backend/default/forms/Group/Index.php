@@ -34,17 +34,6 @@ class Default_Form_Group_Index extends Twitter_Bootstrap3_Form_Inline
             'multiOptions' => array('' => $view->translate('- Chọn -')) + Default_Model_DbTable_Row_Group::returnBitStats(),
             'order' => ($eleOrder += 100),
         ));
-        // +++
-        /*$elements[] = */$element = $this->createElement('button', 'btn_submit', array(
-            'label' => '<i class="glyphicon glyphicon-plus-sign"></i> ABC',
-            'attribs' => array(
-                'class' => 'btn-primary',
-                'type' => 'submit',
-                'escape' => false
-            ),
-            'multiOptions' => array('' => $view->translate('- Chọn -')) + Default_Model_DbTable_Row_Group::returnBitStats(),
-            'order' => ($eleOrder += 100),
-        ));
         
         // Add elements
         $this->addElements($elements);
