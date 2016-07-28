@@ -43,6 +43,20 @@ class App_View_Helper_Bt3ManageTools extends Zend_View_Helper_Abstract {
      */
     public static $_urlParamsDelete = array('action' => 'delete',  'id' => '__id__');
 	
+	/**
+	 * Build attributes string from array
+	 * 
+	 * @param $attrs array An array of attributes
+	 * @return string
+	 */
+	protected function _buildAttrStr($attrs) {
+        $str = '';
+        foreach ((array)$attrs as $k => $v) {
+            $str .= " {$k}" . '="' . htmlspecialchars($v) . '"';
+        }
+		return $str;
+	} 
+	
     /**
      * 
      * @return App_View_Helper_Bt3ManageTools
@@ -155,32 +169,37 @@ class App_View_Helper_Bt3ManageTools extends Zend_View_Helper_Abstract {
      * @var string Manage tool's html template
      */
     public static $_mToolActiveTogglerHtml = '<div class="toggle-switch">
-	<input id="mtool-active-{{id}}" type="checkbox" class="hidden" name="active[{{id}}]" value="{{active}}" {{checked}} />
-	<label for="mtool-active-{{id}}" class="ts-helper" {{data-href-attr}}></label>
+	<input id="mtool-active-{{id}}" type="checkbox" class="hidden" name="active[{{id}}]" value="{{active}}" {{checked}} {{disabled}} />
+	<label for="mtool-active-{{id}}" class="ts-helper" {{data-href}}></label>
 </div>';
 	/**
      * Manage tool # active toggler
-     * @param nul|string $href A tag's href
-     * @param nul|string $icon Icon's class
+	 * 
+	 * @param int|string $id Data id
+     * @param int|string $activer Active flag
      * @param array $attrs An array of attrs
      * @return string 
      */
-    public function mToolActiveToggler($id, $active, $href = null, $attrs = array()) {
+    public function mToolActiveToggler($id, $active, $attrs = array()) {
     	// Format data;
-    	// +++ Active
+    	// +++ Active?
     	$active = (1 * $active);
-		$checked = $active ? 'checked="checked"' : ''; 
+		$checked = $active ? 'checked="checked"' : '';
+		// +++ Disabled? 
+		$disabled = is_null($id) ? 'disabled=disabled' : '';
     	// +++ Href
-    	$href = !is_null($href) ? $href : str_replace(
+    	$attrs['data-href'] = !is_null($attrs['data-href']) ? $attrs['data-href'] : str_replace(
     		array('__id__'),
-    		array($id, $active), 
+    		array($id), 
     		$this->view->url(self::$_urlParamsActive)
 		);
-		$href = $href ? "data-href=\"{$href}\"" : '';
+		$attrs['data-href'] = "data-href=\"{$attrs['data-href']}\"";
+		// +++
+		//$attrs = $this->_buildAttrStr($attrs);
         // Return;
         return str_replace(
-    		array('{{id}}', '{{active}}', '{{checked}}', '{{data-href-attr}}'), 
-    		array($id, $active, $checked, $href), 
+    		array('{{id}}', '{{active}}', '{{checked}}', '{{disabled}}', '{{data-href}}'), 
+    		array($id, $active, $checked, $disabled, $attrs['data-href']), 
     		self::$_mToolActiveTogglerHtml
 		);
     }
@@ -201,23 +220,20 @@ class App_View_Helper_Bt3ManageTools extends Zend_View_Helper_Abstract {
         $icon = $attrs['icon'];
         unset($attrs['href'], $attrs['icon']);
         // +++ 
-        $aAttrs = array();
-        foreach ((array)$attrs as $k => $v) {
-            $aAttrs[] = $k . '="' . htmlspecialchars($v) . '"';
-        }
-        
+        $attrs = $this->_buildAttrStr($attrs);
+		
         // Return
         return str_replace(
             array('{{href}}', '{{icon}}', '{{a_attrs}}'), 
-            array($href, $icon, implode(' ', $aAttrs)), 
+            array($href, $icon, $attrs), 
             self::$_mBtnHtml
         ); 
     }
 	
     /**
      * Manage tool # edit
-     * @param nul|string $href A tag's href
-     * @param nul|string $icon Icon's class
+     * @param null|string $href A tag's href
+     * @param null|string $icon Icon's class
      * @param array $attrs An array of attrs
      * @return string 
      */
@@ -234,8 +250,8 @@ class App_View_Helper_Bt3ManageTools extends Zend_View_Helper_Abstract {
     
     /**
      * Manage tool delete
-     * @param nul|string $href A tag's href
-     * @param nul|string $icon Icon's class
+     * @param null|string $href A tag's href
+     * @param null|string $icon Icon's class
      * @param array $attrs An array of attrs
      * @return string
      */
@@ -252,8 +268,8 @@ class App_View_Helper_Bt3ManageTools extends Zend_View_Helper_Abstract {
     
     /**
      * Manage tool detail
-     * @param nul|string $href A tag's href
-     * @param nul|string $icon Icon's class
+     * @param null|string $href A tag's href
+     * @param null|string $icon Icon's class
      * @param array $attrs An array of attrs
      * @return string
      */

@@ -16,6 +16,13 @@ class Default_Form_Account_Crud extends Twitter_Bootstrap3_Form
         
         // Define elements
         $eleOrder = 0; $elements = array();
+		// +++ 
+        $elements[] = $element = $this->createElement('select', 'group_id', array(
+            'label' => $txt = $view->translate('Nhóm tài khoản'),
+			'class' => 'selectpicker',
+			'data-live-search' => 'true',
+            'order' => ($eleOrder += 100),
+        ));
         // +++ 
         $elements[] = $element = $this->createElement('text', 'username', array(
             'label' => $txt = $view->translate('Tên đăng nhập'),
@@ -43,18 +50,18 @@ class Default_Form_Account_Crud extends Twitter_Bootstrap3_Form
             'maxlength' => 250,
             'required' => true,
             'order' => ($eleOrder += 100)
-        ));
+        )); 
 		// +++ 
         $elements[] = $element = $this->createElement('text', 'avatar', array(
             'label' => $txt = $view->translate('Ảnh đại diện'),
             'placeholder' => $txt,
             'attribs' => array(
             	'readonly' => 'readonly',
-            	'data-kcfinder' => 'default.account.avatars'
+            	'data-kcfinder' => Default_Model_DbTable_Account::AVATAR_FOLDER
 			),
             'order' => ($eleOrder += 100),
             'addon_prepend' => FORM_HTML_KCFINDER_PICKER,
-            'addon_append' => FORM_HTML_KCFINDER_CLEAR
+            'addon_append' => FORM_HTML_KCFINDER_REMOVE
         ));
         // +++ 
         $elements[] = $element = $this->createElement('textarea', 'note', array(

@@ -8,15 +8,23 @@ class Default_Model_DbTable_Row_Group extends K111_Db_Table_Row_BitStat
     /**
      * @var string A built-in group code
      */
-    const BIG_ADMIN = 'ADMIN';
+    const BUILT_IN_ADMIN = 'ADMIN';
     /**
-     * @var array An array of built-in groups
+     * @var array An array of built-in groups code
      */
-    public static function returnBuiltInGroups() {
+    public static function returnBuiltInGroupsCode() {
         return array(
-            self::BIG_ADMIN 
+            self::BUILT_IN_ADMIN
         );
     }
+	/**
+	 * Check if this current row (group) is built-in group? 
+	 * @return bool
+	 */
+	public function isBuiltInGroup() {
+		// Return
+		return in_array($this->code, self::returnBuiltInGroupsCode());
+	}
     
 	/**
 	 * Initialize object

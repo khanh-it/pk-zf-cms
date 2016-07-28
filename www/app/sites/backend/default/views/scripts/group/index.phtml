@@ -42,17 +42,61 @@ $this->Bt3NavLinks(array(
 				</tr>
             </thead>
             <tbody>
-        <?php
-            if ($totalItemsCount):
-				// Manage tools 
-				$manageBtnLinks = array(
-					'detail' => $this->Bt3ManageTools()->mBtnDetail(),
-					'edit' => $this->Bt3ManageTools()->mBtnEdit(),
-					'delete' => $this->Bt3ManageTools()->mBtnDelete(),
-				);
-                //
+		<?php
+			// Manage tools 
+			$manageBtnLinks = array(
+				'detail' => $this->Bt3ManageTools()->mBtnDetail(),
+				'edit' => $this->Bt3ManageTools()->mBtnEdit(),
+				'delete' => $this->Bt3ManageTools()->mBtnDelete(),
+			);
+			
+		// Built-in groups //
+            if (!empty($this->builtInGroups)):
+		?>
+				<tr>
+					<td colspan="100">
+						<h4 class="clearfix"><span class="label label-info">
+							<?php echo $this->translate('Nhóm tài khoản hệ thống'); ?>:
+						</span></h4>
+					</td>
+				</tr>
+		<?php
+                // No
                 $no = 0;
-                //
+                // Loop
+                foreach ($this->builtInGroups as $item):
+        ?>
+        		<tr>
+					<td align="center" class="nowrap"><?php echo ++$no; ?></td>
+					<td align="center" class="text-center"></td>
+					<td><?php echo $item->code; ?></td>
+					<td><?php echo $item->name; ?></td>
+					<td><?php echo $item->note; ?></td>
+					<td align="center" class="nowrap">
+						<?php echo $this->Bt3ManageTools()->mToolActiveToggler(null, $item->active); ?>
+					</td>
+					<td class="nowrap">
+					<?php
+						$manageBtns = array(
+							'__detail_' => str_replace(array('__id__'), array($item->id), $manageBtnLinks['detail']),
+						);
+						echo implode("\n", $manageBtns);
+					?>
+					</td>
+				</tr>
+        <?php
+        			unset($item);
+        		endforeach;
+		?>
+			<tr><td colspan="100"><hr style="margin:0;"/></td></tr>
+		<?php
+			endif;
+        // ./Built-in groups //
+        	
+            if ($totalItemsCount):
+                // No
+                $no = 0;
+                // Loop
                 foreach ($this->paginator as $item):
         ?>
 				<tr>

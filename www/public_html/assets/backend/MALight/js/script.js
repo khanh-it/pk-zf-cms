@@ -119,9 +119,7 @@
 			//
 			$(this).parents('form').find('[name]').val('');	
 		});
-	});
-// ./Admin panel.
-
+		
 // Admin form /
 	// Define, get elements 
 	// +++ 
@@ -165,54 +163,68 @@
 	// ./Active/Unactive
 	
 // ./Admin form /
+	});
+// ./Admin panel.
 	
 // KCFinder //
+	// @var KCFinder library path 
+	var KCFinderLibraryPath = '/assets/backend/MALight/vendors/kcfinder/browse.php';
 	/**
-	 * 
+	 * Open KCFinder library
+	 * @param type {String} Sub folder name, used to store files...
+	 * @param cb {Function} A callback funciton
+	 * @param isMulti {Boolean} Flag is pick multi files?
+	 * @return void
 	 */
-	function openKCFinder_singleFile() {
+	var openKCFinder = function openKCFinder(type, cb, isMulti) {
 		window.KCFinder = {};
-		window.KCFinder.callBack = function(url) {
-			// Actions with url parameter here
+		window.KCFinder[
+			isMulti ? 'callBackMultiple' : 'callBack'
+		] = function(files) {
+			// Format data
+			files = ('string' == typeof files) ? [files] : $.makeArray(files);
+			// Actions with url parameter here 
+			(cb || $.noop())(files);
+			// Clear memory
 			window.KCFinder = null;
 		};
-		window.open('/assets/backend/MALight/vendors/kcfinder/browse.php', 'kcfinder_single');
-	}
- 	/**
-	 * 
-	 */
-	function openKCFinder_multipleFiles() {
-		window.KCFinder = {};
-		window.KCFinder.callBackMultiple = function(files) {
-			for (var i; i < files.length; i++) {
-				// Actions with files[i] here
-			}
-			window.KCFinder = null;
-	    };
-		window.open('assets/backend/MALight/vendors/kcfinder/browse.php', 'kcfinder_multiple');
-	}
+		window.open(
+			KCFinderLibraryPath + '?_KCFinderType=' + type, '_blank', 
+			'fullscreen=0,width=640,height=480,top=10,left=10,location=0,menubar=0,resizable=1,scrollbars=1,status=0,titlebar=0,toolbar=0'
+		);
+	};
 	/**
-	 * 
+	 * Help auto pick files using kcfinder for input, textarea elements
 	 */
-	$(document).on('click', '.kcfinder-picker, .kcfinder-clear', function(evt){
-		//
-		var $this = $(this), 
-			$input = $(this).parent().find('[data-kcfinder]')
-		;
-		// 
-		if ($this.is('.kcfinder-clear')) {
-			$input.val('');
-		// 
-		} else if ($this.is('.kcfinder-picker')) {
-			//KCFinderType
-			if ($input.is('input[type="text"]')) {
-				openKCFinder_singleFile();
-			} else if ($input.is('textarea')) {
-				
+	$(document).on('click', '.kcfinder-picker, .kcfinder-remove', function(evt){
+		// Prevent default;
+		evt.preventDefault();
+		// Define vars, get elements
+		var $this = $(this), $parent = $this, $input;
+		for (var i = 1; i <= 3; i++) {
+			$input = ($parent = $parent.parent()).find('input[data-kcfinder], textarea[data-kcfinder]').eq(0);
+			if ($input.length) { break; }
+		}
+		if ($input.length) {
+			var isRemove = $this.is('.kcfinder-remove'), 
+				isMulti = $input.is('textarea')
+			;
+			// Case: remove
+			if (isRemove) {
+				$input.val('');
+			// Case: pick file(s)
+			} else {
+				// Open KCFinder, get files...
+				var type = $input.data('kcfinder');
+				openKCFinder($input.data('kcfinder'), function(files){
+					// set values...
+					files = $.map(files, function(file){
+						return file.substr(file.indexOf(type) + type.length);
+					});
+					$input.val(isMulti ? files.join('\n') : files.pop());
+				}, isMulti);
 			}
-			$input.val('');
-			
-		} 
+		}
 	});
 // ./KCFinder //	
 })(jQuery);

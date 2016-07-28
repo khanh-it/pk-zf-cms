@@ -21,3 +21,15 @@ $this->Bt3NavLinks(array(
 	?>
 	</div>
 </div>
+<?php
+// CSS:
+// +++ Inline style;
+$this->HeadStyleAction($this->curRequest, null, array(
+	'action' => 'crud'
+));
+
+// CSS:
+// +++ Inline script;
+$this->HeadScriptAction($this->curRequest, null, array(
+	'action' => 'crud'
+));

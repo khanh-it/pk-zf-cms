@@ -42,6 +42,9 @@ class GroupController extends K111_Controller_Action
 		$vData['form']->populate($params);
 		
 	    // Fetch data;
+	    // +++ Bult-in groups
+	    $vData['builtInGroups'] = $this->_repo->fetchBuiltInGroups();
+		  
 	    // +++  
 	    $selector = $this->_repo->buildFetchDataSelector($params);
 	    // +++ Paaginator
@@ -70,7 +73,7 @@ class GroupController extends K111_Controller_Action
 		
 		// Check data valid?
 		if (!$entity) {
-			throw new Exception($this->view->translate('Data not found'), 500);
+			throw new Exception($this->view->translate('Data not found!'), 500);
 		}
 		
 		try {
@@ -143,7 +146,7 @@ class GroupController extends K111_Controller_Action
     	            $entity = $entity ?: $this->_repo->fetchNew();
     	            // Fill entity data 
     	            $entity->setFromArray(array_merge($formValues,
-    	            	('update' == $options['act'])
+    	            	$options['isActUpdate']
 					// +++ Case: update
 						? array(
 							'last_modified_account_id' => $this->_authIdentity->id,
@@ -212,8 +215,8 @@ class GroupController extends K111_Controller_Action
 	    // +++ Controller options
 	    	'contOpts' => $options
 		)));
-		// +++ 
-		$this->renderScript('group/crud.phtml');
+		// +++ Render script
+		$this->renderScript($this->_request->getControllerName() . '/crud.phtml');
 	}
 	
 	/**
@@ -240,7 +243,10 @@ class GroupController extends K111_Controller_Action
 		
 		// Check data valid?
 		if (!$entity) {
-			throw new Exception($this->view->translate('Data not found'), 500);
+			throw new Exception($this->view->translate('Data not found!'), 500);
+		}
+		if ($entity->isBuiltInGroup()) {
+			throw new Exception($this->view->translate('Edit built-in group is not allowed!'), 500);
 		}
 		
 		// Forward request;
@@ -265,7 +271,7 @@ class GroupController extends K111_Controller_Action
 		
 		// Check data valid?
 		if (!$entity) {
-			throw new Exception($this->view->translate('Data not found'), 500);
+			throw new Exception($this->view->translate('Data not found!'), 500);
 		}
 		
 		// Forward request;
@@ -291,7 +297,15 @@ class GroupController extends K111_Controller_Action
 		
 		// Check data valid?
 		if (empty($entities)) {
-			throw new Exception($this->view->translate('Data not found'), 500);
+			throw new Exception($this->view->translate('Data not found!'), 500);
+		}
+		foreach ($entities as $key => $entity) {
+			if ($entity->isBuiltInGroup()) {
+				unset($entities[$key]);
+			}
+		}
+		if (count($id) != count($entities)) {
+			throw new Exception($this->view->translate('Data count not matched!'), 500);
 		}
 		
 		// Loop, delete data;

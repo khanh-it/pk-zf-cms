@@ -41,6 +41,27 @@ class Default_Model_DbTable_Account extends K111_Db_Table
             'refColumns' => array('id')
         )
     );
+	
+	/**
+	 * Base folder, used to store account's avatar
+	 */
+	const AVATAR_FOLDER = 'default.account.avatars';
+	
+	/**
+	 * Return account's avatar uploaded web path
+	 * 
+	 * @param $avatar string Account's avatar
+	 * @return string
+	 */
+	public static function returnAvatarWebPath($avatar) {
+		if ($avatar) {
+			// Get K111_AssetsFinder;
+			$assetsFinder = K111_AssetsFinder::getInstance();
+			// +++ 
+			$avatar = $assetsFinder->uploadFiles(self::AVATAR_FOLDER . $avatar);
+		}
+		return $avatar;
+	}
 
 // +++ Repo helpers
     /**
@@ -70,6 +91,13 @@ class Default_Model_DbTable_Account extends K111_Db_Table
                 ))
             ;
         }
+		// +++ group?
+        $options['group_id'] = array_filter((array)($options['group_id']));
+        if (!empty($options['group_id'])) {
+            $select
+                ->where('group_id IN (?)', $options['group_id'])
+            ;
+        }
 		// +++ active?
         $options['active'] = trim($options['active']);
         if ('' != $options['active']) {
@@ -93,13 +121,13 @@ class Default_Model_DbTable_Account extends K111_Db_Table
 	 * @return bool
 	 */
 	public function checkExistsByUsername($username, array $options = array()) {
-		//
+		// Where
 		$where = array(
         	'username = ?' => $username
 		);
 		// +++ 
 		$options['exclude_id'] = array_filter((array)$options['exclude_id']);
-		if ($options['exclude_id']) {
+		if (!empty($options['exclude_id'])) {
 			$where['id NOT IN (?)'] = $options['exclude_id'];
 		}
 		

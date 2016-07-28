@@ -10,6 +10,11 @@ class AccountController extends K111_Controller_Action
 	 * @var Default_Model_DbTable_Account
 	 */ 
 	protected $_repo;
+	
+	/**
+	 * @var Default_Model_DbTable_Group
+	 */ 
+	protected $_repoGroup;
 		
     /**
      * (non-PHPdoc)
@@ -20,6 +25,8 @@ class AccountController extends K111_Controller_Action
 		/* Initialize action controller here */
 		// +++ Entity's repo;
 		$this->_repo = new Default_Model_DbTable_Account();
+		// +++ Entity's repo;
+		$this->_repoGroup = new Default_Model_DbTable_Group();
 	}
 	
 	/**
@@ -52,9 +59,13 @@ class AccountController extends K111_Controller_Action
 	    if ($this->_request->isPost()) {
 	        // Get post data;
 	        $postData = $this->_request->getPost();
+			
+			// Security
+			$security = $_SESSION['security'];
+			unset($_SESSION['security']);
 	        
 	        // Check data's validation
-	        if (($securityMatched = ($postData['security'] == $_SESSION['security'])) // security
+	        if (($securityMatched = ($postData['security'] == $security)) // security
 	            && ($postData['username'] = trim(strip_tags($postData['username']))) // username
 	            && ($postData['password'] = trim(strip_tags($postData['password']))) // password
             ) {
@@ -64,12 +75,12 @@ class AccountController extends K111_Controller_Action
                 $zAuthAdapterDbTable = new Zend_Auth_Adapter_DbTable();
                 // Get authenticate result. 
                 $zAuthResult = $zAuthAdapterDbTable
-                    ->setTableName(Default_Model_DbTable_Account::TBL_NAME)
+                    ->setTableName($this->_repo->getName())
                     ->setIdentityColumn('username')
                     ->setIdentity($postData['username'])
                     ->setCredentialColumn('password')
                     ->setCredential($postData['password'])
-                    ->setCredentialTreatment('MD5(?) AND `active` = ' . Default_Model_DbTable_Account::ACTIVE_YES)
+                    ->setCredentialTreatment('MD5(?) AND `active` = ' . Default_Model_DbTable_Row_Account::STAT_YES)
                     ->authenticate()
                 ;
                 // Check authenticate result
@@ -173,10 +184,20 @@ class AccountController extends K111_Controller_Action
 	    
 	    // Define var # view's data;
 	    $vData = array();
+		
+		// Fetch relative data
+		// +++ Group
+		$vData['groupOptions'] = (array)$this->_repoGroup->fetchOptions(array(
+			'include_code' => true
+		));
 	     
 	    // Define var # form;
-	    $vData['form'] = $form = new Default_Form_Group_Index();
-		// +++ 
+	    $vData['form'] = $form = new Default_Form_Account_Index();
+		// +++ Fill form's elemnents data
+		// +++ +++ Group
+		$form->group_id && $form->group_id->setMultiOptions(
+			array('' => LANG_SELECT) + $vData['groupOptions']
+		); 
 		
 		// +++ Fill form's data;
 		$vData['form']->populate($params);
@@ -245,9 +266,20 @@ class AccountController extends K111_Controller_Action
 		
 	    // Define var # view's data;
 	    $vData = array();
+		
+		// Fetch relative data
+		// +++ Group
+		$vData['groupOptions'] = (array)$this->_repoGroup->fetchOptions(array(
+			'include_code' => true
+		));
 	    
 	    // Define var # form;
 	    $vData['form'] = $form = new Default_Form_Account_Crud();
+		// +++ Fill form's elemnents data
+		// +++ +++ Group
+		$form->group_id && $form->group_id->setMultiOptions(
+			array('' => LANG_SELECT) + $vData['groupOptions']
+		);
 		// +++ Disable elements on detail mode
 		if ($options['isActDetail']) {
 			foreach ($form->getElements() as $ele) {
@@ -265,15 +297,15 @@ class AccountController extends K111_Controller_Action
 	        if ($form->isValid($postData)) {
 	        	// Get form data;
 	            $formValues = $form->getValues();
-	        	
+				
     	        // Check duplicate code!
-    	        $dataExists = $this->_repo->checkExistsByUsername($formValues['code'], array(
+    	        $dataExists = $this->_repo->checkExistsByUsername($formValues['username'], array(
     	        	'exclude_id' => array($entity->id) 
 				)); 
                 if ($dataExists) {
     	            $form
-    	               ->getElement('code')
-    	                   ->addError($txt = $this->view->translate('Mã nhóm tài khoản đã tồn tại!'))
+    	               ->getElement('username')
+    	                   ->addError($txt = $this->view->translate('Tên đăng nhập đã tồn tại!'))
     	            ;
                 }
 	            
@@ -283,7 +315,7 @@ class AccountController extends K111_Controller_Action
     	            $entity = $entity ?: $this->_repo->fetchNew();
     	            // Fill entity data 
     	            $entity->setFromArray(array_merge($formValues,
-    	            	('update' == $options['act'])
+    	            	$options['isActUpdate']
 					// +++ Case: update
 						? array(
 							'last_modified_account_id' => $this->_authIdentity->id,
@@ -352,8 +384,8 @@ class AccountController extends K111_Controller_Action
 	    // +++ Controller options
 	    	'contOpts' => $options
 		)));
-		// +++ 
-		$this->renderScript('group/crud.phtml');
+		// +++ Render script
+		$this->renderScript($this->_request->getControllerName() . '/crud.phtml');
 	}
 	
 	/**

@@ -27,6 +27,15 @@ class Default_Form_Account_Index extends Twitter_Bootstrap3_Form_Inline
             'placeholder' => $txt,
             'order' => ($eleOrder += 100),
         ));
+		// +++ 
+        $elements[] = $element = $this->createElement('select', 'group_id', array(
+            'label' => $txt = $view->translate('Nhóm tài khoản'),
+            'addon_prepend' => $txt,
+            'class' => 'selectpicker',
+            'data-live-search' => 'true',
+            'style' => 'min-width: 200px;',
+            'order' => ($eleOrder += 100),
+        ));
         // +++ 
         $elements[] = $element = $this->createElement('select', 'active', array(
             'label' => $txt = $view->translate('Kích hoạt?'),

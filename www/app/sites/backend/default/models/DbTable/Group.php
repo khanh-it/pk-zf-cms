@@ -49,7 +49,9 @@ class Default_Model_DbTable_Group extends K111_Db_Table
      */
     public function buildFetchDataSelector(array $options = array(), array $order = array()) {
         // 
-        $select = $this->select();
+        $select = $this->select()
+			->from($this->_name)
+		;
         
         // Filter data;
         $dbA = $select->getAdapter();
@@ -65,6 +67,13 @@ class Default_Model_DbTable_Group extends K111_Db_Table
                 ->bind(array(
                     'keyword' => "%{$options['keyword']}%"
                 ))
+            ;
+        }
+		// +++ code?
+		$options['code'] = array_filter((array)($options['code']));
+        if (!empty($options['code'])) {
+            $select
+                ->where('code IN (?)', $options['code'])
             ;
         }
 		// +++ active?
@@ -90,18 +99,60 @@ class Default_Model_DbTable_Group extends K111_Db_Table
 	 * @return bool
 	 */
 	public function checkExistsByCode($code, array $options = array()) {
-		//
+		// Where
 		$where = array(
         	'code = ?' => $code
 		);
 		// +++ 
 		$options['exclude_id'] = array_filter((array)$options['exclude_id']);
-		if ($options['exclude_id']) {
+		if (!empty($options['exclude_id'])) {
 			$where['id NOT IN (?)'] = $options['exclude_id'];
 		}
 		
 		// Return;
 		return !!$this->fetchRow($where);
+	}
+	
+	/**
+	 * Fetch all built in groups
+	 * 
+	 * @return array
+	 */
+	public function fetchBuiltInGroups() {
+		// Where?
+		$where = array(
+        	'code IN (?)' => Default_Model_DbTable_Row_Group::returnBuiltInGroupsCode()
+		);
+		
+		// Return;
+		return $this->fetchAll($where);
+	}
+	
+	/**
+	 * Fetch options
+	 * 
+	 * @return array
+	 */
+	public function fetchOptions(array $options = array(), array $order = array()) {
+		// Call helper, build selector
+		$selector = $this->buildFetchDataSelector($options, $order);
+		// +++ Reset query parts, re init
+		$selector
+			->reset(Zend_Db_Select::COLUMNS)
+			->columns(array(
+				'id', 
+				is_null($options['include_code']) ? 'name'
+				: (true === $options['include_code']
+					? 'CONCAT(name, " [", code, "]")'
+					: 'CONCAT("[", code, "] ", name)'
+				)
+			))
+		;
+		// Fetch data
+		$return = $this->getAdapter()->fetchPairs($selector);
+		
+		// Return;
+		return $return;
 	}
 // +++ End.Repo helpers
 }

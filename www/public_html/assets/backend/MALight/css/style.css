@@ -6,6 +6,12 @@ body {font-family: Tahoma,Helvetica Neue,Helvetica,Arial,sans-serif, sans-serif;
 .breadcrumb {margin-bottom: 20px;}
 /* +++ toolbars */
 .block-header .actions>li>a {width: auto;height: auto;}
+/* +++ image thumb */
+img.img-thumb {}
+img.img-thumb-16 {max-width: 16px}
+img.img-thumb-24 {max-width: 24px}
+img.img-thumb-32 {max-width: 32px}
+img.img-thumb-64 {max-width: 64px}
 
 /* +++ MA overwrites */
 .checkbox {margin: 0px;}
@@ -19,3 +25,7 @@ body {font-family: Tahoma,Helvetica Neue,Helvetica,Arial,sans-serif, sans-serif;
 /* Form, form elements */
 form label.control-label {font-weight: 600;}
 form label.control-label.required::after {content: " (*)";color: red;}
+
+/* +++ bootstrap-select */
+.bootstrap-select {min-width: 100px}
+.bootstrap-select select {visibility: hidden;display: none;}

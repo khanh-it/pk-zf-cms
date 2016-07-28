@@ -50,7 +50,7 @@ class K111_Db_Table_Row_Abstract extends Zend_Db_Table_Row_Abstract
      */
     public function __set($columnName, $value)
     {
-        $funcName = 'get' . ucfirst($columnName);
+        $funcName = 'set' . ucfirst($columnName);
         if (method_exists($this, $funcName)) {
             return $this->{$funcName}($value);
         }

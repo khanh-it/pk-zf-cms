@@ -57,6 +57,26 @@ class K111_Db_Table extends Zend_Db_Table_Abstract
 
         parent::__construct($config);
     }
+
+	/**
+     * Returns table name
+     * 
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->_name;
+    }
+	
+	/**
+     * Returns table primary key(s)
+     * 
+     * @return string|array
+     */
+    public function getPrimary()
+    {
+        return $this->_primary;
+    }
     
     /**
      * Returns a normalized version of the reference map
