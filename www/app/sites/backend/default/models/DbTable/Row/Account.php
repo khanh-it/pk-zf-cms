@@ -6,13 +6,25 @@
 class Default_Model_DbTable_Row_Account extends K111_Db_Table_Row_BitStat
 {
 	/**
+	 * Encode password
+	 * @param $password string Password
+	 * @return this
+	 */
+	public function setPassword($password) {
+		// Format input
+		$this->modifyData('password', md5($password));
+
+		return $this;
+	}
+	
+	/**
 	 * Check group_id data valid?
 	 * @param $groupId int|string Group id
 	 * @return this
 	 */
 	public function setGroup_id($groupId) {
 		// Format input
-		$this->group_id = ('' == (string)$groupId) ? null : $groupId;
+		$this->modifyData('group_id', ('' == (string)$groupId) ? null : $groupId);
 
 		return $this;
 	}
@@ -35,8 +47,10 @@ class Default_Model_DbTable_Row_Account extends K111_Db_Table_Row_BitStat
 	public function init()
 	{
 	    // Set default data
-	    // +++ 
-	    $date = new DateTime();
-	    $this->created_time = $date->format('Y-m-d H:i:s');
+	    if ($this->isClean()) {
+		    // +++ 
+		    $date = new DateTime();
+		    $this->created_time = $date->format('Y-m-d H:i:s');
+		}
 	}
 }

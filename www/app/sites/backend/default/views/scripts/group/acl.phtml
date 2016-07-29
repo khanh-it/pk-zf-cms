@@ -1,0 +1,159 @@
+<?php
+/**
+ * Script view: acl 
+ * @author khanhdtp
+ */
+// Get Zend_Controller_Front;
+$front = Zend_Controller_Front::getInstance();
+
+// Toolbars
+$this->Bt3NavLinks(array(
+    $this->Bt3NavLinks()->iconApply(),
+    $this->Bt3NavLinks()->iconSaveAndClose(),
+    $this->Bt3NavLinks()->iconClose()
+));
+?>
+<div class="card">
+	<!-- card-header -->
+	<div class="card-header">
+		<form id="filter-form" enctype="application/x-www-form-urlencoded" method="get" action="">
+			<h4>
+				<span class="label label-info">
+					<?php echo $this->translate('Nhóm tài khoản'); ?>:
+				</span>&nbsp;
+				<span class="label label-danger">
+					<?php echo "[{$this->entity->code}] {$this->entity->name}"; ?>
+				</span>
+			</h4>
+			<div class="input-group" style="width: 100%;">
+				<span class="input-group-addon">
+					<h4><span class="label label-info">
+						<?php echo $this->translate('Site'); ?>:
+					</span></h4>
+				</span>
+				<div class="clearfix" style="padding: 5px 0;">
+					<?php
+						echo $this->formSelect('site', $_GET['site'], array(
+							'class' => 'form-control selectpicker show-tick'
+						), (array)$this->listSiteOpts);
+					?>
+				</div>
+				<span class="input-group-addon" style="padding:3px;">
+					<button class="btn btn-primary">Submit</button>
+				</span>
+			</div>
+		</form>
+	</div>
+	<!-- ./card-header -->
+	<form id="admin-form" class="table-responsive" enctype="application/x-www-form-urlencoded" method="post" action="">
+		<table id="tbl-data-list" class="table table-bordered table-condensed table-hover">
+            <thead>
+                <tr>
+					<th width="10">#</th>
+					<th width="10" class="text-center">
+						<?php echo $this->Bt3ManageTools()->mToolCheckerToggler(); ?>
+					</th>
+					<th><?php echo $this->translate('Module / Controller / Action'); ?></th>
+					<th><?php echo $this->translate('Ghi chú'); ?></th>
+					<th width="10">
+						<abbr title="<?php echo $this->translate('Quản lý'); ?>">
+							<?php echo $this->translate('Q.Lý?'); ?>
+						</abbr>
+					</th>
+				</tr>
+            </thead>
+            <tbody>
+		<?php
+			// Manage tools 
+			$manageBtnLinks = array(
+			);
+			
+        	// 
+            if (!empty($this->arrMCA['module'])):
+                // No
+                $noModule = 0;
+                // Module //
+                foreach ((array)$this->arrMCA['module'] as $moduleKey => $moduleInfo):
+		?>
+				<tr class="module">
+					<td align="center" class="text-nowrap"><?php echo ++$noModule; ?></td>
+					<td colspan="2">
+						Module: [<?php echo $moduleKey; ?>] <?php echo $moduleInfo['name']; ?>
+					</td>
+					<td><?php echo $moduleInfo['note']; ?></td>
+					<td class="text-nowrap">
+					</td>
+				</tr>
+		<?php
+					// Controller //
+					$noController = 0;
+					// 
+					foreach ((array)$this->arrMCA['controller'][$moduleKey] as $controllerKey => $controllerInfo):
+		?>
+				<tr class="controller">
+					<td align="center" class="text-nowrap"><?php echo "{$noModule}." . ++$noController; ?></td>
+					<td colspan="2">
+						<div class="m-l-10">
+							Controller: [<?php echo $controllerKey; ?>] <?php echo $controllerInfo['name']; ?>
+						</div>
+					</td>
+					<td><?php echo $controllerInfo['note']; ?></td>
+					<td class="text-nowrap">
+					</td>
+				</tr>
+		<?php
+						
+						// Action //
+						$noAction = 0;
+						// +++ 
+						foreach ((array)$this->arrMCA['action'][$moduleKey][$controllerKey] as $actionKey => $actionInfo):
+							//
+							$MCAKey = ACL::compileMCAKey($moduleKey, $controllerKey, $actionKey);
+							// Action checker attrs
+							$actionAttrs = array();
+							// +++ Is checked?
+							if (!is_null($this->aclData[$MCAKey])) {
+								$actionAttrs['checked'] = 'checked';
+							}
+							
+		?>
+				<tr class="action">
+					<td align="center" class="text-nowrap"><?php echo "{$noModule}.{$noController}." . ++$noAction; ?></td>
+					<td align="center" class="text-center">
+						<?php echo $this->Bt3ManageTools()->mToolChecker($MCAKey, $actionAttrs); ?>
+					</td>
+					<td>
+						 [<?php echo $actionKey; ?>] <?php echo $actionInfo['name']; ?>
+					</td>
+					<td><?php echo $actionInfo['note']; ?></td>
+					<td class="text-nowrap">
+					</td>
+				</tr>
+		<?php
+						endforeach;
+						// ./Action //
+					
+					endforeach;
+					// ./Controller //
+				
+				endforeach;
+			else:
+			// ./Module //
+		?>
+				<tr>
+					<td colspan="100"><?php echo $this->translate('Vui lòng chọn `site`.'); ?></td>
+				</tr>
+				<tr><td colspan="100"></td></tr>
+		<?php endif; ?>
+			</tbody>
+		</table>
+	</form>
+</div>
+<?php
+// CSS:
+// +++ Inline style;
+$this->HeadStyleAction($this->curRequest);
+
+// CSS:
+// +++ Inline script;
+$this->HeadScriptAction($this->curRequest);

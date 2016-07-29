@@ -1,6 +1,9 @@
 <?php
 // application/controllers/ErrorController.php
  
+/**
+ * 
+ */
 class ErrorController extends Zend_Controller_Action
 {
  
@@ -8,7 +11,9 @@ class ErrorController extends Zend_Controller_Action
     {
     	//
     	$this->_helper->layout->disableLayout(true);
-    	
+		
+		$accessDenied = $this->_request->getParam('access-denied');
+		
         $errors = $this->_getParam('error_handler');
  
         switch ($errors->type) {
@@ -27,7 +32,18 @@ class ErrorController extends Zend_Controller_Action
                 break;
         }
  
-        $this->view->exception = $errors->exception;
-        $this->view->request   = $errors->request;
+        $this->view->exception 		= $errors->exception;
+        $this->view->request   		= $errors->request;
+		$this->view->accessDenied   = $accessDenied;
     }
+	
+	/**
+	 * 
+	 */
+	public function accessDeniedAction() {
+		// Flag: access denied
+		$this->_request->setParam('access-denied', true);
+		// Forward request
+		$this->forward('error');
+	}
 }

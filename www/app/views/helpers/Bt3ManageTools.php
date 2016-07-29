@@ -145,7 +145,7 @@ class App_View_Helper_Bt3ManageTools extends Zend_View_Helper_Abstract {
      * @var string
      */
     public static $_mToolCheckerHtml = '<div class="checkbox">
-	<label><input id="{{id}}" name="{{name}}" type="checkbox" class="{{class}}" value="{{value}}" />
+	<label><input type="checkbox" {{attrs}}/>
 	<i class="input-helper"></i></label>
 </div>';
 	/**
@@ -153,14 +153,17 @@ class App_View_Helper_Bt3ManageTools extends Zend_View_Helper_Abstract {
 	 * @return string
 	 */
 	public function mToolChecker($value, array $attrs = array()) {
+		// Format inputs;
+		// +++ 
+		$attrs['value'] = $attrs['value'] ?: $value;
+		// +++ 
+		$attrs['name'] = $attrs['name'] ?: 'id[]';
+		// +++ 
+		$attrs['class'] = "mtool-checker {$attrs['class']}";
+		//
 		return str_replace(
-			array('{{value}}', '{{name}}', '{{id}}', '{{class}}'), 
-			array(
-				htmlspecialchars($value ? $value : $attrs['value']),
-				htmlspecialchars($attrs['name'] ? $attrs['name'] : 'id[]'),
-				htmlspecialchars($attrs['id']),
-				'mtool-checker ' . htmlspecialchars($attrs['class'])
-			), 
+			array('{{attrs}}'), 
+			array($this->_buildAttrStr($attrs)), 
 			self::$_mToolCheckerHtml
 		);
 	}
@@ -216,8 +219,9 @@ class App_View_Helper_Bt3ManageTools extends Zend_View_Helper_Abstract {
      */
     public function mBtn($attrs) {
         // Tag # A;
-        $href = $attrs['href'] ? $attrs['href'] : 'javascript:void(0);';
+        $href = $attrs['href'] ?: 'javascript:void(0);';
         $icon = $attrs['icon'];
+		$attrs['class'] = $attrs['class'] ?: 'btn btn-default btn-sm waves-effect';
         unset($attrs['href'], $attrs['icon']);
         // +++ 
         $attrs = $this->_buildAttrStr($attrs);

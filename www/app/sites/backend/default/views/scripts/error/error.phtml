@@ -9,10 +9,12 @@
 <body>
   <h1>An error occurred</h1>
   <h2><?php echo $this->message ?></h2>
- 
-  <?php //if ('development' == $this->env): ?>
- 
   <h3>Exception information:</h3>
+  <?php
+  	if ($this->accessDenied):
+  ?>
+  <div>Access denined</div>
+  <?php else: ?>
   <p>
       <b>Message:</b> <?php echo $this->exception->getMessage() ?>
   </p>
@@ -24,7 +26,6 @@
   <h3>Request Parameters:</h3>
   <pre><?php echo var_export($this->request->getParams(), 1) ?>
   </pre>
-  <?php //endif ?>
- 
+  <?php endif ?>
 </body>
 </html>

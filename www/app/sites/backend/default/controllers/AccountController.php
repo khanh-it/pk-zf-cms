@@ -106,11 +106,26 @@ class AccountController extends K111_Controller_Action
                         // Account object info from database;
                         $accountResultObject = $zAuthAdapterDbTable->getResultRowObject();
                         // Write a session storage to Zend_Auth;
-                        // +++ 
+                        // +++ Group data 
+						if ($accountResultObject->group_id) {
+							// Fetch group data;
+							$groupEntity = $this->_repoGroup->find($accountResultObject->group_id)->current();
+							if ($groupEntity) {
+								$groupAcl = array();
+								foreach ((array)$groupEntity->getAcl() as $site => $acl) {
+									$groupAcl[$site] = ',' . implode(',', $acl) . ',';
+								}
+								$accountResultObject = (object)array_merge((array)$accountResultObject, array(
+									'group_name' => $groupEntity->name, 'group_acl' => $groupAcl
+								));
+								unset($groupAcl, $site, $acl);
+							}
+						}	
                         // +++ Remember me?
-                        if ($postData['remember']) {
+						if ($postData['remember']) {
                             Zend_Session::rememberMe(2 * 86400); //2 days
                         }
+						// +++ 
                         // +++ 
                         $zAuthStorage = new Zend_Auth_Storage_Session();
                         $zAuthStorage->write($accountResultObject);
@@ -188,7 +203,7 @@ class AccountController extends K111_Controller_Action
 		// Fetch relative data
 		// +++ Group
 		$vData['groupOptions'] = (array)$this->_repoGroup->fetchOptions(array(
-			'include_code' => true
+			//'include_code' => true
 		));
 	     
 	    // Define var # form;
@@ -280,12 +295,18 @@ class AccountController extends K111_Controller_Action
 		$form->group_id && $form->group_id->setMultiOptions(
 			array('' => LANG_SELECT) + $vData['groupOptions']
 		);
-		// +++ Disable elements on detail mode
+		// +++ Change filter, validation coditions on update mode
+		if ($options['isActUpdate']) {
+			$form->password && $form->password->setRequired(false);
+		} 
+		// +++ Modify elements on detail mode
 		if ($options['isActDetail']) {
+			// Disable elements
 			foreach ($form->getElements() as $ele) {
 				$ele->setAttrib('disabled', 'disabled');
-			}
-			unset($ele);
+			} unset($ele);
+			// +++ 
+			$form->password && $form->removeElement('password'); 
 		}
 	    
 	    // Process on POST
@@ -313,7 +334,14 @@ class AccountController extends K111_Controller_Action
 	            if (!$form->hasErrors()) {
 	                // Create new entity (if not any)
     	            $entity = $entity ?: $this->_repo->fetchNew();
-    	            // Fill entity data 
+    	            // Fill entity data
+					// +++ Don't reset password if has no input
+					if ($options['isActUpdate']) {
+						if ('' == (string)$formValues['password']) {
+							unset($formValues['password']);
+						}
+					}
+					// +++ 
     	            $entity->setFromArray(array_merge($formValues,
     	            	$options['isActUpdate']
 					// +++ Case: update
@@ -473,7 +501,7 @@ class AccountController extends K111_Controller_Action
 		
 		// Inform
         $this->_helper->flashMessenger->addMessage(
-            $this->view->translate('Thao tác dữ liệu thành công!'),
+            $this->view->translate('Xóa dữ liệu thành công!'),
             'layout-messages'
         );
 		

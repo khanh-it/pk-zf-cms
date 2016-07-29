@@ -34,11 +34,18 @@ $this->Bt3NavLinks(array(
 					<th width="10" class="text-center">
 						<?php echo $this->Bt3ManageTools()->mToolCheckerToggler(); ?>
 					</th>
-					<th><?php echo $this->Bt3ManageTools()->mToolSorter($this->translate('Mã nhóm tài khoản'), 'code'); ?></th>
-					<th><?php echo $this->Bt3ManageTools()->mToolSorter($this->translate('Tên nhóm tài khoản'), 'name'); ?></th>
+					<th><?php echo $this->Bt3ManageTools()->mToolSorter($this->translate('Nhóm tài khoản'), 'name'); ?></th>
 					<th><?php echo $this->translate('Ghi chú'); ?></th>
-                    <th width="10"><?php echo $this->translate('K.Hoạt?'); ?></th>
-					<th width="10"><?php echo $this->translate('Q.Lý?'); ?></th>
+                    <th width="10">
+                    	<abbr title="<?php echo $this->translate('Kích hoạt?'); ?>">
+                    		<?php echo $this->translate('K.Hoạt?'); ?>
+                    	</abbr>
+                    </th>
+					<th width="10">
+						<abbr title="<?php echo $this->translate('Quản lý'); ?>">
+							<?php echo $this->translate('Q.Lý?'); ?>
+						</abbr>
+					</th>
 				</tr>
             </thead>
             <tbody>
@@ -48,6 +55,10 @@ $this->Bt3NavLinks(array(
 				'detail' => $this->Bt3ManageTools()->mBtnDetail(),
 				'edit' => $this->Bt3ManageTools()->mBtnEdit(),
 				'delete' => $this->Bt3ManageTools()->mBtnDelete(),
+				'acl' => $this->Bt3ManageTools()->mBtn(array(
+					'icon' => 'glyphicon glyphicon-list-alt',
+					'href' => $this->url(array('action' => 'acl', 'id' => '__id__'), 'default'),
+				)),
 			);
 			
 		// Built-in groups //
@@ -67,17 +78,20 @@ $this->Bt3NavLinks(array(
                 foreach ($this->builtInGroups as $item):
         ?>
         		<tr>
-					<td align="center" class="nowrap"><?php echo ++$no; ?></td>
+					<td align="center" class="text-nowrap"><?php echo ++$no; ?></td>
 					<td align="center" class="text-center"></td>
-					<td><?php echo $item->code; ?></td>
-					<td><?php echo $item->name; ?></td>
+					<td>
+						<?php echo $item->name; ?><br/>
+						<small class="m-l-5"><abbr title="">[<?php echo $item->code; ?>]</abbr></small>
+					</td>
 					<td><?php echo $item->note; ?></td>
-					<td align="center" class="nowrap">
+					<td align="center" class="text-nowrap">
 						<?php echo $this->Bt3ManageTools()->mToolActiveToggler(null, $item->active); ?>
 					</td>
-					<td class="nowrap">
+					<td class="text-nowrap">
 					<?php
 						$manageBtns = array(
+							'__alc_' => str_replace(array('__id__'), array($item->id), $manageBtnLinks['acl']),
 							'__detail_' => str_replace(array('__id__'), array($item->id), $manageBtnLinks['detail']),
 						);
 						echo implode("\n", $manageBtns);
@@ -100,22 +114,25 @@ $this->Bt3NavLinks(array(
                 foreach ($this->paginator as $item):
         ?>
 				<tr>
-					<td align="center" class="nowrap"><?php echo ++$no; ?></td>
+					<td align="center" class="text-nowrap"><?php echo ++$no; ?></td>
 					<td align="center" class="text-center">
 						<?php echo $this->Bt3ManageTools()->mToolChecker($item->id); ?>
 					</td>
-					<td><?php echo $item->code; ?></td>
-					<td><?php echo $item->name; ?></td>
+					<td>
+						<?php echo $item->name; ?><br/>
+						<small class="m-l-10"><abbr title="">[<?php echo $item->code; ?>]</abbr></small>
+					</td>
 					<td><?php echo $item->note; ?></td>
-					<td align="center" class="nowrap">
+					<td align="center" class="text-nowrap">
 						<?php echo $this->Bt3ManageTools()->mToolActiveToggler($item->id, $item->active); ?>
 					</td>
-					<td class="nowrap">
+					<td class="text-nowrap">
 					<?php
 						$manageBtns = array(
+							'__alc_' => str_replace(array('__id__'), array($item->id), $manageBtnLinks['acl']),
 							'__detail_' => str_replace(array('__id__'), array($item->id), $manageBtnLinks['detail']),
 							'__update_' => str_replace(array('__id__'), array($item->id), $manageBtnLinks['edit']),
-							'__delete_' => str_replace(array('__id__'), array($item->id), $manageBtnLinks['delete'])
+							'__delete_' => str_replace(array('__id__'), array($item->id), $manageBtnLinks['delete']),
 						);
 						echo implode("\n", $manageBtns);
 					?>

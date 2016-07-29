@@ -2,7 +2,10 @@
 /**
  * 
  * @author khanhdtp
- *
+ * @MCAInfo({
+ 	"name": "Group controller",
+	"info": "Group of accounts"
+})
  */
 class GroupController extends K111_Controller_Action
 {
@@ -24,6 +27,11 @@ class GroupController extends K111_Controller_Action
 	
 	/**
 	 * Action: list data;
+	 * @MCAInfo({
+ 			"name" : "Index action",
+			"info" : "List group data"
+		})
+	 * 
 	 * @return void
 	 */
 	public function indexAction()
@@ -282,6 +290,99 @@ class GroupController extends K111_Controller_Action
 	}
 	
 	/**
+	 * Action: acl;
+	 * @return void 
+	 */
+	public function aclAction() 
+	{
+		// Get params
+		// +++ Data ID;
+		$id = $this->_request->getUserParam('id');
+		// +++ 
+		$site = $this->_getParam('site');
+		
+		// Fetch data
+		$entity = $this->_repo->find($id)->current();
+		
+		// Check data valid?
+		if (!$entity) {
+			throw new Exception($this->view->translate('Data not found!'), 500);
+		}
+		
+		// Define vars
+		// +++ 
+		$ACL = new ACL();
+		$vData['arrMCA'] = $ACL->listMCA($site);
+		// +++ 
+		$vData = array();
+		
+		// Call helper get list of site, and format for select options use.
+		$vData['listSiteOpts'] = array(
+			'' => LANG_SELECT
+		);
+		// +++ 
+		foreach ($ACL->listSite() as $siteKey => $siteInfo) {
+			$vData['listSiteOpts'][$siteKey] = "[{$siteKey}] {$siteInfo['name']} ({$siteInfo['info']})";
+		}
+		
+		// Case: user select site
+		$siteInfo = $vData['listSiteOpts'][$site];
+		if ($siteInfo) {
+			// Case: post acl data?
+			if ($this->_request->isPost()) {
+				// Get submit data;
+	        	$postData = $this->_request->getPost();
+				$aclData = (array)$postData['id'];
+				// Set acl data to entity;
+				$entity->setAcl($aclData, $site);
+				// Save data to database
+				$entityId = $entity->save();
+				
+	            // Inform
+	            $this->_helper->flashMessenger->addMessage(
+	                $this->view->translate('Thao tác dữ liệu thành công!'),
+	                'layout-messages'
+                );
+	            
+	            // Redirect
+	            switch ($postData['_act']) {
+	            	// +++ apply
+	                case 'apply' : {
+	                	$url = http_build_query($_GET);
+                        $url = $this->view->url() . ($url ? "?{$url}" : '');
+						// Redirect to home page!
+                        return $this->redirect($url, array(
+                            'prependBase' => false
+                        ));
+	                } break;
+	                // +++ save_n_close
+	                case 'save_n_close' : {
+	                    $this->_helper->redirector(
+	                        null,
+	                        $this->_request->getControllerName(),
+	                        $this->_request->getModuleName(),
+	                        array('id' => null)
+	                    );
+	                } break;
+	            }
+			}
+
+			// Get ACL data (decoded)
+			$vData['aclData'] = $entity->getAcl();
+			$vData['aclData'] = array_flip((array)$vData['aclData'][$site]);
+			
+			// Call method to get list of module/controller/action data;
+			$vData['arrMCA'] = $ACL->listMCA($site);
+		}
+		
+		// Render view
+		// +++ 
+		$vData['entity'] = $entity;
+		// +++ 
+		$this->view->assign($vData);
+	}
+	
+	/**
 	 * Action: delete;
 	 * @return void
 	 */
@@ -315,7 +416,7 @@ class GroupController extends K111_Controller_Action
 		
 		// Inform
         $this->_helper->flashMessenger->addMessage(
-            $this->view->translate('Thao tác dữ liệu thành công!'),
+            $this->view->translate('Xóa dữ liệu thành công!'),
             'layout-messages'
         );
 		

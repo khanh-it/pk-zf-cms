@@ -26,7 +26,7 @@ class App_View_Helper_Bt3FilterForm extends Zend_View_Helper_Abstract {
     /**
      * 
      */
-    protected static $_html = '<div class="clearfix">
+    protected static $_html = '<div id="filter-form-wrapper" class="clearfix">
             <div class="pull-left">__left__</div>
             <div class="pull-right">__right__</div>
         </div>'
@@ -59,23 +59,31 @@ class App_View_Helper_Bt3FilterForm extends Zend_View_Helper_Abstract {
             //  
             $eleOrder = (int)(PHP_INT_MAX / 2);
             // 
-            $elementsLeft->addElement('button', '__btn-submit', array(
-                'label' => '<span class="' . $this->_submitBtnIcon . '"></span>',
-                'attribs' => array(
-                    'class' => 'btn-primary',
-                    'type' => 'submit',
-                    'escape' => false
-                ),
-                'order' => --$eleOrder
-            ));
-            $elementsLeft->addElement('button', '__btn-reset', array(
-                'label' => '<span class="' . $this->_resetBtnIcon . '"></span>',
-                'attribs' => array(
-                    'type' => 'reset',
-                    'escape' => false
-                ),
-                'order' => PHP_INT_MAX
-            ));
+            $elementsLeft->addElement(
+	            $element = $elementsLeft->createElement('button', '__btn-submit', array(
+	                'label' => '<span class="' . $this->_submitBtnIcon . '"></span>',
+	                'attribs' => array(
+	                    'class' => 'btn-primary btn-form-filter',
+	                    'type' => 'submit',
+	                    'escape' => false
+	                ),
+	                'order' => --$eleOrder
+	            ))
+			);
+			$element->removeDecorator('container');
+			// 
+			$elementsLeft->addElement(
+	            $element = $elementsLeft->createElement('button', '__btn-reset', array(
+	                'label' => '<span class="' . $this->_resetBtnIcon . '"></span>',
+	                'attribs' => array(
+	                	'class' => 'btn-default btn-form-filter',
+	                    'type' => 'reset',
+	                    'escape' => false
+	                ),
+	                'order' => PHP_INT_MAX
+	            ))
+			);
+			$element->removeDecorator('container');
         }
         // Return;
         return str_replace(
