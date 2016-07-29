@@ -216,8 +216,9 @@ class App_View_Helper_Bt3ManageTools extends Zend_View_Helper_Abstract {
      */
     public function mBtn($attrs) {
         // Tag # A;
-        $href = $attrs['href'] ? $attrs['href'] : 'javascript:void(0);';
+        $href = $attrs['href'] ?: 'javascript:void(0);';
         $icon = $attrs['icon'];
+		$attrs['class'] = $attrs['class'] ?: 'btn btn-default btn-sm waves-effect';
         unset($attrs['href'], $attrs['icon']);
         // +++ 
         $attrs = $this->_buildAttrStr($attrs);

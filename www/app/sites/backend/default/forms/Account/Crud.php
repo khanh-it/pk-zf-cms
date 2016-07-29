@@ -19,7 +19,7 @@ class Default_Form_Account_Crud extends Twitter_Bootstrap3_Form
 		// +++ 
         $elements[] = $element = $this->createElement('select', 'group_id', array(
             'label' => $txt = $view->translate('Nhóm tài khoản'),
-			'class' => 'selectpicker',
+			'class' => 'selectpicker show-tick',
 			'data-live-search' => 'true',
             'order' => ($eleOrder += 100),
         ));

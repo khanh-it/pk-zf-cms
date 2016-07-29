@@ -6,13 +6,25 @@
 class Default_Model_DbTable_Row_Account extends K111_Db_Table_Row_BitStat
 {
 	/**
+	 * Encode password
+	 * @param $password string Password
+	 * @return this
+	 */
+	public function setPassword($password) {
+		// Format input
+		$this->_data['password'] = md5($password);
+
+		return $this;
+	}
+	
+	/**
 	 * Check group_id data valid?
 	 * @param $groupId int|string Group id
 	 * @return this
 	 */
 	public function setGroup_id($groupId) {
 		// Format input
-		$this->group_id = ('' == (string)$groupId) ? null : $groupId;
+		$this->_data['group_id'] = ('' == (string)$groupId) ? null : $groupId;
 
 		return $this;
 	}

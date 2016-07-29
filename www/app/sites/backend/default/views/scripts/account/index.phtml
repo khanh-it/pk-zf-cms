@@ -34,13 +34,20 @@ $this->Bt3NavLinks(array(
 					<th width="10" class="text-center">
 						<?php echo $this->Bt3ManageTools()->mToolCheckerToggler(); ?>
 					</th>
-					<th><?php echo $this->Bt3ManageTools()->mToolSorter($this->translate('Tên đăng nhập'), 'username'); ?></th>
-					<th><?php echo $this->Bt3ManageTools()->mToolSorter($this->translate('Tên tài khoản'), 'fullname'); ?></th>
-					<th width="10" class="nowrap"><?php echo $this->translate('Ảnh đại diện'); ?></th>
+					<th><?php echo $this->Bt3ManageTools()->mToolSorter($this->translate('Tài khoản'), 'fullname'); ?></th>
+					<th width="10" class="text-nowrap"><?php echo $this->translate('Ảnh đại diện'); ?></th>
 					<th><?php echo $this->translate('Ghi chú'); ?></th>
 					<th><?php echo $this->translate('Nhóm tài khoản'); ?></th>
-                    <th width="10"><?php echo $this->translate('K.Hoạt?'); ?></th>
-					<th width="10"><?php echo $this->translate('Q.Lý?'); ?></th>
+                    <th width="10">
+                    	<abbr title="<?php echo $this->translate('Kích hoạt?'); ?>">
+                    		<?php echo $this->translate('K.Hoạt?'); ?>
+                    	</abbr>
+                    </th>
+					<th width="10">
+						<abbr title="<?php echo $this->translate('Quản lý'); ?>">
+							<?php echo $this->translate('Q.Lý?'); ?>
+						</abbr>
+					</th>
 				</tr>
             </thead>
             <tbody>
@@ -58,18 +65,20 @@ $this->Bt3NavLinks(array(
                 foreach ($this->paginator as $item):
         ?>
 				<tr>
-					<td align="center" class="nowrap"><?php echo ++$no; ?></td>
+					<td align="center" class="text-nowrap"><?php echo ++$no; ?></td>
 					<td align="center" class="text-center">
 						<?php echo $this->Bt3ManageTools()->mToolChecker($item->id); ?>
 					</td>
-					<td><?php echo $item->username; ?></td>
-					<td><?php echo $item->fullname; ?></td>
-					<td align="center" class="nowrap">
+					<td>
+						<?php echo $item->fullname; ?><br/>
+						<small class="m-l-10"><abbr title="">[<?php echo $item->username; ?>]</abbr></small>
+					</td>
+					<td align="center" class="text-nowrap">
 						<?php 
 							// Avatar
 							echo ($avatar = $item->returnAvatarWebPath())
 								? ("<a href=\"{$avatar}\" target=\"_blank\">"
-									. "<img src=\"{$avatar}\" class=\"img-thumb img-thumb-32\" />"
+									. "<img src=\"{$avatar}\" class=\"img-thumb img-thumb-48\" />"
 								. "</a>")
 								: ''
 							; 
@@ -77,10 +86,10 @@ $this->Bt3NavLinks(array(
 					</td>
 					<td><?php echo $item->note; ?></td>
 					<td><?php echo $this->groupOptions[$item->group_id]; ?></td>
-					<td align="center" class="nowrap">
+					<td align="center" class="text-nowrap">
 						<?php echo $this->Bt3ManageTools()->mToolActiveToggler($item->id, $item->active); ?>
 					</td>
-					<td class="nowrap">
+					<td class="text-nowrap">
 					<?php
 						$manageBtns = array(
 							'__detail_' => str_replace(array('__id__'), array($item->id), $manageBtnLinks['detail']),

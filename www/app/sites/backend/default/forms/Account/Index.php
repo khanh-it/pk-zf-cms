@@ -31,9 +31,9 @@ class Default_Form_Account_Index extends Twitter_Bootstrap3_Form_Inline
         $elements[] = $element = $this->createElement('select', 'group_id', array(
             'label' => $txt = $view->translate('Nhóm tài khoản'),
             'addon_prepend' => $txt,
-            'class' => 'selectpicker',
+            'class' => 'selectpicker show-tick',
             'data-live-search' => 'true',
-            'style' => 'min-width: 200px;',
+            'data-width' => '',
             'order' => ($eleOrder += 100),
         ));
         // +++ 

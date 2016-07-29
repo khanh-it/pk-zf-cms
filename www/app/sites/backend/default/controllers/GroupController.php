@@ -2,7 +2,10 @@
 /**
  * 
  * @author khanhdtp
- *
+ * @MCAInfo({
+ 	"name": "Group controller",
+	"info": "Group of accounts"
+})
  */
 class GroupController extends K111_Controller_Action
 {
@@ -24,6 +27,11 @@ class GroupController extends K111_Controller_Action
 	
 	/**
 	 * Action: list data;
+	 * @MCAInfo({
+ 			"name" : "Index action",
+			"info" : "List group data"
+		})
+	 * 
 	 * @return void
 	 */
 	public function indexAction()
@@ -282,6 +290,51 @@ class GroupController extends K111_Controller_Action
 	}
 	
 	/**
+	 * Action: acl;
+	 * @return void 
+	 */
+	public function aclAction() 
+	{
+		// Get params
+		// +++ Data ID;
+		$id = $this->_getParam('id');
+		// +++ 
+		$site = $this->_getParam('site');
+		
+		// Fetch data
+		$entity = $this->_repo->find($id)->current();
+		
+		// Check data valid?
+		if (!$entity) {
+			throw new Exception($this->view->translate('Data not found!'), 500);
+		}
+		
+		// Define vars
+		// +++ 
+		$ACL = new ACL();
+		// +++ 
+		$vData = array();
+		
+		// 
+		$vData['listSiteOpts'] = array(
+			'' => LANG_SELECT
+		);
+		// +++ 
+		foreach ($ACL->listSite() as $siteKey => $siteInfo) {
+			$vData['listSiteOpts'][$siteKey] = "[{$siteKey}] {$siteInfo['name']} ({$siteInfo['info']})";
+		}
+		
+		// 
+		$siteInfo = $vData['listSiteOpts'][$site];
+		if ($siteInfo) {
+			$vData['arrMCA'] = $ACL->listMCA();
+		}
+
+		// Render view
+		$this->view->assign($vData);	
+	}
+	
+	/**
 	 * Action: delete;
 	 * @return void
 	 */
@@ -315,7 +368,7 @@ class GroupController extends K111_Controller_Action
 		
 		// Inform
         $this->_helper->flashMessenger->addMessage(
-            $this->view->translate('Thao tác dữ liệu thành công!'),
+            $this->view->translate('Xóa dữ liệu thành công!'),
             'layout-messages'
         );
 		

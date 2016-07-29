@@ -32,6 +32,7 @@ class K111_Db_Table_Row_Abstract extends Zend_Db_Table_Row_Abstract
      */
     public function __get($columnName)
     {
+    	$columnName = $this->_transformColumn($columnName);
         $funcName = 'get' . ucfirst($columnName);
         if (method_exists($this, $funcName)) {
             return $this->{$funcName}();
@@ -50,8 +51,10 @@ class K111_Db_Table_Row_Abstract extends Zend_Db_Table_Row_Abstract
      */
     public function __set($columnName, $value)
     {
+    	$columnName = $this->_transformColumn($columnName);
         $funcName = 'set' . ucfirst($columnName);
         if (method_exists($this, $funcName)) {
+        	$this->_modifiedFields[$columnName] = true;
             return $this->{$funcName}($value);
         }
         

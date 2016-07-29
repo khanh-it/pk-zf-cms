@@ -1,7 +1,6 @@
 /* Bootstrap 3 - theme */
 /* +++ */
-body {font-family: Tahoma,Helvetica Neue,Helvetica,Arial,sans-serif, sans-serif;}
-.nowrap {white-space: nowrap;}
+body {font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Tahoma, Arial, sans-serif;}
 /* +++ breadcrumb */
 .breadcrumb {margin-bottom: 20px;}
 /* +++ toolbars */
@@ -11,6 +10,7 @@ img.img-thumb {}
 img.img-thumb-16 {max-width: 16px}
 img.img-thumb-24 {max-width: 24px}
 img.img-thumb-32 {max-width: 32px}
+img.img-thumb-48 {max-width: 48px}
 img.img-thumb-64 {max-width: 64px}
 
 /* +++ MA overwrites */
@@ -25,7 +25,11 @@ img.img-thumb-64 {max-width: 64px}
 /* Form, form elements */
 form label.control-label {font-weight: 600;}
 form label.control-label.required::after {content: " (*)";color: red;}
+.btn-form-filter {margin-left:10px;}
 
 /* +++ bootstrap-select */
-.bootstrap-select {min-width: 100px}
-.bootstrap-select select {visibility: hidden;display: none;}
+.bootstrap-select {min-width: 120px;}
+.bootstrap-select select {visibility: hidden; display: none !important;}
+.bootstrap-select .dropdown-menu {max-width: 100%; overflow: hidden;}
+.form-inline .bootstrap-select {max-width: 320px;}
+.form-inline .bootstrap-select .dropdown-menu {max-width: 320px;}
