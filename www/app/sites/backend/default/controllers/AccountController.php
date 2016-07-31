@@ -106,11 +106,26 @@ class AccountController extends K111_Controller_Action
                         // Account object info from database;
                         $accountResultObject = $zAuthAdapterDbTable->getResultRowObject();
                         // Write a session storage to Zend_Auth;
-                        // +++ 
+                        // +++ Group data 
+						if ($accountResultObject->group_id) {
+							// Fetch group data;
+							$groupEntity = $this->_repoGroup->find($accountResultObject->group_id)->current();
+							if ($groupEntity) {
+								$groupAcl = array();
+								foreach ((array)$groupEntity->getAcl() as $site => $acl) {
+									$groupAcl[$site] = ',' . implode(',', $acl) . ',';
+								}
+								$accountResultObject = (object)array_merge((array)$accountResultObject, array(
+									'group_name' => $groupEntity->name, 'group_acl' => $groupAcl
+								));
+								unset($groupAcl, $site, $acl);
+							}
+						}	
                         // +++ Remember me?
-                        if ($postData['remember']) {
+						if ($postData['remember']) {
                             Zend_Session::rememberMe(2 * 86400); //2 days
                         }
+						// +++ 
                         // +++ 
                         $zAuthStorage = new Zend_Auth_Storage_Session();
                         $zAuthStorage->write($accountResultObject);

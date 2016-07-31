@@ -23,18 +23,36 @@
  */
 class K111_Db_Table_Row_Abstract extends Zend_Db_Table_Row_Abstract
 {
+	/**
+	 * Is clean data (new created)?
+	 * 
+	 * @return bool
+	 */
+	public function isClean() {
+		return empty($this->_cleanData);
+	}
+	
+	/**
+	 * Change row field value and auto mark field as modified
+	 * 
+	 * @param string $columnName Column name 
+	 * @param mixed $value Value
+	 * @return mixed
+	 */
+	public function modifyData($columnName, $value) {
+		return parent::_set($columnName, $value);
+	}
+	
     /**
      * Retrieve row field value
      *
      * @param  string $columnName The user-specified column name.
-     * @return string             The corresponding column value.
+     * @return mixed             The corresponding column value.
      * @throws Zend_Db_Table_Row_Exception if the $columnName is not a column in the row.
      */
     public function __get($columnName)
     {
-    	$columnName = $this->_transformColumn($columnName);
-        $funcName = 'get' . ucfirst($columnName);
-        if (method_exists($this, $funcName)) {
+        if (method_exists($this, $funcName = ('get' . ucfirst($columnName)))) {
             return $this->{$funcName}();
         }
         
@@ -51,16 +69,13 @@ class K111_Db_Table_Row_Abstract extends Zend_Db_Table_Row_Abstract
      */
     public function __set($columnName, $value)
     {
-    	$columnName = $this->_transformColumn($columnName);
-        $funcName = 'set' . ucfirst($columnName);
-        if (method_exists($this, $funcName)) {
-        	$this->_modifiedFields[$columnName] = true;
-            return $this->{$funcName}($value);
+    	$return = parent::__set($columnName, $value);
+        if (method_exists($this, $funcName = ('set' . ucfirst($columnName)))) {
+            $return = $this->{$funcName}($value);
         }
-        
-        return parent::__set($columnName, $value);
+        return $return;
     }
-    
+	
     /**
      * Query a parent table to retrieve the single row matching the reference rule.
      *

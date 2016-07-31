@@ -1,9 +1,21 @@
 <?php
 // application/controllers/ErrorController.php
- 
+/**
+ * @author khanhdtp
+ * @MCAInfo({
+ 	"name": "Error controller",
+	"info": "Error page"
+})
+ */ 
 class ErrorController extends Zend_Controller_Action
 {
- 
+ 	/**
+	 * @author khanhdtp
+	 * @MCAInfo({
+	 	"name": "Error controller",
+		"info": "Error page"
+	})
+	 */
     public function errorAction()
     {
         $errors = $this->_getParam('error_handler');

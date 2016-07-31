@@ -16,14 +16,31 @@ $this->Bt3NavLinks(array(
 <div class="card">
 	<!-- card-header -->
 	<div class="card-header">
-		<form id="filter-form" enctype="application/x-www-form-urlencoded" method="post" action="">
-			<div class="form-group">
-				<h4><?php echo $this->translate('Vui lòng chọn'); ?></h4>
-				<?php
-					echo $this->formSelect('site', $_GET['site'], array(
-						'class' => 'form-control selectpicker show-tick'
-					), (array)$this->listSiteOpts);
-				?>
+		<form id="filter-form" enctype="application/x-www-form-urlencoded" method="get" action="">
+			<h4>
+				<span class="label label-info">
+					<?php echo $this->translate('Nhóm tài khoản'); ?>:
+				</span>&nbsp;
+				<span class="label label-danger">
+					<?php echo "[{$this->entity->code}] {$this->entity->name}"; ?>
+				</span>
+			</h4>
+			<div class="input-group" style="width: 100%;">
+				<span class="input-group-addon">
+					<h4><span class="label label-info">
+						<?php echo $this->translate('Site'); ?>:
+					</span></h4>
+				</span>
+				<div class="clearfix" style="padding: 5px 0;">
+					<?php
+						echo $this->formSelect('site', $_GET['site'], array(
+							'class' => 'form-control selectpicker show-tick'
+						), (array)$this->listSiteOpts);
+					?>
+				</div>
+				<span class="input-group-addon" style="padding:3px;">
+					<button class="btn btn-primary">Submit</button>
+				</span>
 			</div>
 		</form>
 	</div>
@@ -36,7 +53,7 @@ $this->Bt3NavLinks(array(
 					<th width="10" class="text-center">
 						<?php echo $this->Bt3ManageTools()->mToolCheckerToggler(); ?>
 					</th>
-					<th><?php echo $this->translate('Module/Controller/Action'); ?></th>
+					<th><?php echo $this->translate('Module / Controller / Action'); ?></th>
 					<th><?php echo $this->translate('Ghi chú'); ?></th>
 					<th width="10">
 						<abbr title="<?php echo $this->translate('Quản lý'); ?>">
@@ -52,11 +69,11 @@ $this->Bt3NavLinks(array(
 			);
 			
         	// 
-            if ($this->arrMCA):
+            if (!empty($this->arrMCA['module'])):
                 // No
                 $noModule = 0;
                 // Module //
-                foreach ($this->arrMCA['module'] as $moduleKey => $moduleInfo):
+                foreach ((array)$this->arrMCA['module'] as $moduleKey => $moduleInfo):
 		?>
 				<tr class="module">
 					<td align="center" class="text-nowrap"><?php echo ++$noModule; ?></td>
@@ -71,7 +88,7 @@ $this->Bt3NavLinks(array(
 					// Controller //
 					$noController = 0;
 					// 
-					foreach ($this->arrMCA['controller'][$moduleKey] as $controllerKey => $controllerInfo):
+					foreach ((array)$this->arrMCA['controller'][$moduleKey] as $controllerKey => $controllerInfo):
 		?>
 				<tr class="controller">
 					<td align="center" class="text-nowrap"><?php echo "{$noModule}." . ++$noController; ?></td>
@@ -89,15 +106,24 @@ $this->Bt3NavLinks(array(
 						// Action //
 						$noAction = 0;
 						// +++ 
-						foreach ($this->arrMCA['action'][$moduleKey][$controllerKey] as $actionKey => $actionInfo):
+						foreach ((array)$this->arrMCA['action'][$moduleKey][$controllerKey] as $actionKey => $actionInfo):
+							//
+							$MCAKey = ACL::compileMCAKey($moduleKey, $controllerKey, $actionKey);
+							// Action checker attrs
+							$actionAttrs = array();
+							// +++ Is checked?
+							if (!is_null($this->aclData[$MCAKey])) {
+								$actionAttrs['checked'] = 'checked';
+							}
+							
 		?>
 				<tr class="action">
 					<td align="center" class="text-nowrap"><?php echo "{$noModule}.{$noController}." . ++$noAction; ?></td>
 					<td align="center" class="text-center">
-						<?php echo $this->Bt3ManageTools()->mToolChecker($key); ?>
+						<?php echo $this->Bt3ManageTools()->mToolChecker($MCAKey, $actionAttrs); ?>
 					</td>
 					<td>
-						Action: [<?php echo $actionKey; ?>] <?php echo $actionInfo['name']; ?>
+						 [<?php echo $actionKey; ?>] <?php echo $actionInfo['name']; ?>
 					</td>
 					<td><?php echo $actionInfo['note']; ?></td>
 					<td class="text-nowrap">
@@ -111,9 +137,16 @@ $this->Bt3NavLinks(array(
 					// ./Controller //
 				
 				endforeach;
-				// ./Module //
-			endif;
-        ?>
+			else:
+			// ./Module //
+		?>
+				<tr>
+					<td></td>
+					<td colspan="3"><?php echo $this->translate('Vui lòng chọn `site`.'); ?></td>
+					<td></td>
+				</tr>
+				<tr><td colspan="100"></td></tr>
+		<?php endif; ?>
 			</tbody>
 		</table>
 	</form>

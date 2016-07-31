@@ -4,6 +4,97 @@
  */
 class ACL {
 	
+	/**
+	 * @var K111_Filter_ConvertCamelCase 
+	 */
+	protected static $_camelCaseConverter;
+	/**
+	 * Get K111_Filter_ConvertCamelCase instance
+	 * @return K111_Filter_ConvertCamelCase
+	 */
+	public static function getCamelCaseConverter() {
+		if (!self::$_camelCaseConverter) {
+			self::$_camelCaseConverter = new K111_Filter_ConvertCamelCase();
+		}
+		return self::$_camelCaseConverter;
+	}
+	
+	/**
+	 * Parse (moodule)/controller/action info from string
+	 * #pattern : @MCAInfo({
+ 	"name": "Group controller",
+	"description": "Group of accounts"
+})
+	 * @param $str string MCA info string
+	 * @return array
+	 */
+	public static function parseMCAInfo($str = null) {
+		//
+		$MCAInfo = array();
+		//
+		$pattern = '/\@MCAInfo\s*\(\s*([^)]+)\s*\)/smu';
+		preg_match($pattern, $str, $matchs);
+		// 
+		if (!empty($matchs)) {
+			$MCAInfo = (array)@json_decode(trim($matchs[1]));
+		}
+		
+		return $MCAInfo;
+	}	
+	
+	/**
+	 * Extract controller class file for class, + methods tokens...
+	 * 
+	 * @param string $fileName Controller class file
+	 * @return array
+	 */
+	public static function parseControllerClassTokensFromFile($filename) {
+		// Class tokens
+		$classTokens = array();
+		// Method tokens
+		$methodTokens = array();
+		// Parse file
+		if (file_exists($filename) && is_readable($filename)) {
+			// Get file's content.
+			$fileContents = file_get_contents($filename);
+			
+			// // Extract class tokens
+			$pattern = '/(\/\*\*(((?!\*\/).)*)?\*\/)\s*(abstract)?\s*class\s+([^ ]+)Controller\s*/smu';
+			$result = preg_match($pattern, $fileContents, $matches);
+			if ($result) {
+				$classTokens = array(
+					'name' => $matches[5],
+					'doc_comment' => trim($matches[1]),
+				);
+				// Extract methods tokens
+				$pattern = '/(\/\*\*(((?!\*\/).)*)?\*\/)\s*(public)?\s*function\s*([^ ]+Action)\s*/smu';
+				if (preg_match_all($pattern, $fileContents, $matches)) {
+					//\Zend_Debug::dump($matches);
+					for ($i = 0; $i < count($matches[0]); $i++) {
+						$methodTokens[] = array(
+							'name' => $matches[5][$i],
+							'doc_comment' => trim($matches[1][$i]),
+						);
+					}
+				}
+			};
+		}
+		
+		// Return;
+		return array($classTokens, $methodTokens);
+	}
+
+	/**
+	 * Compile module/controller/action key
+	 * 
+	 * @param $moduleName string Module name 
+	 * @param $controllerName string Controller name
+	 * @param $actionName string Action name
+	 */
+	public static function compileMCAKey($moduleName, $controllerName, $actionName) {
+		return "{$moduleName}/{$controllerName}/{$actionName}";
+	}
+	
     /**
      * @var Zend_Db_Adapter_Abstract
      */
@@ -26,11 +117,20 @@ class ACL {
 		$this->_front = Zend_Controller_Front::getInstance();
     }
     
+	/**
+	 * @var array
+	 */
+	protected static $_checkPermissionOptions;
+	
     /**
      * Handle account's access permission checking
+	 * 
+	 * @param $options array An array of options
      * @return void
      */
-    public static function checkAccessPermission() {
+    public static function checkAccessPermission(array $options = array()) {
+    	// Set options
+    	self::$_checkPermissionOptions = $options;
         // Get K111_EventManager_EventManager
         $eventManager = K111_EventManager_EventManager::getInstance();
         // Register hook:
@@ -41,33 +141,80 @@ class ACL {
             $request = $e->getTarget()->getRequest();
             // Is request dispatchable?
             if ($front->getDispatcher()->isDispatchable($request)) {
-                // Init ACL instance;
-                $acl = new ACL();
-                // +++ Call helper function to check account's access permission.
-                $acl->doCheckAccessPermission($request);
+                // Call helper function to check account's access permission.
+                $hasAccessPermission = ACL::hasAccessPermission($request);
+				// Case: not login
+				if (is_null($hasAccessPermission)) {
+					// Get, +format params
+					// +++ 
+					$urlNoLoginParams = (array)self::$_checkPermissionOptions['url_no_login_params'];
+					
+					// Forward request (redirect)
+		            return $request
+		                ->setModuleName($urlNoLoginParams['module'])
+		                ->setControllerName($urlNoLoginParams['controller'])
+		                ->setActionName($urlNoLoginParams['action'])
+		                ->setDispatched(true)
+		            ;
+				// Case: dont has permission
+				} elseif (false === $hasAccessPermission) {
+					// Get, +format params
+					// +++ 
+					$urlAccessDeniedParams = (array)self::$_checkPermissionOptions['url_access_denied_params'];
+					
+					// Forward request (redirect)
+		            return $request
+		                ->setModuleName($urlAccessDeniedParams['module'])
+		                ->setControllerName($urlAccessDeniedParams['controller'])
+		                ->setActionName($urlAccessDeniedParams['action'])
+		                ->setDispatched(true)
+		            ;			
+				}
             }
         });
     }
-    
+	
     /**
      * Check account's access permission
      * 
-     * 
      * @return this
      */
-    public function doCheckAccessPermission(Zend_Controller_Request_Http $request) {
+    public static function hasAccessPermission($request) {
+		// Flag: has permission?
+		$hasPermission = null;
+    	// Get, + format params
+		$params = $request;
+		// +++ 
+		if ($request instanceof Zend_Controller_Request_Abstract) {
+			$params = array(
+				'module' => $request->getModuleName(),
+				'controller' => $request->getControllerName(),
+				'action' => $request->getActionName()
+			);
+		}
+		
         // Get Zend_Auth.
         $zAuth = Zend_Auth::getInstance();
         
         // Case: not login?
         if (!$zAuth->hasIdentity()) {
-            $request
-                ->setModuleName('default')
-                ->setControllerName('account')
-                ->setActionName('login')
-                ->setDispatched(true)
-            ;
+        	return $hasPermission;
         }
+		
+		// 
+		// +++ 
+		$site = APPLICATION_SITE;
+		// +++
+		$MCAKey = self::compileMCAKey($params['module'], $params['controller'], $params['action']);
+		
+		// Get identity data
+		$identity = $zAuth->getIdentity();
+		// +++ 
+		$acl = $identity->group_acl[$site];
+		$hasPermission = (false !== strpos($acl, ",{$MCAKey},"));
+		
+		// Return;
+		return $hasPermission;
     }
 	
 	/**
@@ -87,7 +234,7 @@ class ACL {
 	 * @return array 
 	 */
 	public function listSite(array $options = array()) {
-		// 
+		// An array of site(s).
 		$listSite = array();
 		// Get site folder root path 
 		$sitePath = $this->getSitePath();
@@ -122,37 +269,14 @@ class ACL {
 	}
 	
 	/**
-	 * Parse (moodule)/controller/action info from string
-	 * #pattern : @MCAInfo({
- 	"name": "Group controller",
-	"description": "Group of accounts"
-})
-	 * @param $str string MCA info string
-	 * @return array
-	 */
-	public function parseMCAInfo($str = null) {
-		//
-		$MCAInfo = array();
-		//
-		$pattern = '/\@MCAInfo\s*\(\s*([^)]+)\s*\)/smu';
-		preg_match($pattern, $str, $matchs);
-		// 
-		if (!empty($matchs)) {
-			$MCAInfo = (array)@json_decode(trim($matchs[1]));
-		}
-		
-		return $MCAInfo;
-	}
-	
-	/**
 	 * List module/controller/action
 	 *
 	 * @param $siteName string Site name
 	 * @param $options array An array of options
 	 * @return array 
 	 */
-	public function listMCA($siteName = 'backend', array $options = array()) {
-		//
+	public function listMCA($siteName, array $options = array()) {
+		// List of module/controller/action
 		$listMCA = array(
 			'module' => array(),
 			'controller' => array(),
@@ -171,9 +295,10 @@ class ACL {
 		// +++
 		$controllerNameSubfix = 'Controller'; 
 		$controllerNameSubfixPHP = "{$controllerNameSubfix}.php";
-		$controllerClassLoaded = array();
 		// +++ 
 		$actionNameSubfix = 'Action';
+		// +++ 
+		$camelCaseConverter = self::getCamelCaseConverter();
 		
 		// Module //
 		$modules = array();
@@ -203,68 +328,50 @@ class ACL {
 			
 			// Conroller //
 			$controllers = array();
-			if ($controllerPath = realpath("{$moduleDirPath}/{$controllerDirName}")) {
+			if ($controllerPath = realpath("{$moduleDirPath}/{$controllerDirName}")) 
+			{
 				foreach ((new DirectoryIterator($controllerPath)) as $controllerDir) {
 					if (!$controllerDir->isFile()) {
 						continue;
 					}
 					// Load controller classes //
-					$controllerFile = $controllerDir->getFilename();
-					if (0 === strpos($controllerFile, '_')) {
-						continue;
-					}
-					if ((strlen($controllerFile) - strlen($controllerNameSubfixPHP)) 
-							!== strpos($controllerFile, $controllerNameSubfixPHP)
-					) {
-						continue;
-					}
-					// +++ Require controller class file.
-					require_once ("{$controllerPath}/{$controllerFile}");
-				}
-				foreach (get_declared_classes() as $controllerName) {
+					$controllerName = $controllerDir->getFilename();
+					if (0 === strpos($controllerName, '_')) { continue; }
+					if ((strlen($controllerName) - strlen($controllerNameSubfixPHP)) 
+							!== strpos($controllerName, $controllerNameSubfixPHP)
+					) { continue; }
+					// Parse controller class file.
+					$controllerClassFilename = "{$controllerPath}/{$controllerName}";
+					list($classTokens, $methodTokens) = self::parseControllerClassTokensFromFile($controllerClassFilename);
+					//continue;
 					// Set data //
-					if ((strlen($controllerName) - strlen($controllerNameSubfix)) 
-							!== strpos($controllerName, $controllerNameSubfix)
-					) {
-						continue;
-					}
-					if ($controllerClassLoaded[$controllerName]) {
-						continue;
-					}
-					$controllerClassLoaded[$controllerName] = true;
-					// +++ Get controller info
-					$controllerRef = new ReflectionClass($controllerName);
-					
-					$controllers[
-						$controllerName = str_replace($controllerNameSubfix, '', $controllerName)
-					] = array_merge(
-						$this->parseMCAInfo($controllerRef->getDocComment()), array(
+					if (empty($classTokens)) { continue; }
+					$controllerName = $camelCaseConverter->filter(
+						str_replace($controllerNameSubfix, '', $classTokens['name'])
+					); 
+					$controllers[$controllerName] = array_merge(
+						self::parseMCAInfo($classTokens['doc_comment']), array(
 						// +++ File path
-							'path' => $controllerRef->getFileName()
+							'path' => $controllerClassFilename
 						)
 					);
 					// ./Set data //
 					
 					// Action //
+					if (empty($methodTokens)) { continue; }
 					$actions = array();
-					foreach (($controllerRef->getMethods()) as $methodRef) {
+					foreach ($methodTokens as $methodToken) {
 						// +++ Set data //
-						if (!$methodRef->isPublic()) {
-							continue;
-						}
-						$actionName = $methodRef->getName();
-						if (0 === strpos($actionName, '_')) {
-							continue;
-						}
+						$actionName = $methodToken['name'];
+						if (0 === strpos($actionName, '_')) { continue; }
 						if ((strlen($actionName) - strlen($actionNameSubfix)) 
 								!== strpos($actionName, $actionNameSubfix)
-						) {
-							continue;
-						}
-						// +++ +++ 
-						$actions[
+						) { continue; }
+						// +++ 
+						$actionName = $camelCaseConverter->filter(
 							str_replace($actionNameSubfix, '', $actionName)
-						] = $this->parseMCAInfo($methodRef->getDocComment());
+						);  
+						$actions[$actionName] = $this->parseMCAInfo($methodToken['doc_comment']);
 						// +++ ./Set data //
 					}
 					$listMCA['action'][$moduleName][$controllerName] = $actions;

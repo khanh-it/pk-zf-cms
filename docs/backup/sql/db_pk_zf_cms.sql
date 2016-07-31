@@ -1,6 +1,6 @@
 /*
-SQLyog Ultimate v11.3 (64 bit)
-MySQL - 10.1.10-MariaDB : Database - db_pk_zf_cms
+SQLyog Ultimate v12.09 (64 bit)
+MySQL - 5.5.39 : Database - db_pk_zf_cms
 *********************************************************************
 */
 
@@ -23,6 +23,7 @@ DROP TABLE IF EXISTS `tbl_account`;
 CREATE TABLE `tbl_account` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary key',
   `group_id_json` varchar(255) NOT NULL DEFAULT '' COMMENT 'String of group ids (encoded)',
+  `group_id` int(11) DEFAULT NULL COMMENT 'Group id',
   `username` varchar(255) NOT NULL DEFAULT '' COMMENT 'Account''s username',
   `password` varchar(55) NOT NULL DEFAULT '' COMMENT 'Account''s password',
   `avatar` varchar(255) NOT NULL DEFAULT '' COMMENT 'Account''s avatar',
@@ -30,16 +31,28 @@ CREATE TABLE `tbl_account` (
   `last_login_time` datetime DEFAULT NULL COMMENT 'Account''s last login time',
   `active` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Flag: is active?',
   `draft` datetime DEFAULT NULL COMMENT 'Datetime: mark as data draft?',
+  `note` varchar(512) NOT NULL DEFAULT '' COMMENT 'Account''s note',
   `create_account_id` int(11) DEFAULT NULL COMMENT 'Creator id',
   `created_time` datetime DEFAULT NULL COMMENT 'Created time',
   `last_modified_account_id` int(11) DEFAULT NULL COMMENT 'Last modifier id',
   `last_modified_time` datetime DEFAULT NULL COMMENT 'Last modified time',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UNIQUE_username` (`username`),
+  KEY `ACCOUNT__GROUP` (`group_id`),
+  KEY `ACCOUNT__CREATE_ACCOUNT` (`create_account_id`),
+  KEY `ACCOUNT__LAST_MODIFIED_ACCOUNT` (`last_modified_account_id`),
+  KEY `IDX_fullname` (`fullname`),
+  KEY `IDX_active` (`active`),
+  KEY `IDX_draft` (`draft`),
+  KEY `IDX_created_time` (`created_time`),
+  CONSTRAINT `ACCOUNT__CREATE_ACCOUNT` FOREIGN KEY (`create_account_id`) REFERENCES `tbl_group` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `ACCOUNT__GROUP` FOREIGN KEY (`group_id`) REFERENCES `tbl_group` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `ACCOUNT__LAST_MODIFIED_ACCOUNT` FOREIGN KEY (`last_modified_account_id`) REFERENCES `tbl_account` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='Tbl, manage accounts!';
 
 /*Data for the table `tbl_account` */
 
-insert  into `tbl_account`(`id`,`group_id_json`,`username`,`password`,`avatar`,`fullname`,`last_login_time`,`active`,`draft`,`create_account_id`,`created_time`,`last_modified_account_id`,`last_modified_time`) values (1,'','admin','e10adc3949ba59abbe56e057f20f883e','','Administrator',NULL,1,NULL,NULL,NULL,NULL,NULL);
+insert  into `tbl_account`(`id`,`group_id_json`,`group_id`,`username`,`password`,`avatar`,`fullname`,`last_login_time`,`active`,`draft`,`note`,`create_account_id`,`created_time`,`last_modified_account_id`,`last_modified_time`) values (1,'',9,'admin','e10adc3949ba59abbe56e057f20f883e','','Administrator',NULL,1,NULL,'',NULL,'2016-07-26 11:10:36',NULL,NULL);
 
 /*Table structure for table `tbl_group` */
 
@@ -49,7 +62,7 @@ CREATE TABLE `tbl_group` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary key',
   `code` varchar(55) NOT NULL DEFAULT '' COMMENT 'Group''s code',
   `name` varchar(255) NOT NULL DEFAULT '' COMMENT 'Group''s name',
-  `note` varchar(255) NOT NULL DEFAULT '' COMMENT 'Group''s note',
+  `note` varchar(512) NOT NULL DEFAULT '' COMMENT 'Group''s note',
   `acl` longtext COMMENT 'Group''s acl (encoded permission string)',
   `active` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Flag: is active?',
   `draft` datetime DEFAULT NULL COMMENT 'Datetime: mark as data draft?',
@@ -64,13 +77,14 @@ CREATE TABLE `tbl_group` (
   KEY `IDX_draft` (`draft`),
   KEY `GROUP__CREATE_ACCOUNT` (`create_account_id`),
   KEY `GROUP__LAST_MODIFIED_ACCOUNT` (`last_modified_account_id`),
+  KEY `IDX_create_time` (`created_time`),
   CONSTRAINT `GROUP__CREATE_ACCOUNT` FOREIGN KEY (`create_account_id`) REFERENCES `tbl_account` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `GROUP__LAST_MODIFIED_ACCOUNT` FOREIGN KEY (`last_modified_account_id`) REFERENCES `tbl_account` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COMMENT='Tbl, manage account''s groups!';
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COMMENT='Tbl, manage account''s groups!';
 
 /*Data for the table `tbl_group` */
 
-insert  into `tbl_group`(`id`,`code`,`name`,`note`,`acl`,`active`,`draft`,`create_account_id`,`created_time`,`last_modified_account_id`,`last_modified_time`) values (1,'ADMIN','Administrator','Built-in group',NULL,1,NULL,1,'2016-06-27 10:19:24',NULL,'0000-00-00 00:00:00'),(2,'B\"O\'D','Board of Director','@author khanhdtp',NULL,1,NULL,1,NULL,NULL,NULL),(3,'MOD','Moderator','@author khanhdtp',NULL,1,NULL,1,NULL,NULL,NULL),(4,'USER','Users','',NULL,1,NULL,1,'2016-06-28 23:32:24',NULL,NULL),(5,'PUBLISHER','PUBLISHER','',NULL,1,NULL,1,'2016-06-28 23:33:20',NULL,NULL),(6,'OTHERS','Khác','',NULL,1,NULL,1,'2016-06-28 23:33:49',NULL,NULL),(8,'BOD-Dup','Duplicate of Board of Director','@author khanhdtp',NULL,1,NULL,1,'2016-06-29 21:18:58',NULL,NULL);
+insert  into `tbl_group`(`id`,`code`,`name`,`note`,`acl`,`active`,`draft`,`create_account_id`,`created_time`,`last_modified_account_id`,`last_modified_time`) values (3,'MOD','Moderator','@author khanhdtp','a:1:{s:7:\"backend\";a:18:{i:0;s:21:\"default/account/login\";i:1;s:22:\"default/account/logout\";i:2;s:23:\"default/account/profile\";i:3;s:21:\"default/account/index\";i:4;s:22:\"default/account/active\";i:5;s:22:\"default/account/create\";i:6;s:22:\"default/account/update\";i:7;s:22:\"default/account/detail\";i:8;s:22:\"default/account/delete\";i:9;s:19:\"default/group/index\";i:10;s:20:\"default/group/active\";i:11;s:20:\"default/group/create\";i:12;s:20:\"default/group/update\";i:13;s:20:\"default/group/detail\";i:14;s:17:\"default/group/acl\";i:15;s:20:\"default/group/delete\";i:16;s:19:\"default/index/index\";i:17;s:20:\"default/index/layout\";}}',1,NULL,1,'2016-07-25 09:55:40',NULL,NULL),(4,'USER','Users','','a:1:{s:8:\"frontend\";a:2:{i:0;s:19:\"default/error/error\";i:1;s:19:\"default/index/index\";}}',0,NULL,1,'2016-07-26 10:19:47',NULL,NULL),(5,'PUBLISHER','PUBLISHER','',NULL,1,NULL,1,'2016-06-28 23:33:20',NULL,NULL),(6,'OTHERS','Khác','',NULL,1,NULL,1,'2016-06-28 23:33:49',NULL,NULL),(8,'BOD-Dup','Duplicate of Board of Director','@author khanhdtp',NULL,0,NULL,1,'2016-07-26 10:19:48',NULL,NULL),(9,'ADMIN','Administrator','Built-in group','a:1:{s:7:\"backend\";a:18:{i:0;s:21:\"default/account/login\";i:1;s:22:\"default/account/logout\";i:2;s:23:\"default/account/profile\";i:3;s:21:\"default/account/index\";i:4;s:22:\"default/account/active\";i:5;s:22:\"default/account/create\";i:6;s:22:\"default/account/update\";i:7;s:22:\"default/account/detail\";i:8;s:22:\"default/account/delete\";i:9;s:19:\"default/group/index\";i:10;s:20:\"default/group/active\";i:11;s:20:\"default/group/create\";i:12;s:20:\"default/group/update\";i:13;s:20:\"default/group/detail\";i:14;s:17:\"default/group/acl\";i:15;s:20:\"default/group/delete\";i:16;s:19:\"default/index/index\";i:17;s:20:\"default/index/layout\";}}',1,NULL,1,'2016-07-25 09:55:47',NULL,NULL),(10,'new_ADMIN','Administrator (new)','Administrator (new)\'s note!',NULL,1,NULL,1,'2016-07-25 05:37:40',NULL,NULL),(11,'MOD_new','(new) Moderator','(new) Moderator\'s note!',NULL,1,NULL,1,'2016-07-25 09:55:48',1,'2016-07-25 05:46:36');
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
