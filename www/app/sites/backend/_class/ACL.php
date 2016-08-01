@@ -120,7 +120,17 @@ class ACL {
 	/**
 	 * @var array
 	 */
-	protected static $_checkPermissionOptions;
+	protected static $_checkAccessOptions;
+	
+	/**
+	 * Set check access options
+	 * 
+	 * @param array $options An array of options
+	 * @return void 
+	 */
+	public static function setCheckAccessOptions(array $options) {
+		self::$_checkAccessOptions = (array)$options;
+	} 
 	
     /**
      * Handle account's access permission checking
@@ -128,9 +138,7 @@ class ACL {
 	 * @param $options array An array of options
      * @return void
      */
-    public static function checkAccessPermission(array $options = array()) {
-    	// Set options
-    	self::$_checkPermissionOptions = $options;
+    public static function checkAccess() {
         // Get K111_EventManager_EventManager
         $eventManager = K111_EventManager_EventManager::getInstance();
         // Register hook:
@@ -142,12 +150,13 @@ class ACL {
             // Is request dispatchable?
             if ($front->getDispatcher()->isDispatchable($request)) {
                 // Call helper function to check account's access permission.
-                $hasAccessPermission = ACL::hasAccessPermission($request);
+                $isAccessAllowed = ACL::isAccessAllowed($request);
+				
 				// Case: not login
-				if (is_null($hasAccessPermission)) {
+				if (is_null($isAccessAllowed)) {
 					// Get, +format params
 					// +++ 
-					$urlNoLoginParams = (array)self::$_checkPermissionOptions['url_no_login_params'];
+					$urlNoLoginParams = (array)self::$_checkAccessOptions['url_no_login_params'];
 					
 					// Forward request (redirect)
 		            return $request
@@ -156,11 +165,12 @@ class ACL {
 		                ->setActionName($urlNoLoginParams['action'])
 		                ->setDispatched(true)
 		            ;
+					
 				// Case: dont has permission
-				} elseif (false === $hasAccessPermission) {
+				} elseif (false === $isAccessAllowed) {
 					// Get, +format params
 					// +++ 
-					$urlAccessDeniedParams = (array)self::$_checkPermissionOptions['url_access_denied_params'];
+					$urlAccessDeniedParams = (array)self::$_checkAccessOptions['url_access_denied_params'];
 					
 					// Forward request (redirect)
 		            return $request
@@ -179,7 +189,7 @@ class ACL {
      * 
      * @return this
      */
-    public static function hasAccessPermission($request) {
+    public static function isAccessAllowed($request) {
 		// Flag: has permission?
 		$hasPermission = null;
     	// Get, + format params
@@ -201,16 +211,32 @@ class ACL {
         	return $hasPermission;
         }
 		
-		// 
-		// +++ 
-		$site = APPLICATION_SITE;
-		// +++
-		$MCAKey = self::compileMCAKey($params['module'], $params['controller'], $params['action']);
-		
 		// Get identity data
 		$identity = $zAuth->getIdentity();
+		
+		// Check access permission by options
+		// +++ Skip by skip_credentials
+		$skipCredentials = (array)self::$_checkAccessOptions['skip_credentials'];
+		if ($skipCredentials[$identity->username]) {
+			return ($hasPermission = true);
+		}
+		// +++ Skip by skip_mca
+		$skipMCA = (array)self::$_checkAccessOptions['skip_mca'];
+		if (true === ($skipMCA = $skipMCA[$params['module']])) { // Module
+			return ($hasPermission = true);
+		}
+		else if (true === ($skipMCA = $skipMCA[$params['controller']])) { // Controller
+			return ($hasPermission = true);
+		}
+		else if (true === ($skipMCA = $skipMCA[$params['action']])) { // Action
+			return ($hasPermission = true);
+		}
+		
+		// Check access permission by group's acl
+		// +++
+		$MCAKey = self::compileMCAKey($params['module'], $params['controller'], $params['action']);
 		// +++ 
-		$acl = $identity->group_acl[$site];
+		$acl = $identity->group_acl[APPLICATION_SITE];
 		$hasPermission = (false !== strpos($acl, ",{$MCAKey},"));
 		
 		// Return;

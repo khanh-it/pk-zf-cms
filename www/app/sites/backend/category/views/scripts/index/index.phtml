@@ -1,0 +1,130 @@
+<?php
+/**
+ * Script view: list category 
+ * @author khanhdtp
+ */
+// Get Zend_Controller_Front;
+$front = Zend_Controller_Front::getInstance();
+
+// Toolbars
+$this->Bt3NavLinks(array(
+    $this->Bt3NavLinks()->iconNew(),
+    $this->Bt3NavLinks()->iconDelete()
+));
+?>
+<div class="card">
+	<!-- card-header -->
+	<div class="card-header">
+		<?php
+			// Filter form;
+			echo $this->Bt3FilterForm()->render($this->form, $this->formSearch);
+		?><br/>
+		<h2>
+			<small><?php
+			  	echo $this->translate('Tổng số dòng') . ': ' . ($totalItemsCount = count($this->paginator)) . '.' 
+			?></small>
+		</h2>
+	</div>
+	<!-- ./card-header -->
+	<form id="admin-form" class="card-body table-responsive" enctype="application/x-www-form-urlencoded" method="post" action="">
+		<table id="tbl-data-list" class="table table-bordered table-condensed table-hover">
+            <thead>
+                <tr>
+					<th width="10">#</th>
+					<th width="10" class="text-center">
+						<?php echo $this->Bt3ManageTools()->mToolCheckerToggler(); ?>
+					</th>
+					<th><?php echo $this->Bt3ManageTools()->mToolSorter($this->translate('Danh mục'), 'name'); ?></th>
+					<th width="10" class="text-nowrap"><?php echo $this->translate('Hình ảnh'); ?></th>
+					<th><?php echo $this->translate('Ghi chú'); ?></th>
+                    <th width="10">
+                    	<abbr title="<?php echo $this->translate('Kích hoạt?'); ?>">
+                    		<?php echo $this->translate('K.Hoạt?'); ?>
+                    	</abbr>
+                    </th>
+					<th width="10">
+						<abbr title="<?php echo $this->translate('Quản lý'); ?>">
+							<?php echo $this->translate('Q.Lý?'); ?>
+						</abbr>
+					</th>
+				</tr>
+            </thead>
+            <tbody>
+        <?php
+            if ($totalItemsCount):
+				// Manage tools 
+				$manageBtnLinks = array(
+					'detail' => $this->Bt3ManageTools()->mBtnDetail(),
+					'edit' => $this->Bt3ManageTools()->mBtnEdit(),
+					'delete' => $this->Bt3ManageTools()->mBtnDelete(),
+				);
+                //
+                $no = 0;
+                //
+                foreach ($this->paginator as $item):
+					// Levels icon
+					$iconLvls = str_repeat('&mdash;&nbsp;', $item['_level'] - 1);
+        ?>
+				<tr>
+					<td align="center" class="text-nowrap"><?php echo ++$no; ?></td>
+					<td align="center" class="text-center">
+						<?php echo $this->Bt3ManageTools()->mToolChecker($item['id']); ?>
+					</td>
+					<td>
+						<div class="pull-left"><?php echo $iconLvls; ?>&nbsp;</div>
+						<div>
+							<?php echo $item['name']; ?><br/>
+							<small class="m-l-10"><abbr title="">[<?php echo $item['code']; ?>]</abbr></small>
+						</div>
+					</td>
+					<td align="center" class="text-nowrap">
+						<?php 
+							// Images
+							$imgs = (array)Category_Model_DbTable_Category::returnImgsWebPath($item['imgs']);
+							echo ($avatar = $imgs[0])
+								? ("<a href=\"{$imgs[0]}\" target=\"_blank\">"
+									. "<img src=\"{$imgs[0]}\" class=\"img-thumb img-thumb-48\" />"
+								. "</a>")
+								: ''
+							; 
+						?>
+					</td>
+					<td><?php echo $item['note']; ?></td>
+					<td align="center" class="text-nowrap">
+						<?php echo $this->Bt3ManageTools()->mToolActiveToggler($item['id'], $item['active']); ?>
+					</td>
+					<td class="text-nowrap">
+					<?php
+						$manageBtns = array(
+							'__detail_' => str_replace(array('__id__'), array($item['id']), $manageBtnLinks['detail']),
+							'__update_' => str_replace(array('__id__'), array($item['id']), $manageBtnLinks['edit']),
+							'__delete_' => str_replace(array('__id__'), array($item['id']), $manageBtnLinks['delete'])
+						);
+						echo implode("\n", $manageBtns);
+					?>
+					</td>
+				</tr>
+        <?php 
+                endforeach;
+            endif;
+        ?>
+			</tbody>
+		</table>
+	</form>
+	<!-- /.box-body -->
+	<div class="card-header clearfix">
+        <div class="pull-right">
+            <?php
+                echo $this->paginationControl($this->paginator); 
+            ?>
+        </div>
+	</div>
+</div>
+<?php
+// CSS:
+// +++ Inline style;
+$this->HeadStyleAction($this->curRequest);
+
+// CSS:
+// +++ Inline script;
+$this->HeadScriptAction($this->curRequest);

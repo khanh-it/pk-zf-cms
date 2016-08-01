@@ -1,0 +1,35 @@
+<?php
+/**
+ * Script view: group # crud
+ * @author khanhdtp
+ */
+// Toolbars
+$this->Bt3NavLinks(array(
+	$this->contOpts['isActUpdate'] ? $this->Bt3NavLinks()->iconApply() : '', 
+    !$this->contOpts['isActDetail'] ? $this->Bt3NavLinks()->iconSaveAndNew() : '',
+    !$this->contOpts['isActDetail'] ? $this->Bt3NavLinks()->iconSaveAndClose() : '',
+    $this->contOpts['isActDetail'] ? $this->Bt3NavLinks()->iconNew() : '',
+    $this->contOpts['isActDetail'] ? $this->Bt3NavLinks()->iconEdit() : '',
+    $this->Bt3NavLinks()->iconClose()
+));
+?>
+<div id="controller" class="card">
+	<div class="card-body card-padding">
+	<?php 
+	    // Render form
+	    echo $this->form;
+	?>
+	</div>
+</div>
+<?php
+// CSS:
+// +++ Inline style;
+$this->HeadStyleAction($this->curRequest, null, array(
+	'action' => 'crud'
+));
+
+// CSS:
+// +++ Inline script;
+$this->HeadScriptAction($this->curRequest, null, array(
+	'action' => 'crud'
+));
