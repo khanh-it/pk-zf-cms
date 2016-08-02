@@ -3,6 +3,11 @@
  */
 class Category_Model_DbTable_Category extends K111_Db_Table
 {
+	/**
+	 * @var string 
+	 */
+	const PHRASE = 'CATEGORY';
+	
     /**
      * The table name.
      * @var string
@@ -13,7 +18,12 @@ class Category_Model_DbTable_Category extends K111_Db_Table
      * The primary key column or columns.
      * @var mixed
      */
-    protected $_primary = 'id';
+    protected $_primary = array('id', 'phrase');
+	/**
+     * The primary values.
+     * @var mixed
+     */
+    protected $_primaryValues = array(null, 'CATEGORY');
     
     /**
      * Classname for row
@@ -24,7 +34,10 @@ class Category_Model_DbTable_Category extends K111_Db_Table
 	/**
 	 * Dependent tables map
 	 */
-	protected $_dependentTables = array('Category_Model_DbTable_Category');
+	protected $_dependentTables = array(
+		'Category_Model_DbTable_Category',
+		'Category_Model_DbTable_CategoryEntry'
+	);
 	
     /**
      * Reference map
@@ -77,8 +90,16 @@ class Category_Model_DbTable_Category extends K111_Db_Table
 	 * @return Zend_Db_Table_Selector
      */
     public function buildFetchDataSelector(array $options = array(), array $order = array()) {
-        // 
-        $select = $this->select();
+        // Init select
+        $select = $this->select()
+			->setIntegrityCheck(false)
+			->from($this->_name)
+			->joinLeft(
+				'tbl_phrase',
+				'phr_context = phrase AND phr_rel_id = id',
+				array()
+			)
+		;
         
         // Filter data;
         $dbA = $select->getAdapter();
@@ -225,6 +246,8 @@ class Category_Model_DbTable_Category extends K111_Db_Table
 		
 		// Fetch data
 		$rows = $this->fetchAll($select);
+		$entry = $rows->current()->findChildrenEntry('en');
+		Zend_Debug::dump($entry);die();
 		$return = $this->dataRecursiveArray($rows->toArray());
 		
 		// Return

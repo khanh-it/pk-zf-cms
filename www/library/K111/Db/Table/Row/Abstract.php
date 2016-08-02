@@ -89,4 +89,28 @@ class K111_Db_Table_Row_Abstract extends Zend_Db_Table_Row_Abstract
             return $this->findParentRow($refMapItem[Zend_Db_Table_Abstract::REF_TABLE_CLASS], $rule);
         }
     }
+	
+	/**
+     * Saves the properties to the database.
+     *
+     * Auto mark primary properties as modified. 
+	 * Solve problems when parent rows not triggering onUpdate cascade.    
+     *
+     * @return mixed The primary key value(s), as an associative array if the
+     *     key is compound, or a scalar if the key is single-column.
+     */
+    public function save()
+    {
+        /**
+         * Mark primary properties as modified
+         */
+        $primary = (array)$this->getTable()->getPrimary();
+		foreach ($primary as $columnName) {
+			!$this->_modifiedFields[$columnName] 
+				&& ($this->_modifiedFields[$columnName] = true)
+			;
+		}
+		
+		return parent::save();
+    }
 }

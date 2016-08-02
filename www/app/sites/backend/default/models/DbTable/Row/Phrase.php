@@ -12,7 +12,7 @@ class Default_Model_DbTable_Row_Phrase extends K111_Db_Table_Row_Abstract
 	 * @return string
 	 */
 	public static function encodeData($data) {
-		return is_array($data) ? serialize((array)$data) : $data;
+		return is_string($data) ? $data : json_encode($data);
 	}
 	
 	/**
@@ -22,19 +22,18 @@ class Default_Model_DbTable_Row_Phrase extends K111_Db_Table_Row_Abstract
 	 * @return array
 	 */
 	public static function decodeData($data) {
-		$return = (@unserialize((string)$data));
-		return (false === $return) ? array() : $return;
+		return (array)(@json_decode((string)$data, JSON_OBJECT_AS_ARRAY));
 	}
 	
 	/**
 	 * Get data (decoded)
 	 * @return array
 	 */
-	public function getData() {
-		if (is_string($this->_data['data'])) {
-			return self::decodeData((string)$this->_data['data']);	
+	public function getPhr_data() {
+		if (is_string($this->_data['phr_data'])) {
+			return self::decodeData((string)$this->_data['phr_data']);	
 		}
-		return $this->_data['data']; 
+		return $this->_data['phr_data']; 
 	}
 	
 	/**
@@ -43,7 +42,7 @@ class Default_Model_DbTable_Row_Phrase extends K111_Db_Table_Row_Abstract
 	 * @param array|string $data data
 	 * @return array
 	 */
-	public function setData($data) {
+	public function setPhr_data($data) {
 		// Format input data;
 		// +++ 
 		
@@ -51,7 +50,7 @@ class Default_Model_DbTable_Row_Phrase extends K111_Db_Table_Row_Abstract
 		if (is_array($data)) {
 			$data = self::encodeData($data);
 		}
-		$this->modifyData('data', $data);
+		$this->modifyData('phr_data', $data);
 				
 		return $this;
 	}
@@ -62,6 +61,5 @@ class Default_Model_DbTable_Row_Phrase extends K111_Db_Table_Row_Abstract
 	 * @return void
 	 */
 	public function init()
-	{
-	}
+	{}
 }

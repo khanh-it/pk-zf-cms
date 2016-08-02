@@ -23,6 +23,12 @@
  */
 class K111_Db_Table extends Zend_Db_Table_Abstract
 {
+	/**
+     * The primary default values.
+     * @var mixed
+     */
+    protected $_primaryValues;
+	
     /**
      * __construct() - For concrete implementation of Zend_Db_Table
      *
@@ -90,5 +96,31 @@ class K111_Db_Table extends Zend_Db_Table_Abstract
         $refMap = $this->_getReferenceMapNormalized();
         // Return
         return $rule ? $refMap[$rule] : $refMap;
+    }
+	
+	/**
+     * Fetches rows by primary key. 
+	 * 
+	 * Set default values for primary keys if available!
+     *
+     * @param  mixed $key The value(s) of the primary keys.
+     * @return Zend_Db_Table_Rowset_Abstract Row(s) matching the criteria.
+     * @throws Zend_Db_Table_Exception
+     */
+    public function find()
+    {
+    	$args = func_get_args();
+		
+		$argsCount = count($args);
+		$argsZeroCount = count($args[0]);
+		$primaryCount = count((array)$this->_primary);
+		
+    	if (($argsCount < $primaryCount) && $argsZeroCount && !empty($this->_primaryValues)) {
+    		for ($i = $argsCount; $i < $primaryCount; $i++) {
+    			$args[$i] = array_fill(0, $argsZeroCount, $this->_primaryValues[$i]);
+    		}
+    	}
+    	
+		return call_user_func_array(array('parent', __FUNCTION__), $args);
     }
 }

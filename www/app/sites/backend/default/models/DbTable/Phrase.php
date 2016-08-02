@@ -15,8 +15,14 @@ class Default_Model_DbTable_Phrase extends K111_Db_Table
      * The primary key column or columns.
      * @var mixed
      */
-    protected $_primary = 'id';
+    protected $_primary = 'phr_id';
     
+	/**
+     * Classname for rowset
+     * @var string
+     */
+    protected $_rowsetClass = 'Default_Model_DbTable_Rowset_Phrase';
+	
     /**
      * Classname for row
      * @var string

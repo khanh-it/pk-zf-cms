@@ -29,6 +29,23 @@ class Category_Model_DbTable_Row_Category extends K111_Db_Table_Row_BitStat
 	public function findChildrenCategory() {
 		return $this->findDependentRowset('Category_Model_DbTable_Category', 'Parent');
 	}
+	
+	/**
+	 * Find current row's dependent category entry rowset
+	 * 
+	 * @return Zend_Db_Table_Rowset_Abstract
+	 */
+	public function findChildrenEntry($lang = null) {
+		// 
+		$rows = $this->findDependentRowset('Category_Model_DbTable_CategoryEntry', 'Category');
+		// Return;
+		return $rows->getPhrData(
+			Category_Model_DbTable_Category::PHRASE,
+			$this->_data['id'],
+			$lang
+		);
+	}
+	
 	/**
 	 * Find current row's parent row
 	 * 
@@ -36,30 +53,6 @@ class Category_Model_DbTable_Row_Category extends K111_Db_Table_Row_BitStat
 	 */
 	public function findParentCategory() {
 		return $this->findParentRowByRule('Parent');
-	}
-	
-	/**
-	 * Encode password
-	 * @param $password string Password
-	 * @return this
-	 */
-	public function setPassword($password) {
-		// Format input
-		$this->modifyData('group_id', md5($password));
-
-		return $this;
-	}
-	
-	/**
-	 * Check group_id data valid?
-	 * @param $groupId int|string Group id
-	 * @return this
-	 */
-	public function setGroup_id($groupId) {
-		// Format input
-		$this->modifyData('group_id', ('' == (string)$groupId) ? null : $groupId);
-
-		return $this;
 	}
 	
 	/**
