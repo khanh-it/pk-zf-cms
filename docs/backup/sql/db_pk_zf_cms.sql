@@ -73,6 +73,7 @@ CREATE TABLE `tbl_category` (
   `created_time` datetime DEFAULT NULL COMMENT 'Created time',
   `last_modified_account_id` int(11) DEFAULT NULL COMMENT 'Last modifier id',
   `last_modified_time` datetime DEFAULT NULL COMMENT 'Last modified time',
+  `phrase` varchar(16) NOT NULL DEFAULT 'CATEGORY' COMMENT 'Phrase''s context string',
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNIQUE_CODE` (`code`),
   KEY `IDX_name` (`name`),
@@ -82,6 +83,7 @@ CREATE TABLE `tbl_category` (
   KEY `CATEGORY__PARENT` (`parent_id`),
   KEY `CATEGORY__CREATE_ACCOUNT` (`create_account_id`),
   KEY `CATEGORY__LAST_MODIFIED_ACCOUNT` (`last_modified_account_id`),
+  KEY `IDX_phrase` (`phrase`),
   CONSTRAINT `CATEGORY__CREATE_ACCOUNT` FOREIGN KEY (`create_account_id`) REFERENCES `tbl_account` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `CATEGORY__LAST_MODIFIED_ACCOUNT` FOREIGN KEY (`last_modified_account_id`) REFERENCES `tbl_account` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `CATEGORY__PARENT` FOREIGN KEY (`parent_id`) REFERENCES `tbl_category` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
@@ -89,7 +91,7 @@ CREATE TABLE `tbl_category` (
 
 /*Data for the table `tbl_category` */
 
-insert  into `tbl_category`(`id`,`parent_id`,`code`,`name`,`alias`,`type`,`imgs`,`note`,`active`,`draft`,`create_account_id`,`created_time`,`last_modified_account_id`,`last_modified_time`) values (1,NULL,'cate1','Cate 1','','PRODUCT',NULL,'',1,NULL,1,NULL,NULL,NULL),(2,NULL,'cate2','Cate 2','','PRODUCT',NULL,'',1,NULL,1,NULL,NULL,NULL),(3,NULL,'cate3','Cate 3','','PRODUCT',NULL,'',1,NULL,1,NULL,NULL,NULL),(4,1,'cate1.1','Cate 1.1','','PRODUCT',NULL,'',1,NULL,1,NULL,NULL,NULL),(5,1,'cate1.2','Cate 1.2','','PRODUCT',NULL,'',1,NULL,1,NULL,NULL,NULL),(6,2,'cate2.1','Cate 2.1','','PRODUCT',NULL,'',1,NULL,1,NULL,NULL,NULL),(7,2,'cate2.2','Cate 2.2','','PRODUCT',NULL,'',1,NULL,1,NULL,NULL,NULL),(8,3,'cate3.1','Cate 3.1','','PRODUCT',NULL,'',1,NULL,1,NULL,NULL,NULL),(9,3,'cate3.2','Cate 3.2','','PRODUCT',NULL,'',1,NULL,1,NULL,NULL,NULL),(10,4,'cate1.1.1','Cate 1.1.1','','PRODUCT',NULL,'',1,NULL,1,NULL,NULL,NULL),(11,4,'cate1.1.2','Cate 1.1.2','','PRODUCT',NULL,'',1,NULL,1,NULL,NULL,NULL);
+insert  into `tbl_category`(`id`,`parent_id`,`code`,`name`,`alias`,`type`,`imgs`,`note`,`active`,`draft`,`create_account_id`,`created_time`,`last_modified_account_id`,`last_modified_time`,`phrase`) values (2,NULL,'cate2','Cate 2','','PRODUCT',NULL,'',1,NULL,1,NULL,NULL,NULL,'CATEGORY'),(3,NULL,'cate3','Cate 3','','PRODUCT',NULL,'',1,NULL,1,NULL,NULL,NULL,'CATEGORY'),(11,NULL,'cate1.1.2','Cate 1.1.2','','PRODUCT',NULL,'',1,NULL,1,NULL,NULL,NULL,'CATEGORY');
 
 /*Table structure for table `tbl_group` */
 
@@ -128,16 +130,18 @@ insert  into `tbl_group`(`id`,`code`,`name`,`note`,`acl`,`active`,`draft`,`creat
 DROP TABLE IF EXISTS `tbl_phrase`;
 
 CREATE TABLE `tbl_phrase` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'Primary key',
-  `context` varchar(128) NOT NULL DEFAULT '' COMMENT 'Context string',
-  `rel_id` varchar(32) NOT NULL DEFAULT '' COMMENT 'Relative id (context''s primary key)',
-  `lang` varchar(3) NOT NULL DEFAULT '' COMMENT 'Language key (string)',
-  `data` longtext COMMENT 'Encoded string, store language phrases',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `UNIQUE_ROW` (`context`,`rel_id`,`lang`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Language''s phrases..!';
+  `phr_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'Primary key',
+  `phr_context` varchar(128) NOT NULL DEFAULT '' COMMENT 'Context string',
+  `phr_rel_id` varchar(32) NOT NULL DEFAULT '' COMMENT 'Relative id (context''s primary key)',
+  `phr_lang` varchar(3) NOT NULL DEFAULT '' COMMENT 'Language key (string)',
+  `phr_data` longtext COMMENT 'Encoded string, store language phrases',
+  PRIMARY KEY (`phr_id`),
+  UNIQUE KEY `UNIQUE_ROW` (`phr_context`,`phr_rel_id`,`phr_lang`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='Language''s phrases..!';
 
 /*Data for the table `tbl_phrase` */
+
+insert  into `tbl_phrase`(`phr_id`,`phr_context`,`phr_rel_id`,`phr_lang`,`phr_data`) values (3,'CATEGORY','2','en','{\"name\": \"Category\'s name\"}'),(4,'PRODUCT','2','en',NULL);
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
