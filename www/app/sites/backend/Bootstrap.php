@@ -43,36 +43,70 @@ class Bootstrap extends K111_Application_Bootstrap_Bootstrap
 	}
 	
 	/**
-	 * Cấu hình controller
+	 * Initilize font controller's plugins
+	 * 
+	 * @return void
 	 */
 	protected function _initScriptController() {
-		
 		return;
 		$this->bootstrap('frontController');
 		$front = $this->getResource('frontController');
 	
 		/* Dang ky plugin */
 		$front->registerPlugin(new ZF_Controller_Plugin_RemoveExtensionDefault());
-		// Plugin phan quyen
-		$front->registerPlugin(new ZF_Controller_Plugin_CheckPermission(array(
-		    'ignoreSMCA'	=> array(
-		        'default'	=> array(
-		            //'index'	=> true,
-		            'error'	=> true
-		        ),
-		        'member' => array(
-		            'index' => array(
-		                'login' => true,
-		                'logout' => true
-		            )
-		        )
-		    ),
-		    'ignoreIdentities' => array('')
-		)));
-		
-		// Plugin phan quyen
-		//$front->registerPlugin ( new ZF_Controller_Plugin_CheckPermission () );
-		$front->registerPlugin ( new ZF_Controller_Plugin_Hook () );
-		// $front->registerPlugin(new ZF_Controller_Plugin_SystemLog());
 	}
+	
+	/**
+     * Init Access Control List (check account acess permission)
+     * @return void
+     */
+    protected function _initACL() {
+        // Load ACL class;
+        require_once __DIR__ . '/_class/ACL.php';
+        // +++ Init check access options
+        ACL::setCheckAccessOptions(array(
+        // +++ 
+        	'skip_mca' => array(),
+        // +++
+        	'skip_credentials' => array(
+        		'admin' => true
+			), 
+        // +++ Redirect login : module/controller/action
+        	'url_no_login_params' => array(
+        		'module' => 'default',
+        		'controller' => 'account',
+        		'action' => 'login'
+			),
+		// +++ 
+			'url_access_denied_params' => array(
+        		'module' => 'default',
+        		'controller' => 'error',
+        		'action' => 'access-denied'
+			) 
+		));
+		// +++ Register handler for handling checking access!  
+        ACL::checkAccess();
+    }
+	
+	/**
+     * Init system's language
+     * @return void
+     */
+    protected function _initLanguage() {
+        // Load `Language` class;
+        require_once __DIR__ . '/_class/Language.php';
+        // +++ Set configs
+        Language::setConfigs(
+        	require_once __DIR__ . '/_lang/configs.php'
+		);
+		// +++ Init default language
+		if (!Zend_Session::isStarted()) {
+			Zend_Session::start();
+		}
+		if (!$_SESSION['CMS_LANG']) {
+			list($topLang) = Language::getTop();
+			$_SESSION['CMS_LANG'] = $topLang;
+		}
+		Language::setDefault($_SESSION['CMS_LANG']);
+    }
 }

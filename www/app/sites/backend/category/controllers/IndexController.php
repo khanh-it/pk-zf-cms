@@ -134,6 +134,9 @@ class Category_IndexController extends K111_Controller_Action
 			}
 			unset($ele);
 		}
+		// +++ Load SEO Tools elements
+		$vData['phrUtil'] = $phrUtil = Default_Model_Util_Phrase::getInstance();
+		$phrUtil->buildFormSEOElements($form);
 	    
 	    // Process on POST
 	    if ($this->_request->isPost() && !$options['isActDetail']) {

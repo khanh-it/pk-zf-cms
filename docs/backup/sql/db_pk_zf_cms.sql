@@ -73,7 +73,7 @@ CREATE TABLE `tbl_category` (
   `created_time` datetime DEFAULT NULL COMMENT 'Created time',
   `last_modified_account_id` int(11) DEFAULT NULL COMMENT 'Last modifier id',
   `last_modified_time` datetime DEFAULT NULL COMMENT 'Last modified time',
-  `phrase` varchar(16) NOT NULL DEFAULT 'CATEGORY' COMMENT 'Phrase''s context string',
+  `phrase` varchar(8) NOT NULL DEFAULT 'CATEGORY' COMMENT 'Phrase''s context string',
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNIQUE_CODE` (`code`),
   KEY `IDX_name` (`name`),
@@ -134,14 +134,16 @@ CREATE TABLE `tbl_phrase` (
   `phr_context` varchar(128) NOT NULL DEFAULT '' COMMENT 'Context string',
   `phr_rel_id` varchar(32) NOT NULL DEFAULT '' COMMENT 'Relative id (context''s primary key)',
   `phr_lang` varchar(3) NOT NULL DEFAULT '' COMMENT 'Language key (string)',
-  `phr_data` longtext COMMENT 'Encoded string, store language phrases',
+  `phr_column` varchar(128) NOT NULL DEFAULT '' COMMENT 'Column name',
+  `phr_data` text COMMENT 'Column data',
   PRIMARY KEY (`phr_id`),
-  UNIQUE KEY `UNIQUE_ROW` (`phr_context`,`phr_rel_id`,`phr_lang`)
+  UNIQUE KEY `UNIQUE_ROW` (`phr_context`,`phr_rel_id`,`phr_lang`,`phr_column`),
+  KEY `IDX_column_n_data` (`phr_column`,`phr_data`(255))
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='Language''s phrases..!';
 
 /*Data for the table `tbl_phrase` */
 
-insert  into `tbl_phrase`(`phr_id`,`phr_context`,`phr_rel_id`,`phr_lang`,`phr_data`) values (3,'CATEGORY','2','en','{\"name\": \"Category\'s name\"}'),(4,'PRODUCT','2','en',NULL);
+insert  into `tbl_phrase`(`phr_id`,`phr_context`,`phr_rel_id`,`phr_lang`,`phr_column`,`phr_data`) values (1,'CATEGORY','2','en','name','Category\'s name was PC Games!'),(2,'CATEGORY','2','en','alias','category-name-was-ios-games');
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
