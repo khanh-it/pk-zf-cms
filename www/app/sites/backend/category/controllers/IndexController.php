@@ -59,6 +59,8 @@ class Category_IndexController extends K111_Controller_Action
 		$vData['form']->populate($params);
 		
 	    // Fetch data;
+	    // +++ Default category's type
+	    $params['type'] = $this->_options['type'];
 	    // +++  
 		$selector = $this->_repo->flatternDataRecursive(
 			$this->_repo->fetchDataRecursive($params)
@@ -124,9 +126,13 @@ class Category_IndexController extends K111_Controller_Action
 		
 	    // Define var # view's data;
 	    $vData = array();
+		// +++
+		$vData['phrUtil'] = $phrUtil = Default_Model_Util_Phrase::getInstance();
 	    
 	    // Define var # form;
 	    $vData['form'] = $form = new Category_Form_Category_Crud();
+		// +++ Load SEO Tools elements
+		$phrUtil->buildFormSEOElements($form);
 		// +++ Disable elements on detail mode
 		if ($options['isActDetail']) {
 			foreach ($form->getElements() as $ele) {
@@ -134,9 +140,17 @@ class Category_IndexController extends K111_Controller_Action
 			}
 			unset($ele);
 		}
-		// +++ Load SEO Tools elements
-		$vData['phrUtil'] = $phrUtil = Default_Model_Util_Phrase::getInstance();
-		$phrUtil->buildFormSEOElements($form);
+		// +++ Parent
+		$cateOpts = $this->_repo->flatternDataRecursive(
+			$this->_repo->fetchDataRecursive(array(
+			// +++ Default category's type
+	    		'type' => $this->_options['type']
+			)), 
+			array('build_option' => true)
+		);
+		$form->parent_id && $form->parent_id->setMultiOptions(
+			array('' => LANG_SELECT) + $cateOpts
+		);
 	    
 	    // Process on POST
 	    if ($this->_request->isPost() && !$options['isActDetail']) {
@@ -147,11 +161,17 @@ class Category_IndexController extends K111_Controller_Action
 	        if ($form->isValid($postData)) {
 	        	// Get form data;
 	            $formValues = $form->getValues();
+				
+				\Zend_Debug::dump($postData);
+				\Zend_Debug::dump($formValues);
+				die();
 	        	
     	        // Check duplicate code!
-    	        $dataExists = $this->_repo->checkExistsByCode($formValues['code'], array(
-    	        	'exclude_id' => array($entity->id) 
-				)); 
+    	        $dataExists = $this->_repo->checkExistsByCode(
+    	        	$formValues['code'], $this->_options['type'], array(
+	    	        	'exclude_id' => array($entity->id) 
+					))
+				;
                 if ($dataExists) {
     	            $form
     	               ->getElement('code')

@@ -40,8 +40,8 @@ class Category_Form_Category_Crud extends Twitter_Bootstrap3_Form
             'order' => ($eleOrder += 100)
         ));
 		// +++ 
-        $elements[] = $element = $this->createElement('text', 'name_seo', array(
-            'label' => $txt = $view->translate('Tên danh mục - SEO'),
+        $elements[] = $element = $this->createElement('text', 'alias', array(
+            'label' => $txt = $view->translate('Alias - Tên danh mục'),
             'placeholder' => $txt,
             'maxlength' => 250,
             'order' => ($eleOrder += 100),

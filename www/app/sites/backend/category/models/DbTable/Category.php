@@ -188,8 +188,23 @@ class Category_Model_DbTable_Category extends K111_Db_Table
 	 */
 	public function flatternDataRecursive($data, array $options = array()) {
 		// Get, format opitons
+		// +++ Build options key/value pairs?
+		$options['build_option'] = $options['build_option'] ?: false;
 		// +++ Index by?
-		$options['index_by'] = $options['index_by'] ?: false;
+		if (isset($options['build_option'])) {
+			$options['index_by'] = isset($options['index_by']) ? $options['index_by'] : true;
+		}
+		// +++ Format output?
+		if (true === $options['build_option']) {
+			$options['format_output'] = isset($options['format_output']) ? $options['format_output'] : function($item, $options){
+				return str_repeat(':: ', $item['_level'] - 1) 
+			 	. ((true === $options['build_option'])
+					? "{$item['name']} [{$item['code']}]" 
+					: (false === $options['build_option'] ? "{$item['code']} [{$item['name']}]" : $item['name']
+					)
+				);
+			};
+		}
 		
 		// Define vars
 		// +++ 
@@ -209,17 +224,17 @@ class Category_Model_DbTable_Category extends K111_Db_Table
 			}
 			unset($item['_children']);
 			
-			// Format output?
-			$item = is_callable($options['format_output']) 
-				? $options['format_output']($item)
-				: $item
-			;
 			// Case: index by?
 			$idx = (true === $options['index_by']) 
 				? $item['id']
 				: (is_callable($options['index_by'])
 					? $options['index_by']($item) : null
 				)
+			;
+			// Format output?
+			$item = is_callable($options['format_output']) 
+				? $options['format_output']($item, $options)
+				: $item
 			;
 			if ($idx) {
 				$tmp[$idx] = $item;
@@ -246,8 +261,6 @@ class Category_Model_DbTable_Category extends K111_Db_Table
 		
 		// Fetch data
 		$rows = $this->fetchAll($select);
-		$entry = $rows->current()->findChildrenEntry('en');
-		Zend_Debug::dump($entry);die();
 		$return = $this->dataRecursiveArray($rows->toArray());
 		
 		// Return

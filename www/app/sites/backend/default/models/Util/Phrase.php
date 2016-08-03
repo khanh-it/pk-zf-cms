@@ -44,7 +44,7 @@ class Default_Model_Util_Phrase extends Default_Model_Util_Abstract
 		// +++ 
 		
 		// dummy element, used as label spliter
-		$elements[] = $element = $form->createElement('text', 'phr_column__seo', array(
+		$elements[] = $element = $form->createElement('text', 'phr_data__seo', array(
 			'label' => $txt = ('--- <u>' . $view->translate("SEO TOOLS:") . '</u> ---'),
 			'ignore' => true,
 			'attribs' => array(
@@ -59,10 +59,10 @@ class Default_Model_Util_Phrase extends Default_Model_Util_Abstract
 		;
 		
 		// page's title
-		$elements[] = $element = $form->createElement('text', 'phr_column__seo_title', array(
+		$elements[] = $element = $form->createElement('text', 'phr_data__seo_title', array(
 			'label' => $txt = $view->translate("Page's title"),
 			'attribs' => array(
-				'name' => 'phr_column[seo_title]',
+				'name' => 'phr_data[seo_title]',
 				'class' => 'form-control input-sm',
 				'maxlength' => '255',
 				'placeholder' => $txt
@@ -71,10 +71,10 @@ class Default_Model_Util_Phrase extends Default_Model_Util_Abstract
 		));
 		
 		// meta keywords
-		$elements[] = $element = $form->createElement('text', 'phr_column__seo_meta_keywords', array(
+		$elements[] = $element = $form->createElement('text', 'phr_data__seo_meta_keywords', array(
 			'label' => $txt = $view->translate("Page's meta keywords"),
 			'attribs' => array(
-				'name' => 'phr_column[seo_meta_keywords]',
+				'name' => 'phr_data[seo_meta_keywords]',
 				'class' => 'form-control input-sm',
 				'maxlength' => '250',
 				'placeholder' => $txt
@@ -83,10 +83,10 @@ class Default_Model_Util_Phrase extends Default_Model_Util_Abstract
 		));
 		
 		// meta description
-		$elements[] = $element = $form->createElement('text', 'phr_column__seo_meta_description', array(
+		$elements[] = $element = $form->createElement('text', 'phr_data__seo_meta_description', array(
 			'label' => $txt = $view->translate("Page's meta description"),
 			'attribs' => array(
-				'name' => 'phr_column[seo_meta_description]',
+				'name' => 'phr_data[seo_meta_description]',
 				'class' => 'form-control input-sm',
 				'maxlength' => '255',
 				'placeholder' => $txt
@@ -95,10 +95,10 @@ class Default_Model_Util_Phrase extends Default_Model_Util_Abstract
 		));
 		
 		// html_meta 
-		$elements[] = $element = $form->createElement('textarea', 'phr_column__seo_html_meta', array(
+		$elements[] = $element = $form->createElement('textarea', 'phr_data__seo_html_meta', array(
 			'label' => $txt = $view->translate("Page's html meta"),
 			'attribs' => array(
-				'name' => 'phr_column[seo_html_meta]',
+				'name' => 'phr_data[seo_html_meta]',
 				'class' => 'form-control input-sm',
 				'rows' => 6,
 				'placeholder' => $txt
