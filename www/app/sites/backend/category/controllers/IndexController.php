@@ -161,8 +161,10 @@ class Category_IndexController extends K111_Controller_Action
 	        if ($form->isValid($postData)) {
 	        	// Get form data;
 	            $formValues = $form->getValues();
+				// Extract phrase data
+				$phrData = $phrUtil->extractPhrData($formValues);
 				
-				\Zend_Debug::dump($postData);
+				\Zend_Debug::dump($phrData);
 				\Zend_Debug::dump($formValues);
 				die();
 	        	
@@ -175,7 +177,7 @@ class Category_IndexController extends K111_Controller_Action
                 if ($dataExists) {
     	            $form
     	               ->getElement('code')
-    	                   ->addError($txt = $this->view->translate('Mã nhóm tài khoản đã tồn tại!'))
+    	                   ->addError($txt = $this->view->translate('Mã danh mục đã tồn tại!'))
     	            ;
                 }
 	            

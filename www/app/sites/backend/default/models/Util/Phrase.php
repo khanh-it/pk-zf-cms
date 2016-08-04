@@ -30,7 +30,11 @@ class Default_Model_Util_Phrase extends Default_Model_Util_Abstract
 	}
 	
 	/**
+	 * Build form form elements for SEO TOOL(s)
 	 * 
+	 * @param $_form null|Zend_Form From instance
+	 * @param $options array An array of options
+	 * @return array An array of SEO TOOL elements
 	 */
 	public function buildFormSEOElements($_form = null, $options = array()) {
 		// Elements
@@ -44,11 +48,11 @@ class Default_Model_Util_Phrase extends Default_Model_Util_Abstract
 		// +++ 
 		
 		// dummy element, used as label spliter
-		$elements[] = $element = $form->createElement('text', 'phr_data__seo', array(
+		$elements[] = $element = $form->createElement('text', 'phr_data__', array(
 			'label' => $txt = ('--- <u>' . $view->translate("SEO TOOLS:") . '</u> ---'),
 			'ignore' => true,
 			'attribs' => array(
-				'name' => '', 'style' => 'display:none;',
+				'style' => 'display:none;',
 			),
 			'order' => ($_order += 100)
 		));
@@ -62,7 +66,6 @@ class Default_Model_Util_Phrase extends Default_Model_Util_Abstract
 		$elements[] = $element = $form->createElement('text', 'phr_data__seo_title', array(
 			'label' => $txt = $view->translate("Page's title"),
 			'attribs' => array(
-				'name' => 'phr_data[seo_title]',
 				'class' => 'form-control input-sm',
 				'maxlength' => '255',
 				'placeholder' => $txt
@@ -74,7 +77,6 @@ class Default_Model_Util_Phrase extends Default_Model_Util_Abstract
 		$elements[] = $element = $form->createElement('text', 'phr_data__seo_meta_keywords', array(
 			'label' => $txt = $view->translate("Page's meta keywords"),
 			'attribs' => array(
-				'name' => 'phr_data[seo_meta_keywords]',
 				'class' => 'form-control input-sm',
 				'maxlength' => '250',
 				'placeholder' => $txt
@@ -86,7 +88,6 @@ class Default_Model_Util_Phrase extends Default_Model_Util_Abstract
 		$elements[] = $element = $form->createElement('text', 'phr_data__seo_meta_description', array(
 			'label' => $txt = $view->translate("Page's meta description"),
 			'attribs' => array(
-				'name' => 'phr_data[seo_meta_description]',
 				'class' => 'form-control input-sm',
 				'maxlength' => '255',
 				'placeholder' => $txt
@@ -98,7 +99,6 @@ class Default_Model_Util_Phrase extends Default_Model_Util_Abstract
 		$elements[] = $element = $form->createElement('textarea', 'phr_data__seo_html_meta', array(
 			'label' => $txt = $view->translate("Page's html meta"),
 			'attribs' => array(
-				'name' => 'phr_data[seo_html_meta]',
 				'class' => 'form-control input-sm',
 				'rows' => 6,
 				'placeholder' => $txt
@@ -112,4 +112,27 @@ class Default_Model_Util_Phrase extends Default_Model_Util_Abstract
 		// Return
 		return $elements;
 	}
+
+	/**
+	 * Extract phrase data from array (remove keys)
+	 * 
+	 * @param $data array An array data
+	 * @return array
+	 */
+	public function extractPhrData(array &$data) {
+		// Phrase data
+		$phrData = array();
+		// +++ 
+		$phrDataKey = 'phr_data__';
+		// 
+		foreach ($data as $key => $value) {
+			if (0 === strpos($key, $phrDataKey)) {
+				$key = str_replace($phrDataKey, '', $key);
+				$phrData[$key] = $value; 
+			}
+		}
+		
+		// Return
+		return $phrData;
+	}	
 }
