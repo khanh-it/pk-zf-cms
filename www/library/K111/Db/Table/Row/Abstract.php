@@ -40,7 +40,7 @@ class K111_Db_Table_Row_Abstract extends Zend_Db_Table_Row_Abstract
 	 * @return mixed
 	 */
 	public function modifyData($columnName, $value) {
-		return parent::_set($columnName, $value);
+		return parent::__set($columnName, $value);
 	}
 	
     /**

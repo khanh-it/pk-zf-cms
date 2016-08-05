@@ -18,7 +18,10 @@ class Category_ProductController extends K111_Controller_Action
 		// Set request's default params
 		$this->getRequest()
 			->setParam('_options', array(
-				'type' => Category_Model_DbTable_Row_Category::TYPE_PRODUCT
+			// Default category's type
+				'type' => Category_Model_DbTable_Row_Category::TYPE_PRODUCT,
+			// Auto sync module/controller/action for request
+				'syncControllerName' => true
 			))
 		;
 	}

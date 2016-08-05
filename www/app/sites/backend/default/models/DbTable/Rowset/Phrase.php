@@ -6,9 +6,9 @@
 class Default_Model_DbTable_Rowset_Phrase extends K111_Db_Table_Rowset_Abstract
 {
 	/**
-	 * @var array Language data 
+	 * @var array Grouped data 
 	 */
-	protected $_langData = array();
+	protected $_groupedData = array();
 	
     /**
      * Initialize object
@@ -21,7 +21,8 @@ class Default_Model_DbTable_Rowset_Phrase extends K111_Db_Table_Rowset_Abstract
     	foreach ($this as $row) {
     		$this->_langData[$row->phr_context]
     			[$row->phr_rel_id]
-    			[$row->phr_lang] = (array)$row->getPhr_data();
+    			[$row->phr_lang]
+    			[$row->phr_column] = $row;
 			;
 		}
     }
@@ -30,17 +31,22 @@ class Default_Model_DbTable_Rowset_Phrase extends K111_Db_Table_Rowset_Abstract
 	 * 
 	 * 
 	 */
-	public function getPhrData($context, $relId, $lang = null) {
+	public function getGroupedData($context = null, $relId = null, $lang = null) {
 		// Get data
 		$data = $this->_langData;
 		// +++ 
 		if ($context) {
 			$data = (array)$data[$context];
 		}
+		// +++
 		if ($relId) {
 			$data = (array)$data[$relId];
 		}
+		// +++
+		if ($lang) {
+			$data = (array)$data[$lang];
+		}
 		
-		return $lang ? $data[$lang] : $data;
+		return $data;
 	}
 }

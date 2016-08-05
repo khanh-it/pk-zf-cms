@@ -5,9 +5,17 @@
 class Default_Model_Util_Phrase extends Default_Model_Util_Abstract
 {
 	/**
+	 * @var Default_Model_DbTable_Phrase 
+	 */
+	protected $_repo;
+	
+	/**
 	 * Constructor
 	 */
-	protected function __construct(){}
+	protected function __construct(){
+		// Initialize
+		$this->_repo = new Default_Model_DbTable_Phrase();  
+	}
 	
 	/**
 	 * @var Default_Model_Util_Phrase
@@ -127,12 +135,59 @@ class Default_Model_Util_Phrase extends Default_Model_Util_Abstract
 		// 
 		foreach ($data as $key => $value) {
 			if (0 === strpos($key, $phrDataKey)) {
-				$key = str_replace($phrDataKey, '', $key);
-				$phrData[$key] = $value; 
+				$phrData[
+					str_replace($phrDataKey, '', $key)
+				] = $value;
+				// Remove key(s)
+				unset($data[$key]);
 			}
 		}
 		
 		// Return
 		return $phrData;
-	}	
+	}
+	
+	/**
+	 * Extract phrase data from array (remove keys)
+	 * 
+	 * @param $data array An array data
+	 * @return array
+	 */
+	public function savePhrase($context, $relId, $lang, array $data) {
+		// Build selector
+		$select = $this->_repo->buildFetchDataSelector($options = array(
+			'context' => $context,
+			'rel_id' => $relId,
+			'lang' => $lang
+		));
+		
+		// Fetch data
+		$rows = $this->_repo->fetchAll($select);
+		
+		// Get output data (grouped) 
+		$phrColumns = (array)$rows->getGroupedData($context, $relId, $lang);
+		
+		// Loop
+		foreach ($data as $phrColumn => $phrData) {
+			// Create new row (if not any)
+			$row = $phrColumns[$phrColumn];
+			if (!$row) {
+				$row = $this->_repo->createRow();
+				$row->setFromArray(array(
+					'phr_context' => $context,
+					'phr_rel_id' => $relId,
+					'phr_lang' => $lang,
+					'phr_column' => $phrColumn
+				));
+			}
+			// Set data
+			$row->phr_data = $phrData;
+			
+			// Save data to database
+			$row->save();
+		}
+		
+		// Return
+		return $this;
+	}
 }

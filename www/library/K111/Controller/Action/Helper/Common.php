@@ -62,11 +62,11 @@ class K111_Controller_Action_Helper_Common extends Zend_Controller_Action_Helper
 	 * @param string $replacement Replacement char for special chars        	
 	 * @return string
 	 */
-	public function stringToAlias($value, $replacement = '-') {
+	public function str2Alias($value, $replacement = '-') {
 		return strtolower(str_replace(
 			array(' '), 
 			array($replacement), 
-			$this->_filterNoSpecialChar(
+			$this->_filterNoSpecialChar->filter(
 				$this->_filterNoMark->filter($value),
 				$replacement
 			)

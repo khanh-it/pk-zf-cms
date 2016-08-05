@@ -26,16 +26,26 @@ class Category_IndexController extends K111_Controller_Action
 	public function init()
 	{
 		/* Initialize action controller here */
-		// +++ Entity's repo;
-		$this->_repo = new Category_Model_DbTable_Category();
-		
-		// For mat, + get options (from others forwared controllers)
+		// +++ Format, + get options (from others forwared controllers)
 		$this->_options = $this->_request->getParam('_options', array());
 		// +++ Check for required option
 		$categoryTypes = Category_Model_DbTable_Row_Category::returnTypes();
 		if (!$categoryTypes[$this->_options['type']]) {
 			throw new Zend_Controller_Action_Exception("Category type is missing!");
 		}
+		// +++ Sync module/controller/action name?
+		if ($this->_options['syncModuleName']) {
+			$this->_request->setModuleName($this->_request->getParam('module'));
+		}
+		if ($this->_options['syncControllerName']) {
+			$this->_request->setControllerName($this->_request->getParam('controller'));
+		}
+		if ($this->_options['syncActionName']) {
+			$this->_request->setActionName($this->_request->getParam('action'));
+		}
+		// +++ Entity's repo;
+		$this->_repo = new Category_Model_DbTable_Category();
+		$this->_repo->setDefaultType($this->_options['type']);
 	}
 	
 	/**
@@ -71,6 +81,8 @@ class Category_IndexController extends K111_Controller_Action
 	    
 	    // Render view
 	    $this->view->assign($vData);
+		// +++ Render script
+		$this->renderScript('index/index.phtml');
 	}
 	
 	/**
@@ -142,10 +154,7 @@ class Category_IndexController extends K111_Controller_Action
 		}
 		// +++ Parent
 		$cateOpts = $this->_repo->flatternDataRecursive(
-			$this->_repo->fetchDataRecursive(array(
-			// +++ Default category's type
-	    		'type' => $this->_options['type']
-			)), 
+			$this->_repo->fetchDataRecursive(),
 			array('build_option' => true)
 		);
 		$form->parent_id && $form->parent_id->setMultiOptions(
@@ -161,19 +170,23 @@ class Category_IndexController extends K111_Controller_Action
 	        if ($form->isValid($postData)) {
 	        	// Get form data;
 	            $formValues = $form->getValues();
+				// +++ type
+				$formValues['type'] = $this->_options['type'];
+				// +++ Make alias
+				$formValues['alias'] = $formValues['alias'] ?: $this->_helper->common->str2Alias($formValues['name']);
+				
 				// Extract phrase data
 				$phrData = $phrUtil->extractPhrData($formValues);
+				if (!$options['isActUpdate']) {
+					$phrData = array_filter($phrData);
+				}
+				// Get language info
+				list($langKey, $langData) = Language::getDefault();
 				
-				\Zend_Debug::dump($phrData);
-				\Zend_Debug::dump($formValues);
-				die();
-	        	
     	        // Check duplicate code!
-    	        $dataExists = $this->_repo->checkExistsByCode(
-    	        	$formValues['code'], $this->_options['type'], array(
-	    	        	'exclude_id' => array($entity->id) 
-					))
-				;
+    	        $dataExists = $this->_repo->checkExistsByCode($formValues['code'], array(
+    	        	'exclude_id' => array($entity->id) 
+				));
                 if ($dataExists) {
     	            $form
     	               ->getElement('code')
@@ -187,7 +200,7 @@ class Category_IndexController extends K111_Controller_Action
     	            $entity = $entity ?: $this->_repo->fetchNew();
     	            // Fill entity data 
     	            $entity->setFromArray(array_merge($formValues,
-    	            	$options['isActUpdate']
+						$options['isActUpdate']
 					// +++ Case: update
 						? array(
 							'last_modified_account_id' => $this->_authIdentity->id,
@@ -200,6 +213,14 @@ class Category_IndexController extends K111_Controller_Action
 					));
     	            // +++ Get last insert id (if any)
     	            $entityId = $entity->save();
+					
+					// Save phrase data?
+					if ($langKey && !empty($phrData)) {
+						$phrUtil->savePhrase(
+							Category_Model_DbTable_Category::PHRASE,
+							$entity->id, $langKey, $phrData
+						);
+					}
     	            
     	            // Inform
     	            $this->_helper->flashMessenger->addMessage(
@@ -257,7 +278,7 @@ class Category_IndexController extends K111_Controller_Action
 	    	'contOpts' => $options
 		)));
 		// +++ Render script
-		$this->renderScript($this->_request->getControllerName() . '/crud.phtml');
+		$this->renderScript('index/crud.phtml');
 	}
 	
 	/**
@@ -320,98 +341,6 @@ class Category_IndexController extends K111_Controller_Action
 			'entity' => $entity,
 			'act' => 'detail' 
 		));
-	}
-	
-	/**
-	 * Action: acl;
-	 * @return void 
-	 */
-	public function aclAction() 
-	{
-		// Get params
-		// +++ Data ID;
-		$id = $this->_request->getUserParam('id');
-		// +++ 
-		$site = $this->_getParam('site');
-		
-		// Fetch data
-		$entity = $this->_repo->find($id)->current();
-		
-		// Check data valid?
-		if (!$entity) {
-			throw new Exception($this->view->translate('Data not found!'), 500);
-		}
-		
-		// Define vars
-		// +++ 
-		$ACL = new ACL();
-		// +++ 
-		$vData = array();
-		
-		// Call helper get list of site, and format for select options use.
-		$vData['listSiteOpts'] = array(
-			'' => LANG_SELECT
-		);
-		// +++ 
-		foreach ($ACL->listSite() as $siteKey => $siteInfo) {
-			$vData['listSiteOpts'][$siteKey] = "[{$siteKey}] {$siteInfo['name']} ({$siteInfo['info']})";
-		}
-		
-		// Case: user select site
-		$siteInfo = $vData['listSiteOpts'][$site];
-		if ($siteInfo) {
-			// Case: post acl data?
-			if ($this->_request->isPost()) {
-				// Get submit data;
-	        	$postData = $this->_request->getPost();
-				$aclData = (array)$postData['id'];
-				// Set acl data to entity;
-				$entity->setAcl($aclData, $site);
-				// Save data to database
-				$entityId = $entity->save();
-				
-	            // Inform
-	            $this->_helper->flashMessenger->addMessage(
-	                $this->view->translate('Thao tác dữ liệu thành công!'),
-	                'layout-messages'
-                );
-	            
-	            // Redirect
-	            switch ($postData['_act']) {
-	            	// +++ apply
-	                case 'apply' : {
-	                	$url = http_build_query($_GET);
-                        $url = $this->view->url() . ($url ? "?{$url}" : '');
-						// Redirect to home page!
-                        return $this->redirect($url, array(
-                            'prependBase' => false
-                        ));
-	                } break;
-	                // +++ save_n_close
-	                case 'save_n_close' : {
-	                    $this->_helper->redirector(
-	                        null,
-	                        $this->_request->getControllerName(),
-	                        $this->_request->getModuleName(),
-	                        array('id' => null)
-	                    );
-	                } break;
-	            }
-			}
-
-			// Get ACL data (decoded)
-			$vData['aclData'] = $entity->getAcl();
-			$vData['aclData'] = array_flip((array)$vData['aclData'][$site]);
-			
-			// Call method to get list of module/controller/action data;
-			$vData['arrMCA'] = $ACL->listMCA($site);
-		}
-		
-		// Render view
-		// +++ 
-		$vData['entity'] = $entity;
-		// +++ 
-		$this->view->assign($vData);
 	}
 	
 	/**

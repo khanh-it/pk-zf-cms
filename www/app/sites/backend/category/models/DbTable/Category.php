@@ -80,7 +80,32 @@ class Category_Model_DbTable_Category extends K111_Db_Table
 		}
 		return $avatar;
 	}
-
+	
+	/**
+	 * Default category's type
+	 */
+	protected $_defaultType;
+	/**
+	 * Get default category's type
+	 * 
+	 * @return string Category type
+	 */
+	public function getDefaultType() {
+		// Return;
+		return $this->_defaultType;
+	} 
+	/**
+	 * Set default category's type
+	 * 
+	 * @param $type string Category type
+	 * @return this
+	 */
+	public function setDefaultType($type) {
+		$this->_defaultType = (string)$type;
+		// Return;
+		return $this;
+	}
+	
 // +++ Repo helpers
     /**
      * Build fetch all data selector
@@ -125,7 +150,9 @@ class Category_Model_DbTable_Category extends K111_Db_Table
             ;
         }
 		// +++ type?
-        $options['type'] = array_filter((array)($options['type']));
+        $options['type'] = array_filter(
+        	(array)($options['type'] ?: $this->_defaultType)
+		);
         if (!empty($options['type'])) {
             $select
                 ->where('type IN (?)', $options['type'])
@@ -256,7 +283,7 @@ class Category_Model_DbTable_Category extends K111_Db_Table
 	 * @return Zend_Db_Table_Selector
      */
 	public function fetchDataRecursive(array $options = array(), array $order = array()) {
-        // Call function, build selector fetch data; 
+        // Call function, build selector fetch data;
         $select = $this->buildFetchDataSelector($options, $order);
 		
 		// Fetch data
@@ -268,22 +295,30 @@ class Category_Model_DbTable_Category extends K111_Db_Table
     }
 
 	/**
-	 * Check data exist by username
+	 * Check data exist by code
 	 * 
-	 * @param $username string Username
+	 * @param $code string Category code
 	 * @param $options array An array of options
 	 * @return bool
 	 */
-	public function checkExistsByUsername($username, array $options = array()) {
+	public function checkExistsByCode($code, $type = null, array $options = array()) {
 		// Where
 		$where = array(
-        	'username = ?' => $username
+        	'code = ?' => $code
 		);
-		// +++ 
+		// +++ type?
+		$options['type'] = array_filter(
+			(array)($options['type'] ?: $this->_defaultType)
+		);
+		if (!empty($options['type'])) {
+			$where['type IN (?)'] = $options['type'];
+		}
+		// +++ exclude_id?
 		$options['exclude_id'] = array_filter((array)$options['exclude_id']);
 		if (!empty($options['exclude_id'])) {
 			$where['id NOT IN (?)'] = $options['exclude_id'];
 		}
+		//Zend_Debug::dump($where);die();
 		
 		// Return;
 		return !!$this->fetchRow($where);

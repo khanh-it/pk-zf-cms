@@ -76,7 +76,11 @@ class Category_Model_DbTable_Row_Category extends K111_Db_Table_Row_BitStat
 	    if ($this->isClean()) {
 		    // +++ 
 		    $date = new DateTime();
-		    $this->created_time = $date->format('Y-m-d H:i:s');
+			$this->modifyData('created_time', $date->format('Y-m-d H:i:s'));
+			// +++ Type 
+			$this->modifyData('type', $this->getTable()->getDefaultType());
 		}
+		// +++ Always use default phrase context!
+		$this->modifyData('phrase', Category_Model_DbTable_Category::PHRASE);
 	}
 }
