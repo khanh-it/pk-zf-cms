@@ -63,14 +63,18 @@ class Category_IndexController extends K111_Controller_Action
 	     
 	    // Define var # form;
 	    $vData['form'] = $form = new Category_Form_Category_Index();
-		// +++ 
+		// +++ Parent
+		$cateOpts = $this->_repo->flatternDataRecursive(
+			$this->_repo->fetchDataRecursive(),
+			array('build_option' => true)
+		);
+		$form->parent_id && $form->parent_id->setMultiOptions(
+			array('' => LANG_SELECT) + $cateOpts
+		); 
 		
 		// +++ Fill form's data;
 		$vData['form']->populate($params);
-		
 	    // Fetch data;
-	    // +++ Default category's type
-	    $params['type'] = $this->_options['type'];
 	    // +++  
 		$selector = $this->_repo->flatternDataRecursive(
 			$this->_repo->fetchDataRecursive($params)
@@ -138,13 +142,16 @@ class Category_IndexController extends K111_Controller_Action
 		
 	    // Define var # view's data;
 	    $vData = array();
-		// +++
+		// +++ @var Default_Model_Util_Phrase
 		$vData['phrUtil'] = $phrUtil = Default_Model_Util_Phrase::getInstance();
-	    
+		
+		// Get language info
+		list($langKey, $langData) = Language::getDefault();
+		
 	    // Define var # form;
 	    $vData['form'] = $form = new Category_Form_Category_Crud();
 		// +++ Load SEO Tools elements
-		$phrUtil->buildFormSEOElements($form);
+		$phrUtil->buildFormSEOToolsElements($form);
 		// +++ Disable elements on detail mode
 		if ($options['isActDetail']) {
 			foreach ($form->getElements() as $ele) {
@@ -154,13 +161,13 @@ class Category_IndexController extends K111_Controller_Action
 		}
 		// +++ Parent
 		$cateOpts = $this->_repo->flatternDataRecursive(
-			$this->_repo->fetchDataRecursive(),
+			$this->_repo->fetchDataRecursive(array('exclude_id' => $entity->id)),
 			array('build_option' => true)
 		);
 		$form->parent_id && $form->parent_id->setMultiOptions(
 			array('' => LANG_SELECT) + $cateOpts
 		);
-	    
+		
 	    // Process on POST
 	    if ($this->_request->isPost() && !$options['isActDetail']) {
 	        // Get post data
@@ -180,8 +187,6 @@ class Category_IndexController extends K111_Controller_Action
 				if (!$options['isActUpdate']) {
 					$phrData = array_filter($phrData);
 				}
-				// Get language info
-				list($langKey, $langData) = Language::getDefault();
 				
     	        // Check duplicate code!
     	        $dataExists = $this->_repo->checkExistsByCode($formValues['code'], array(
@@ -236,7 +241,7 @@ class Category_IndexController extends K111_Controller_Action
                                 $this->_request->getActionName(),
                                 $this->_request->getControllerName(),
                                 $this->_request->getModuleName(),
-                                $this->_request->getUserParams()
+                                array('id' => $entity->id)
                             );
     	                } break;
     	                // +++ save_n_new
@@ -267,6 +272,11 @@ class Category_IndexController extends K111_Controller_Action
 	    	if ($entity) {
 		    	// +++ 
 				$formData = $entity->toArray();
+				// +++ SEO TOOLS
+				$formData = array_merge(
+					(array)$entity->findChildrenEntry($langKey), 
+					$formData
+				);
 				// +++ 
 				$form->populate($formData);
 			}
@@ -301,14 +311,13 @@ class Category_IndexController extends K111_Controller_Action
 		$id = $this->_getParam('id');
 		
 		// Fetch data
-		$entity = $this->_repo->find($id)->current();
+		$entity = $this->_repo->fetchRow(array(
+			'id = ?' => $id, 'type = ?' => $this->_options['type']
+		));
 		
 		// Check data valid?
 		if (!$entity) {
 			throw new Exception($this->view->translate('Data not found!'), 500);
-		}
-		if ($entity->isBuiltInGroup()) {
-			throw new Exception($this->view->translate('Edit built-in group is not allowed!'), 500);
 		}
 		
 		// Forward request;
@@ -329,7 +338,9 @@ class Category_IndexController extends K111_Controller_Action
 		$id = $this->_getParam('id');
 		
 		// Fetch data
-		$entity = $this->_repo->find($id)->current();
+		$entity = $this->_repo->fetchRow(array(
+			'id = ?' => $id, 'type = ?' => $this->_options['type']
+		));
 		
 		// Check data valid?
 		if (!$entity) {
@@ -355,16 +366,13 @@ class Category_IndexController extends K111_Controller_Action
 		$id = array_filter($id);
 		
 		// Fetch data
-		$entities = $this->_repo->find($id);
+		$entities = $this->_repo->fetchAll(array(
+			'id IN (?)' => $id, 'type = ?' => $this->_options['type']
+		));
 		
 		// Check data valid?
-		if (empty($entities)) {
+		if (!count($entities)) {
 			throw new Exception($this->view->translate('Data not found!'), 500);
-		}
-		foreach ($entities as $key => $entity) {
-			if ($entity->isBuiltInGroup()) {
-				unset($entities[$key]);
-			}
 		}
 		if (count($id) != count($entities)) {
 			throw new Exception($this->view->translate('Data count not matched!'), 500);

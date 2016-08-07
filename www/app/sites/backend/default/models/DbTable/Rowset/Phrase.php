@@ -31,7 +31,7 @@ class Default_Model_DbTable_Rowset_Phrase extends K111_Db_Table_Rowset_Abstract
 	 * 
 	 * 
 	 */
-	public function getGroupedData($context = null, $relId = null, $lang = null) {
+	public function getGroupedData($context = null, $relId = null, $lang = null, array $options = array()) {
 		// Get data
 		$data = $this->_langData;
 		// +++ 
@@ -47,6 +47,14 @@ class Default_Model_DbTable_Rowset_Phrase extends K111_Db_Table_Rowset_Abstract
 			$data = (array)$data[$lang];
 		}
 		
+		// Get data only?
+		if (true === $options['get_data_only']) {
+			foreach ($data as $column => $_dat) {
+				$data[$column] = $_dat->phr_data;
+			}
+		}
+		
+		// Return;
 		return $data;
 	}
 }

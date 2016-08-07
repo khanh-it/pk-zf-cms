@@ -1,0 +1,83 @@
+<?php
+/**
+ * Script view: pagination (pager)
+ * @author khanhdtp
+ */
+?>
+<?php if ($this->pageCount): ?>
+<ul class="pagination pagination-sm no-margin">
+    <!-- First page link -->
+    <?php if (1 != $this->current): ?>
+    <li>
+        <?php $href = $_GET; $href['page'] = 1; ?>
+        <a href="<?php echo '?' . http_build_query($href); ?>">
+            &nbsp;<i class="glyphicon glyphicon-fast-backward"></i>
+        </a>
+    </li>
+    <?php else: ?>
+    <li class="disabled">
+        <span>&nbsp;<i class="glyphicon glyphicon-fast-backward"></i></span>
+    </li>
+    <?php endif; ?>
+    <!-- ./First page link -->
+    
+    <!-- Previous page link -->
+    <?php 
+        if (isset($this->previous)):
+            $href = $_GET; $href['page'] = $this->previous;
+    ?>
+    <li><a href="<?php echo '?' . http_build_query($href); ?>">
+        &nbsp;<i class="glyphicon glyphicon-step-backward"></i>
+    </a></li>
+    <?php else: ?>
+    <li class="disabled">
+        <span>&nbsp;<i class="glyphicon glyphicon-step-backward"></i></span>
+    </li>
+    <?php endif; ?>
+    
+    <!-- ./Previous page link -->
+ 
+    <!-- Numbered page links -->
+    <?php foreach ($this->pagesInRange as $page): ?>
+        <?php 
+            if ($page != $this->current):
+                $href = $_GET; $href['page'] = $page;
+        ?>
+        <li><a href="<?php echo '?' . http_build_query($href); ?>"><?php echo $page; ?></a></li>
+        <?php else: ?>
+        <li class="disabled"><span><?php echo $page; ?></span></li>
+        <?php endif; ?>
+    <?php endforeach; ?>
+    <!-- ./Numbered page links -->
+ 
+    <!-- Next page link -->
+    <?php 
+        if (isset($this->next)):
+            $href = $_GET; $href['page'] = $this->next;
+    ?>
+        <li><a href="<?php echo '?' . http_build_query($href); ?>">
+            &nbsp;<i class="glyphicon glyphicon-step-forward"></i></a>
+        </li>
+    <?php else: ?>
+        <li class="disabled">
+            <span>&nbsp;<i class="glyphicon glyphicon-step-forward"></i></span>
+        </li>
+    <?php endif; ?>
+    <!-- ./Next page link -->
+    
+    <!-- Last page link -->
+    <?php if ($this->pageCount != $this->current): ?>
+    <li>
+        <?php $href = $_GET; $href['page'] = $this->pageCount; ?>
+        <a href="<?php echo '?' . http_build_query($href); ?>">
+            &nbsp;<i class="glyphicon glyphicon-fast-forward"></i>
+        </a>
+    </li>
+    <?php else: ?>
+    <li class="disabled">
+        <span>&nbsp;<i class="glyphicon glyphicon-fast-forward"></i></span>
+    </li>
+    <?php endif; ?>
+    <!-- ./Last page link -->
+</ul>
+<?php endif; ?>

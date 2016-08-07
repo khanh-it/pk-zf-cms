@@ -116,14 +116,14 @@ class Category_Model_DbTable_Category extends K111_Db_Table
      */
     public function buildFetchDataSelector(array $options = array(), array $order = array()) {
         // Init select
-        $select = $this->select()
+        $select = $this->select()/*
 			->setIntegrityCheck(false)
 			->from($this->_name)
 			->joinLeft(
 				'tbl_phrase',
 				'phr_context = phrase AND phr_rel_id = id',
 				array()
-			)
+			)*/
 		;
         
         // Filter data;
@@ -140,6 +140,13 @@ class Category_Model_DbTable_Category extends K111_Db_Table
                 ->bind(array(
                     'keyword' => "%{$options['keyword']}%"
                 ))
+            ;
+        }
+		// +++ id?
+		$options['exclude_id'] = array_filter((array)($options['exclude_id']));
+        if (!empty($options['exclude_id'])) {
+            $select
+                ->where('id NOT IN (?)', $options['exclude_id'])
             ;
         }
 		// +++ parent?
@@ -168,6 +175,7 @@ class Category_Model_DbTable_Category extends K111_Db_Table
                 ))
             ;
         }
+        //die($select);
         
         // Return;
         return $select;
@@ -301,7 +309,7 @@ class Category_Model_DbTable_Category extends K111_Db_Table
 	 * @param $options array An array of options
 	 * @return bool
 	 */
-	public function checkExistsByCode($code, $type = null, array $options = array()) {
+	public function checkExistsByCode($code, array $options = array()) {
 		// Where
 		$where = array(
         	'code = ?' => $code

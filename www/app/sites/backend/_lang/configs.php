@@ -15,6 +15,11 @@ return array(
 			'name' => '',
 			'locale' => 'en_US',
 			'icon' => ''
+		),
+		'jp' => array(
+			'name' => '',
+			'locale' => 'ja_JP',
+			'icon' => ''
 		)
 	),
 	// ./Languages //
@@ -23,11 +28,18 @@ return array(
 	'data' => array(
 		'vi' => array(
 			'vi' => 'Tiếng Việt',
-			'en' => 'Tiếng anh',
+			'en' => 'Tiếng Anh',
+			'jp' => 'Tiếng Nhật',
 		),
 		'en' => array(
 			'vi' => 'Vietnamese',
 			'en' => 'English',
+			'jp' => 'Japanese',
+		),
+		'en' => array(
+			'vi' => '(JP) Vietnamese',
+			'en' => '(JP) English',
+			'jp' => '(JP) Japanese',
 		)
 	)
 	// ./Data //

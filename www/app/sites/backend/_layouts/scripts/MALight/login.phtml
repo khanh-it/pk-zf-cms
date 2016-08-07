@@ -88,8 +88,8 @@ $this->HeadScript()
     ->appendFile($assetsFinder->files("bower_components/bootstrap/dist/js/bootstrap.min.js", 'lib'))
 // +++ HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries
 // +++ WARNING: Respond.js doesn't work if you view the page via file://
-    ->appendFile($assetsFinder->files("html5shiv/html5shiv-3.7.3{$assetsMinStr}.js", 'js'), 'if lt IE 9')
-    ->appendFile($assetsFinder->files("respond/respond-1.4.2{$assetsMinStr}.js", 'js'), 'if lt IE 9')
+    ->appendFile($assetsFinder->files("html5shiv/html5shiv-3.7.3{$assetsMinStr}.js", 'lib'), 'if lt IE 9')
+    ->appendFile($assetsFinder->files("respond/respond-1.4.2{$assetsMinStr}.js", 'lib'), 'if lt IE 9')
 // +++ Material Admin 
     ->appendFile($assetsFinder->files("bower_components/Waves/dist/waves.min.js", 'lib'))
 	->appendFile($assetsFinder->files("bootstrap-growl/bootstrap-growl.min.js", 'lib'))

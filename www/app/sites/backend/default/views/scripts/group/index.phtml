@@ -21,7 +21,7 @@ $this->Bt3NavLinks(array(
 		?><br/>
 		<h2>
 			<small><?php
-			  	echo $this->translate('Tổng số dòng') . ': ' . ($totalItemsCount = count($this->paginator)) . '.' 
+			  	echo $this->translate('Tổng số dòng') . ': ' . ($totalItemsCount = $this->paginator->getTotalItemCount()) . '.';
 			?></small>
 		</h2>
 	</div>
