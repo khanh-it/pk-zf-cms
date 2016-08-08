@@ -17,7 +17,8 @@ $this->Bt3NavLinks(array(
 	<div class="card-header">
 		<?php
 			// Filter form;
-			echo $this->Bt3FilterForm()->render($this->form, $this->formSearch);
+			// @TODO: add feature(s). Filter data... 
+			//echo $this->Bt3FilterForm()->render($this->form, $this->formSearch);
 		?><br/>
 		<h2>
 			<small><?php
@@ -54,6 +55,7 @@ $this->Bt3NavLinks(array(
             if ($totalItemsCount):
 				// Manage tools 
 				$manageBtnLinks = array(
+					'lang' => $this->Bt3ManageTools()->mBtnLang(),
 					'detail' => $this->Bt3ManageTools()->mBtnDetail(),
 					'edit' => $this->Bt3ManageTools()->mBtnEdit(),
 					'delete' => $this->Bt3ManageTools()->mBtnDelete(),
@@ -68,13 +70,13 @@ $this->Bt3NavLinks(array(
 				<tr>
 					<td align="center" class="text-nowrap"><?php echo ++$no; ?></td>
 					<td align="center" class="text-center">
-						<?php echo $this->Bt3ManageTools()->mToolChecker($item['id']); ?>
+						<?php echo $item['_hasChild'] ? '' : $this->Bt3ManageTools()->mToolChecker($item['id']); ?>
 					</td>
 					<td>
 						<div class="pull-left"><?php echo $iconLvls; ?>&nbsp;</div>
 						<div>
 							<?php echo $item['name']; ?><br/>
-							<small class="m-l-10"><abbr title="">[<?php echo $item['code']; ?>]</abbr></small>
+							<small class="m-l-10"><i>[<?php echo $item['code']; ?>]</i></small>
 						</div>
 					</td>
 					<td align="center" class="text-nowrap">
@@ -96,9 +98,12 @@ $this->Bt3NavLinks(array(
 					<td class="text-nowrap">
 					<?php
 						$manageBtns = array(
+							'__lang_' => str_replace(array('__id__'), array($item['id']), $manageBtnLinks['lang']),
 							'__detail_' => str_replace(array('__id__'), array($item['id']), $manageBtnLinks['detail']),
 							'__update_' => str_replace(array('__id__'), array($item['id']), $manageBtnLinks['edit']),
-							'__delete_' => str_replace(array('__id__'), array($item['id']), $manageBtnLinks['delete'])
+							'__delete_' => !$item['_hasChild']
+								? str_replace(array('__id__'), array($item['id']), $manageBtnLinks['delete'])
+								: ''
 						);
 						echo implode("\n", $manageBtns);
 					?>

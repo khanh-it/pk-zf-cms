@@ -10,55 +10,85 @@ $reqParams = $frontReq->getParams();
  
 // Return
 return array(
-	// Category
-    'category' => array(
+	// product.category //
+    'product.category' => array(
         'pages' => array(
-        	// Index
-            'index' => array(
-                'label' => '[i class="zmdi zmdi-layers"][/i] [span]Danh sách[/span]',
-                'module' => 'category',
-                'controller' => 'index',
-                'action' => 'index',
-                'params' => array(
-                	'type' => $reqParams['type']
-				)
-            ),
             // Create
-            'create' => array(
-                'label' => '[i class="zmdi zmdi-layers"][/i] [span]Thêm mới[/span]',
-                'module' => 'category',
-                'controller' => 'index',
-                'action' => 'create',
-                'visible' => false,
-                'params' => array(
-                	'type' => $reqParams['type']
+            'index' => array(
+                'pages' => array(
+					'create' => array(
+		                'label' => '[i class="zmdi zmdi-layers"][/i] [span]Thêm mới[/span]',
+		                'module' => 'product',
+		                'controller' => 'category',
+		                'action' => 'create',
+		                'visible' => false
+		            ),
 				)
             ),
             // Update
             'update' => array(
                 'label' => '[i class="zmdi zmdi-layers"][/i] [span]Cập nhật[/span]',
-                'module' => 'category',
-                'controller' => 'index',
+                'module' => 'product',
+                'controller' => 'category',
                 'action' => 'update',
                 'visible' => false,
                 'params' => array(
-                	'type' => $reqParams['type'],
                 	'id' => $reqParams['id'], 
 				)
             ),
             // Detail
             'detail' => array(
                 'label' => '[i class="zmdi zmdi-layers"][/i] [span]Xem chi tiết[/span]',
-                'module' => 'category',
-                'controller' => 'index',
+                'module' => 'product',
+                'controller' => 'category',
                 'action' => 'detail',
                 'visible' => false,
                 'params' => array(
-                	'type' => $reqParams['type'],
                 	'id' => $reqParams['id'], 
 				)
             )
 		)
     ),
-    // end.category 
+    // end.product.category //
+    
+    // product.product //
+    'product.product' => array(
+        'pages' => array(
+            // Create
+            'index' => array(
+                'pages' => array(
+		            'create' => array(
+		                'label' => '[i class="zmdi zmdi-layers"][/i] [span]Thêm mới[/span]',
+		                'module' => 'product',
+		                'controller' => 'product',
+		                'action' => 'create',
+		                'visible' => false
+		            ),
+				),
+			),
+            // Update
+            'update' => array(
+                'label' => '[i class="zmdi zmdi-layers"][/i] [span]Cập nhật[/span]',
+                'module' => 'product',
+                'controller' => 'product',
+                'action' => 'update',
+                'visible' => false,
+                'params' => array(
+                	'id' => $reqParams['id'], 
+				)
+            ),
+            // Detail
+            'detail' => array(
+                'label' => '[i class="zmdi zmdi-layers"][/i] [span]Xem chi tiết[/span]',
+                'module' => 'product',
+                'controller' => 'product',
+                'action' => 'detail',
+                'visible' => false,
+                'params' => array(
+                	'id' => $reqParams['id'], 
+				)
+            )
+		)
+    ),
+    // end.product.product // 
 );

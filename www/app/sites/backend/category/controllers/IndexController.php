@@ -180,7 +180,9 @@ class Category_IndexController extends K111_Controller_Action
 				// +++ type
 				$formValues['type'] = $this->_options['type'];
 				// +++ Make alias
-				$formValues['alias'] = $formValues['alias'] ?: $this->_helper->common->str2Alias($formValues['name']);
+				$formValues['alias'] = $this->_helper->common->str2Alias(
+					$formValues['alias'] ?: $formValues['name']
+				);
 				
 				// Extract phrase data
 				$phrData = $phrUtil->extractPhrData($formValues);
@@ -272,11 +274,9 @@ class Category_IndexController extends K111_Controller_Action
 	    	if ($entity) {
 		    	// +++ 
 				$formData = $entity->toArray();
-				// +++ SEO TOOLS
-				$formData = array_merge(
-					(array)$entity->findChildrenEntry($langKey), 
-					$formData
-				);
+				// +++ Phrase Data # SEO TOOLS
+				$phrData = (array)$entity->findChildrenEntry($langKey);
+				$formData = array_merge($formData, $phrUtil->prefixPhrData($phrData));
 				// +++ 
 				$form->populate($formData);
 			}
@@ -400,5 +400,123 @@ class Category_IndexController extends K111_Controller_Action
             $this->_request->getModuleName(),
             array('id' => null)
         );
+	}
+
+	/**
+	 * Action: update data;
+	 * @return void
+	 */
+	public function langAction()
+	{
+		// Get params
+		// +++ Data ID;
+		$id = $this->_getParam('id');
+		// +++ Selected lang;
+		$lang = $this->_getParam('lang');
+		
+		// Fetch data
+		$entity = $this->_repo->fetchRow(array(
+			'id = ?' => $id, 'type = ?' => $this->_options['type']
+		));
+		
+		// Check data valid?
+		if (!$entity) {
+			throw new Exception($this->view->translate('Data not found!'), 500);
+		}
+		
+	    // Define var # view's data;
+	    $vData = array();
+		// +++ @var Default_Model_Util_Phrase
+		$vData['phrUtil'] = $phrUtil = Default_Model_Util_Phrase::getInstance();
+		
+		// Get language info
+		// +++ List of languages
+		$vData['languages'] = Language::get();
+		// +++ Default language
+		list($dfLangKey) = Language::getDefault();
+		unset($vData['languages'][$dfLangKey]);
+		// +++ Selected language 
+		if ($vData['langData'] = $vData['languages'][$lang]) {
+			$vData['langKey'] = $lang;
+		} else {
+			$vData['langKey'] = key($vData['languages']);
+			$vData['langData'] = $vData['languages'][$vData['langKey']];
+		}
+		
+	    // Define var # form;
+	    $vData['form'] = $form = new Category_Form_Category_Lang();
+		// +++ Load SEO Tools elements
+		$phrUtil->buildFormSEOToolsElements($form, array(
+			'element_name_prefix' => ''
+		));
+		
+	    // Process on POST
+	    if ($this->_request->isPost()) {
+	        // Get post data
+	        $postData = $this->_request->getPost();
+	        
+	        // Check form valid?
+	        if ($form->isValid($postData)) {
+	        	// Get form data;
+	            $formValues = $form->getValues();
+				// +++ Make alias
+				$formValues['alias'] = $this->_helper->common->str2Alias(
+					$formValues['alias'] ?: $formValues['name']
+				);
+				
+	            // Form has no errors?
+	            if (!$form->hasErrors()) {
+					// Save phrase data? 
+					$phrUtil->savePhrase(
+						Category_Model_DbTable_Category::PHRASE,
+						$entity->id, $vData['langKey'], $formValues
+					);
+				
+    	            // Inform
+    	            $this->_helper->flashMessenger->addMessage(
+    	                $this->view->translate('Dịch ngôn ngữ thành công!'),
+    	                'layout-messages'
+                    );
+    	            
+    	            // Redirect
+    	            switch ($postData['_act']) {
+    	            	// +++ apply
+    	                case 'apply' : {
+                            $this->_helper->redirector(
+                                $this->_request->getActionName(),
+                                $this->_request->getControllerName(),
+                                $this->_request->getModuleName(),
+                                array('id' => $entity->id)
+                            );
+    	                } break;
+    	                // +++ save_n_close
+    	                case 'save_n_close' : {
+    	                    $this->_helper->redirector(
+    	                        null,
+    	                        $this->_request->getControllerName(),
+    	                        $this->_request->getModuleName(),
+    	                        array('id' => null)
+    	                    );
+    	                } break;
+    	            }
+	            }
+	        }
+
+		// Case: on page's first load
+	    } else {
+	    	// Fill form's data;
+	    	if ($entity) {
+				// +++ Phrase data
+				$phrData = (array)$entity->findChildrenEntry($langKey);
+				// +++ 
+				$form->populate($phrData);
+			}
+		}
+	    
+	    // Render view
+	    $this->view->assign(array_merge($vData, array(
+		)));
+		// +++ Render script
+		$this->renderScript('index/lang.phtml');
 	}
 }

@@ -22,6 +22,18 @@ class Category_Model_DbTable_Row_Category extends K111_Db_Table_Row_BitStat
 	}
 	
 	/**
+	 * Check parent_id data valid?
+	 * @param $parentId int|string Parent id
+	 * @return this
+	 */
+	public function setParent_id($parentId) {
+		// Format input
+		$this->modifyData('parent_id', ('' == (string)$parentId) ? null : $parentId);
+
+		return $this;
+	}
+	
+	/**
 	 * Find current row's dependent category rowset
 	 * 
 	 * @return Zend_Db_Table_Rowset_Abstract

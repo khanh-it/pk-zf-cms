@@ -58,11 +58,13 @@ class Default_Model_Util_Phrase extends Default_Model_Util_Abstract
 		$view = $form->getView();
 		// +++ Element's orders
 		$_order = (int)(PHP_INT_MAX / 2);
-		// +++ 
-		$phrDataPrefix = self::PHR_DATA_PREFIX;
+		// +++
+		
+		// Format, get options
+		$options['element_name_prefix'] = $options['element_name_prefix'] ?: self::PHR_DATA_PREFIX;  
 		
 		// dummy element, used as label spliter
-		$elements[] = $element = $form->createElement('text', '_PhrDataLabel_', array(
+		$elements[] = $element = $form->createElement('text', '_SEOToolsLabel_', array(
 			'label' => $txt = ('--- <u>' . $view->translate("SEO TOOLS:") . '</u> ---'),
 			'ignore' => true,
 			'attribs' => array(
@@ -77,7 +79,7 @@ class Default_Model_Util_Phrase extends Default_Model_Util_Abstract
 		;
 		
 		// page's title
-		$elements[] = $element = $form->createElement('text', "{$phrDataPrefix}seo_title", array(
+		$elements[] = $element = $form->createElement('text', "{$options['element_name_prefix']}seo_title", array(
 			'label' => $txt = $view->translate("Page's title"),
 			'attribs' => array(
 				'class' => 'form-control input-sm',
@@ -88,7 +90,7 @@ class Default_Model_Util_Phrase extends Default_Model_Util_Abstract
 		));
 		
 		// meta keywords
-		$elements[] = $element = $form->createElement('text', "{$phrDataPrefix}seo_meta_keywords", array(
+		$elements[] = $element = $form->createElement('text', "{$options['element_name_prefix']}seo_meta_keywords", array(
 			'label' => $txt = $view->translate("Page's meta keywords"),
 			'attribs' => array(
 				'class' => 'form-control input-sm',
@@ -99,7 +101,7 @@ class Default_Model_Util_Phrase extends Default_Model_Util_Abstract
 		));
 		
 		// meta description
-		$elements[] = $element = $form->createElement('text', "{$phrDataPrefix}seo_meta_description", array(
+		$elements[] = $element = $form->createElement('text', "{$options['element_name_prefix']}seo_meta_description", array(
 			'label' => $txt = $view->translate("Page's meta description"),
 			'attribs' => array(
 				'class' => 'form-control input-sm',
@@ -110,7 +112,7 @@ class Default_Model_Util_Phrase extends Default_Model_Util_Abstract
 		));
 		
 		// html_meta 
-		$elements[] = $element = $form->createElement('textarea', "{$phrDataPrefix}seo_html_meta", array(
+		$elements[] = $element = $form->createElement('textarea', "{$options['element_name_prefix']}seo_html_meta", array(
 			'label' => $txt = $view->translate("Page's html meta"),
 			'attribs' => array(
 				'class' => 'form-control input-sm',
@@ -154,9 +156,33 @@ class Default_Model_Util_Phrase extends Default_Model_Util_Abstract
 	}
 	
 	/**
-	 * Extract phrase data from array (remove keys)
+	 * Change array data keys by prepend prefix 
 	 * 
 	 * @param $data array An array data
+	 * @return array
+	 */
+	public function prefixPhrData(array $data) {
+		// Prefix 
+		$phrDataPrefix = self::PHR_DATA_PREFIX;
+		// 
+		foreach ($data as $key => $value) {
+			if (0 !== strpos($key, $phrDataPrefix)) {
+				$data["{$phrDataPrefix}{$key}"] = $value;
+				// Remove old key(s)
+				unset($data[$key]);
+			}
+		}
+		
+		// Return
+		return $data;
+	}
+	
+	/**
+	 * Save phrase(s) data
+	 * 
+	 * @param $context string Context string
+	 * @param $relId int|string Relative object's id
+	 * @param $lang 
 	 * @return array
 	 */
 	public function savePhrase($context, $relId, $lang, array $data) {

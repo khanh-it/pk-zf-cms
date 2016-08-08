@@ -1,10 +1,10 @@
 /**
- * File default/views/assets/account/index.js
+ * File category/views/assets/index/index.js
  */
 (function($, hplData, hplOptions){
 	
-	console.log(hplData);
-	console.log(hplOptions);
+	//console.log(hplData);
+	//console.log(hplOptions);
 	
 })(jQuery, [['_DATA_']], [['_OPTIONS_']]);
-/** ./File default/views/assets/account/index.js */
+/** ./File category/views/assets/index/index.js */

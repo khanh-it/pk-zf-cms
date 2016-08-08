@@ -36,6 +36,11 @@ class App_View_Helper_Bt3ManageTools extends Zend_View_Helper_Abstract {
 	/**
      * @var array
      */
+    public static $_urlParamsLang = array('action' => 'lang',  'id' => '__id__');
+	
+	/**
+     * @var array
+     */
     public static $_urlParamsDetail = array('action' => 'detail',  'id' => '__id__');
 	
 	/**
@@ -284,6 +289,24 @@ class App_View_Helper_Bt3ManageTools extends Zend_View_Helper_Abstract {
 		// ++++ A tag's atr
 		$attrs['class'] = $attrs['class'] ?: 'btn btn-default btn-sm waves-effect';
 		$attrs['data-mtool'] = $attrs['data-mtool'] ?: 'detail';
+        // Return;
+        return $this->mBtn(array_merge($attrs, array('href' => $href, 'icon' => $icon)));
+    }
+	
+	/**
+     * Manage tool # language
+     * @param null|string $href A tag's href
+     * @param null|string $icon Icon's class
+     * @param array $attrs An array of attrs
+     * @return string 
+     */
+    public function mBtnLang($href = null, $icon = 'glyphicon glyphicon-globe', $attrs = array()) {
+    	// Format data;
+    	// +++ Href
+    	$href = $href ? $href : $this->view->url(self::$_urlParamsLang);
+		// ++++ A tag's atr
+		$attrs['class'] = $attrs['class'] ?: 'btn btn-primary btn-sm waves-effect';
+		$attrs['data-mtool'] = $attrs['data-mtool'] ?: 'lang';
         // Return;
         return $this->mBtn(array_merge($attrs, array('href' => $href, 'icon' => $icon)));
     }

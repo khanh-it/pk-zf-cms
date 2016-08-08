@@ -45,12 +45,13 @@ class Category_Form_Category_Crud extends Twitter_Bootstrap3_Form
             'placeholder' => $txt,
             'maxlength' => 250,
             'order' => ($eleOrder += 100),
+            'addon_append' => FORM_HTML_ALIAS_REMOVE,
             'description' => $view->translate('(Lấy theo tên danh mục nếu để trống)'),
         )); 
 		$element->getDecorator('description')
 			->setOption('tag', 'small')
 		;
-		// +++ 
+		// +++ @TODO: implement images preview, sort (for first )...
         $elements[] = $element = $this->createElement('textarea', 'imgs', array(
             'label' => $txt = $view->translate('Hình ảnh'),
             'placeholder' => $txt,

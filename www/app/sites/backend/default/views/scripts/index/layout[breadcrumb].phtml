@@ -9,6 +9,7 @@
 <?php 
 	$html = (string)$this->setEscape('trim')->navigation()->breadcrumbs()
         ->setSeparator('</li><li>')
+		->setRenderInvisible(true)
         ->setLinkLast(true)
 		->render(
 		    new Zend_Navigation(K111_Application_Module_Bootstrap::getDataNavigation()),

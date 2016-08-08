@@ -1,0 +1,62 @@
+<?php
+/**
+ * Script view: group # language
+ * @author khanhdtp
+ */
+// Toolbars
+$this->Bt3NavLinks(array(
+	$this->Bt3NavLinks()->iconApply(), 
+    $this->Bt3NavLinks()->iconSaveAndClose(),
+    $this->Bt3NavLinks()->iconClose()
+));
+
+// Languages
+$languages = (array)$this->languages;
+Zend_Debug::dump($languages);die();
+?>
+<div id="controller" class="card">
+	<div class="card-body card-padding">
+		<!-- Nav tabs -->
+		<ul class="nav nav-tabs" role="tablist">
+			<li role="presentation" class="active">
+				<a href="#home" aria-controls="home" role="tab" data-toggle="tab">Home</a>
+			</li>
+			<li role="presentation">
+				<a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profile</a>
+			</li>
+			<li role="presentation">
+				<a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Messages</a>
+			</li>
+			<li role="presentation">
+				<a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Settings</a>
+			</li>
+		</ul>
+	
+		<!-- Tab panes -->
+		<div class="tab-content">
+			<div role="tabpanel" class="tab-pane active" id="form-wrapper">
+				<?php
+					// Render form
+					echo $this -> form;
+				?>
+			</div>
+			<div role="tabpanel" class="tab-pane">&nbps;</div>
+		</div>
+	</div>
+</div>
+<?php
+// CSS:
+// +++ Inline style;
+$this->HeadStyleAction($this->curRequest, null, array(
+	'module' => 'category',
+	'controller' => 'index',
+	'action' => 'lang'
+));
+
+// CSS:
+// +++ Inline script;
+$this->HeadScriptAction($this->curRequest, null, array(
+	'module' => 'category',
+	'controller' => 'index',
+	'action' => 'lang'
+));

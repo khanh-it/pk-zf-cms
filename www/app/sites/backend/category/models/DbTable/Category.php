@@ -71,14 +71,18 @@ class Category_Model_DbTable_Category extends K111_Db_Table
 	 * @param $avatar string Account's avatar
 	 * @return string
 	 */
-	public static function returnImgsWebPath($avatar) {
-		if ($avatar) {
+	public static function returnImgsWebPath($imgs) {
+		$imgs = is_array($imgs) ? $imgs : array($imgs);
+		if (!empty($imgs)) {
 			// Get K111_AssetsFinder;
 			$assetsFinder = K111_AssetsFinder::getInstance();
-			// +++ 
-			$avatar = $assetsFinder->uploadFiles(self::AVATAR_FOLDER . $avatar);
+			// +++
+			foreach ($imgs as &$img) {
+				$img = self::IMG_FOLDER . $img;
+			} 
+			$imgs = $assetsFinder->uploadFiles($imgs);
 		}
-		return $avatar;
+		return $imgs;
 	}
 	
 	/**
@@ -254,7 +258,7 @@ class Category_Model_DbTable_Category extends K111_Db_Table
 			$item['_level'] = (int)$levels[$item['parent_id']];
 			$levels[$item['id']] = ++$item['_level'];
 			// Prepend item(s) if any. 
-			if (!($item['_hasChild'] = empty($item['_children']))) {
+			if ($item['_hasChild'] = !empty($item['_children'])) {
 				$data = array_merge($item['_children'], $data);
 			}
 			unset($item['_children']);
