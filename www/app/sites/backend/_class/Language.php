@@ -126,4 +126,42 @@ class Language {
 		// Return
 		return $options;
 	}
+	
+	/**
+	 * Render list of language icons
+	 * 
+	 * @param $langs array An array of languages
+	 * @param $options array An array of options
+	 * @return string
+	 */
+	public static function renderLangIcons($langs, array $options = array()) {
+		// Format data
+		$langs = (array)$langs;
+		if (empty($langs)) {
+			return '';
+		}
+		
+		// Get default language
+		$defLang = self::$_default;
+		
+		// Get languages info
+		$languages = self::get();
+		
+		// Render
+		$html = '';
+		foreach ($langs as $lang) {
+			if (($defLang == $lang) && !(true == $options['render_default'])) {
+				continue;	
+			}
+			if ($langData = $languages[$lang]) {
+				$html .= '<i class="lang-icon" title="' . $langData['name'] . '">'
+					. '<img src="' . $langData['icon'] . '" />'
+					. '</i>'
+				;
+			}
+		}
+		
+		// Return;
+		return $html;
+	}
 }

@@ -72,13 +72,13 @@ class Category_Model_DbTable_Category extends K111_Db_Table
 	 * @return string
 	 */
 	public static function returnImgsWebPath($imgs) {
-		$imgs = is_array($imgs) ? $imgs : array($imgs);
+		$imgs = array_filter(is_array($imgs) ? $imgs : explode("\n", $imgs));
 		if (!empty($imgs)) {
 			// Get K111_AssetsFinder;
 			$assetsFinder = K111_AssetsFinder::getInstance();
 			// +++
 			foreach ($imgs as &$img) {
-				$img = self::IMG_FOLDER . $img;
+				$img = trim(self::IMG_FOLDER . $img);
 			} 
 			$imgs = $assetsFinder->uploadFiles($imgs);
 		}

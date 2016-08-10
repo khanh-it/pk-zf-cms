@@ -36,11 +36,11 @@ class App_View_Helper_Bt3NavLinks extends Zend_View_Helper_Abstract {
     /**
      * @var string
      */
-    public static $_urlParamsIndex = array('action' => null, 'id' => null);
+    public static $_urlParamsIndex = array('action' => null, 'id' => null, 'lang' => null);
     /**
      * @var string
      */
-    public static $_urlParamsCreate = array('action' => 'create', 'id' => null);
+    public static $_urlParamsCreate = array('action' => 'create', 'id' => null, 'lang' => null);
     /**
      * @var string
      */

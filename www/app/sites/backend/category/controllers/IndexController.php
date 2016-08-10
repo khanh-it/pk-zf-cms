@@ -60,6 +60,8 @@ class Category_IndexController extends K111_Controller_Action
 	    
 	    // Define var # view's data;
 	    $vData = array();
+		// +++ @var Default_Model_Util_Phrase
+		$vData['phrUtil'] = $phrUtil = Default_Model_Util_Phrase::getInstance();
 	     
 	    // Define var # form;
 	    $vData['form'] = $form = new Category_Form_Category_Index();
@@ -70,10 +72,10 @@ class Category_IndexController extends K111_Controller_Action
 		);
 		$form->parent_id && $form->parent_id->setMultiOptions(
 			array('' => LANG_SELECT) + $cateOpts
-		); 
-		
+		);
 		// +++ Fill form's data;
 		$vData['form']->populate($params);
+		
 	    // Fetch data;
 	    // +++  
 		$selector = $this->_repo->flatternDataRecursive(
@@ -82,6 +84,16 @@ class Category_IndexController extends K111_Controller_Action
 	    // +++ Paaginator
 	    $vData['paginator'] = $paginator = Zend_Paginator::factory($selector);
 	    $paginator->setCurrentPageNumber($this->_getParam('page'));
+		
+		// Loop, get languages data
+		$entityIDs = array();
+		foreach ($paginator as $item) {
+			$entityIDs[] = $item['id'];
+		} unset($item);
+		// +++ Get entity's available languages
+		$vData['entityLanguages'] = $phrUtil->getAvailableLanguages(
+			Category_Model_DbTable_Category::PHRASE, $entityIDs
+		);
 	    
 	    // Render view
 	    $this->view->assign($vData);
@@ -488,7 +500,10 @@ class Category_IndexController extends K111_Controller_Action
                                 $this->_request->getActionName(),
                                 $this->_request->getControllerName(),
                                 $this->_request->getModuleName(),
-                                array('id' => $entity->id)
+                                array(
+                                	'id' => $entity->id,
+                                	'lang' => $vData['langKey']
+								)
                             );
     	                } break;
     	                // +++ save_n_close
@@ -497,7 +512,7 @@ class Category_IndexController extends K111_Controller_Action
     	                        null,
     	                        $this->_request->getControllerName(),
     	                        $this->_request->getModuleName(),
-    	                        array('id' => null)
+    	                        array('id' => null, 'lang' => null)
     	                    );
     	                } break;
     	            }
@@ -507,12 +522,10 @@ class Category_IndexController extends K111_Controller_Action
 		// Case: on page's first load
 	    } else {
 	    	// Fill form's data;
-	    	if ($entity) {
-				// +++ Phrase data
-				$phrData = (array)$entity->findChildrenEntry($langKey);
-				// +++ 
-				$form->populate($phrData);
-			}
+			// +++ Phrase data
+			$phrData = (array)$entity->findChildrenEntry($vData['langKey']);
+			// +++ 
+			$form->populate($phrData);
 		}
 	    
 	    // Render view

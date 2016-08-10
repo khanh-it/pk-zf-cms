@@ -66,6 +66,8 @@ $this->Bt3NavLinks(array(
                 foreach ($this->paginator as $item):
 					// Levels icon
 					$iconLvls = str_repeat('&mdash;&nbsp;', $item['_level'] - 1);
+					// Available languages
+					$availLangs = (array)$this->entityLanguages[$item['id']];
         ?>
 				<tr>
 					<td align="center" class="text-nowrap"><?php echo ++$no; ?></td>
@@ -73,23 +75,26 @@ $this->Bt3NavLinks(array(
 						<?php echo $item['_hasChild'] ? '' : $this->Bt3ManageTools()->mToolChecker($item['id']); ?>
 					</td>
 					<td>
-						<div class="pull-left"><?php echo $iconLvls; ?>&nbsp;</div>
-						<div>
-							<?php echo $item['name']; ?><br/>
-							<small class="m-l-10"><i>[<?php echo $item['code']; ?>]</i></small>
+						<div class="clearfix lang-icons lang-icons-16">
+							<?php echo Language::renderLangIcons($availLangs); ?>
 						</div>
+						<?php echo $iconLvls . $item['name']; ?><br/>
+						<small class="m-l-10"><i>[<?php echo $item['code']; ?>]</i></small>
 					</td>
 					<td align="center" class="text-nowrap">
-						<?php 
-							// Images
-							$imgs = (array)Category_Model_DbTable_Category::returnImgsWebPath($item['imgs']);
-							echo ($avatar = $imgs[0])
-								? ("<a href=\"{$imgs[0]}\" target=\"_blank\">"
-									. "<img src=\"{$imgs[0]}\" class=\"img-thumb img-thumb-48\" />"
-								. "</a>")
-								: ''
-							; 
-						?>
+					<?php 
+						// Images
+						$imgs = (array)Category_Model_DbTable_Category::returnImgsWebPath($item['imgs']);
+						$firstImg = trim($imgs[0]);
+						if ($firstImg):
+					?>
+						<a class="gallery-popup-trigger" href="#" data-imgs="<?php echo empty($imgs) ? '[]' : htmlspecialchars(json_encode($imgs)); ?>">
+							<img src="<?php echo htmlspecialchars($firstImg); ?>" class="img-thumb img-thumb-64" />
+						</a>
+					<?php
+							unset($firstImg); 
+						endif; 
+					?>
 					</td>
 					<td><?php echo $item['note']; ?></td>
 					<td align="center" class="text-nowrap">

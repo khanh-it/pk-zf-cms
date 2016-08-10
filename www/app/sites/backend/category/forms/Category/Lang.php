@@ -21,7 +21,6 @@ class Category_Form_Category_Lang extends Twitter_Bootstrap3_Form
             'label' => $txt = $view->translate('Tên danh mục'),
             'placeholder' => $txt,
             'maxlength' => 250,
-            'required' => true,
             'order' => ($eleOrder += 100)
         ));
 		// +++ 

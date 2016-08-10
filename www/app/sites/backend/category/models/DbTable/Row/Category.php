@@ -54,9 +54,7 @@ class Category_Model_DbTable_Row_Category extends K111_Db_Table_Row_BitStat
 		return $rows->getGroupedData(
 			Category_Model_DbTable_Category::PHRASE,
 			$this->_data['id'],
-			$lang, array(
-				'get_data_only' => true
-			)
+			$lang
 		);
 	}
 	

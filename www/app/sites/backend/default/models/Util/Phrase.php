@@ -196,12 +196,12 @@ class Default_Model_Util_Phrase extends Default_Model_Util_Abstract
 			'lang' => $lang
 		));
 		
-		// Fetch data
-		$rows = $this->_repo->fetchAll($select);
-		
-		// Get output data (grouped) 
-		$phrColumns = (array)$rows->getGroupedData($context, $relId, $lang);
-		
+		// Fetch data, +get output data grouped 
+		$phrColumns = (array)$this->_repo->fetchAll($select)
+			->getGroupedData($context, $relId, $lang, array(
+				'get_data_only' => false
+			))
+		;
 		// Loop
 		foreach ($data as $phrColumn => $phrData) {
 			// Create new row (if not any)
@@ -224,5 +224,44 @@ class Default_Model_Util_Phrase extends Default_Model_Util_Abstract
 		
 		// Return
 		return $this;
+	}
+
+	/**
+	 * Get available languages by context and relative id(s)
+	 * 
+	 * @param $context string Context string 
+	 * @param relIds array An array of object's relative id(s)
+	 * @return array
+	 */
+	public function getAvailableLanguages($context, $relIds) {
+		// Format data
+		// +++ 
+		$context = trim($context);
+		// +++ 
+		$relIds = ($isRelIdsArr = is_array($relIds)) ? $relIds : (array)$relIds;
+		
+		// Empty data?
+		if (!$context || empty($relIds)) {
+			return array();
+		}
+		// Return data
+		$return = array();
+		// Build selector
+		$selector = $this->_repo->buildFetchDataSelector(array(
+			'phr_context' => $context,
+			'phr_rel_id' => $relIds,
+		));
+		// Fetch data
+		$phrData = (array)$this->_repo->fetchAll($selector)->getGroupedData($context);
+		foreach ($phrData as $relId => $phrDataItem) {
+			foreach ($phrDataItem as $lang => $phrColumns) {
+				$phrColumns = array_filter($phrColumns);
+				if (!empty($phrColumns)) {
+					$return[$relId][] = $lang;
+				}
+			}
+		}
+		// Return;
+		return $isRelIdsArr ? $return : current($return);
 	}
 }

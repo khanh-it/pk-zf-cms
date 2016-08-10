@@ -27,7 +27,27 @@ form label.control-label {font-weight: 600;}
 form label.control-label.required::after {content: " (*)";color: red;}
 .btn-form-filter {margin-left:10px;}
 /* +++ language icons */
-img.lang-icon {}
+.lang-icons {}
+.lang-icons .lang-icon {-moz-box-shadow: 3px 3px 3px silver;-webkit-box-shadow: 3px 3px 3px silver;-o-box-shadow: 3px 3px 3px silver;box-shadow: 3px 3px 3px silver;margin-right: 3px;background-color: white;}
+.lang-icons-16 img {width: 16px;}
+.lang-icons-24 img {width: 24px;}
+.lang-icons-32 img {width: 32px;}
+/* +++  */
+.gallery-popup-trigger {display:inline-block;}
+.gallery-popup-overlay {
+	width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1001;
+    height: 100%;
+    overflow: auto;
+}
+.gallery-popup {
+	min-width: 480px;
+    max-width: 96%;
+    margin: 2% auto;
+}
 
 /* +++ bootstrap-select */
 .bootstrap-select {min-width: 120px;}

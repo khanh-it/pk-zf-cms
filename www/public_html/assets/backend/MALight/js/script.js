@@ -10,6 +10,86 @@
 })(jQuery);
 
 /**
+ * Gallery popup
+ * @author khanhdtp
+ */
+(function($){
+	// @var {Object} Templates
+	var tmpl = {
+		'popup': '<div class="gallery-popup-overlay hidden"><div class="card gallery-popup">'
+				+ '<div class="clearfix card-header">'
+					+ '<a href="#" class="btn btn-sm btn-danger pull-right"><span class="glyphicon glyphicon-remove"></span></a>'
+				+ '</div>'
+				+ '<a href="{{src}}" target="_blank">'
+					+ '<img src="{{src}}" class="img-responsive" alt="">'
+				+ '</a>'
+				+ '<div class="clearfix">{{body}}</div>'
+			+ '</div></div>'
+		,
+		'popupItem': '<div class="col-xs-3">'
+				+ '<a href="{{src}}" target="_blank">'
+					+ '<img src="{{src}}" class="img-responsive" alt="">'
+				+ '</a>'
+			+ '</div>'
+	}; 
+	
+	// Class 'gallery popup'. 
+	$.fn.GalleryPopup = $.fn.GalleryPopup || function(options){
+		// Format options
+		options = $.extend(true, {
+			
+		}, options || {});
+		
+		// 
+		$eles = $(this).each(function(idx){
+			var $this = $(this);
+			// Get images data
+			var imgs = $this.data('imgs') || [];
+			// Build gallery popup;
+			var html = '';
+			if (imgs.length) {
+				html = {'popup': '', 'popupItem': ''};
+				html['popup'] = tmpl.popup.replace(/{{src}}/g, imgs[0]);
+				for (var i = 1; i < imgs.length; i++) {
+					html['popupItem'] += tmpl.popupItem.replace(/{{src}}/g, imgs[i]);
+				}
+				html = html['popup'].replace(/{{body}}/g, html['popupItem']);
+			}
+			if (html) {
+				$this.data('gallery-popup', $(html).appendTo(document.body));
+			}
+			//  
+			$this.on('click', function(evt){
+				// Prevent default
+				evt.preventDefault();
+				//
+				var $galleryPopup = $this.data('gallery-popup');
+				if ($galleryPopup) {
+					$galleryPopup.removeClass('hidden').fadeIn('slow');
+				}
+			});
+		});
+	};
+	
+	// Auto trigger gallery popup for dom elements
+	$(document).on('click', '.gallery-popup-trigger', function(evt){
+		// Prevent default
+		evt.preventDefault();
+		//
+		var $this = $(this);
+		//
+		if ($this.data('gallery-popup')) {
+			return;
+		} else {
+			// 
+			$this.GalleryPopup({});
+			//
+			$this.triggerHandler('click');	
+		}
+	});
+})(jQuery);
+
+/**
  * Admin panel
  */
 (function($){

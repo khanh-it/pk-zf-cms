@@ -40,12 +40,16 @@ class Default_Model_DbTable_Rowset_Phrase extends K111_Db_Table_Rowset_Abstract
 	/**
 	 * Get data grouped
 	 * 
-	 * 
+	 * @param $context string Context string
+	 * @param $relId int|string Entity relative id
+	 * @param $lang string Language string
+	 * @param $options array An array of options
+	 * @return array  
 	 */
 	public function getGroupedData($context = null, $relId = null, $lang = null, array $options = array()) {
 		// Format, + get options
 		// +++ Get data only? 
-		$options['get_data_only'] = !!($options['get_data_only'] ?: false);
+		$options['get_data_only'] = !!(is_null($options['get_data_only']) ? true : $options['get_data_only']);
 			
 		// Get data
 		$data = $options['get_data_only'] 
