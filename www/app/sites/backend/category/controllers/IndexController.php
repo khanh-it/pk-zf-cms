@@ -403,10 +403,10 @@ class Category_IndexController extends K111_Controller_Action
 	}
 
 	/**
-	 * Action: update data;
+	 * Action: language;
 	 * @return void
 	 */
-	public function langAction()
+	public function languageAction()
 	{
 		// Get params
 		// +++ Data ID;
@@ -426,6 +426,8 @@ class Category_IndexController extends K111_Controller_Action
 		
 	    // Define var # view's data;
 	    $vData = array();
+		// +++ Entity object
+		$vData['entity'] = $entity;
 		// +++ @var Default_Model_Util_Phrase
 		$vData['phrUtil'] = $phrUtil = Default_Model_Util_Phrase::getInstance();
 		
@@ -517,6 +519,6 @@ class Category_IndexController extends K111_Controller_Action
 	    $this->view->assign(array_merge($vData, array(
 		)));
 		// +++ Render script
-		$this->renderScript('index/lang.phtml');
+		$this->renderScript('index/language.phtml');
 	}
 }

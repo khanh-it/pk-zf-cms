@@ -36,7 +36,7 @@ class App_View_Helper_Bt3ManageTools extends Zend_View_Helper_Abstract {
 	/**
      * @var array
      */
-    public static $_urlParamsLang = array('action' => 'lang',  'id' => '__id__');
+    public static $_urlParamsLang = array('action' => 'language',  'id' => '__id__');
 	
 	/**
      * @var array

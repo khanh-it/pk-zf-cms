@@ -143,14 +143,14 @@ class Product_CategoryController extends K111_Controller_Action
 	}
 	
 	/**
-	 * Action: lang;
+	 * Action: language;
 	 * @MCAInfo({
 	 	"name": "Ngôn ngữ",
 		"info": "Chuyển đổi ngôn ngữ."
 	})
 	 * @return void
 	 */
-	public function langAction()
+	public function languageAction()
 	{
 		// Forward request
 		$this->forward(

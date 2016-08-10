@@ -61,7 +61,10 @@ class Default_Model_Util_Phrase extends Default_Model_Util_Abstract
 		// +++
 		
 		// Format, get options
-		$options['element_name_prefix'] = $options['element_name_prefix'] ?: self::PHR_DATA_PREFIX;  
+		$options['element_name_prefix'] = is_null($options['element_name_prefix']) 
+			? self::PHR_DATA_PREFIX
+			: $options['element_name_prefix']
+		; 
 		
 		// dummy element, used as label spliter
 		$elements[] = $element = $form->createElement('text', '_SEOToolsLabel_', array(

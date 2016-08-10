@@ -26,6 +26,8 @@ img.img-thumb-64 {max-width: 64px}
 form label.control-label {font-weight: 600;}
 form label.control-label.required::after {content: " (*)";color: red;}
 .btn-form-filter {margin-left:10px;}
+/* +++ language icons */
+img.lang-icon {}
 
 /* +++ bootstrap-select */
 .bootstrap-select {min-width: 120px;}

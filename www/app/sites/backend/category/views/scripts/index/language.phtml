@@ -12,29 +12,39 @@ $this->Bt3NavLinks(array(
 
 // Languages
 $languages = (array)$this->languages;
-Zend_Debug::dump($languages);die();
 ?>
 <div id="controller" class="card">
 	<div class="card-body card-padding">
-		<!-- Nav tabs -->
-		<ul class="nav nav-tabs" role="tablist">
-			<li role="presentation" class="active">
-				<a href="#home" aria-controls="home" role="tab" data-toggle="tab">Home</a>
-			</li>
-			<li role="presentation">
-				<a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profile</a>
-			</li>
-			<li role="presentation">
-				<a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Messages</a>
-			</li>
-			<li role="presentation">
-				<a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Settings</a>
-			</li>
-		</ul>
+		<!-- Object info -->
+		<h4 class="clearfix">
+			<span class="label label-primary"><?php
+				echo $this->translate('Danh mục')
+			?>:</span>&nbsp;
+			<span class="label label-info"><?php
+				echo $this->entity->name . ($this->entity->code
+					? (' [' . $this->entity->code . ']')
+					: ''
+				);
+			?></span>
+		</h4><br/>
+		
+		<!-- Buttons -->
+		<?php
+			foreach ($languages as $langKey => $langData):
+				// Switch tab url  
+				$url = $this->url(array('lang' => $langKey), 'default');
+				// Is current tab active?
+				$activeStr = ($this->langKey == $langKey) ? 'btn-primary' : '';
+		?>
+		<a class="btn btn-sm btn-default <?php echo $activeStr; ?>" href="<?php echo $url; ?>" role="button">
+			<img class="lang-icon" src="<?php echo $langData['icon'] ?>" />
+			<?php echo $langData['name'] ?>
+		</a>
+		<?php endforeach; ?>
 	
 		<!-- Tab panes -->
 		<div class="tab-content">
-			<div role="tabpanel" class="tab-pane active" id="form-wrapper">
+			<div role="tabpanel" class="tab-pane active">
 				<?php
 					// Render form
 					echo $this -> form;
