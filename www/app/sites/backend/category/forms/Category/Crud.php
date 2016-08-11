@@ -51,18 +51,22 @@ class Category_Form_Category_Crud extends Twitter_Bootstrap3_Form
 		$element->getDecorator('description')
 			->setOption('tag', 'small')
 		;
-		// +++ @TODO: implement images preview, sort (for first )...
+		// +++ 
+		$kcfinderUploadDir = current(Category_Model_DbTable_Category::returnImgsWebPath('/'));
         $elements[] = $element = $this->createElement('textarea', 'imgs', array(
             'label' => $txt = $view->translate('Hình ảnh'),
             'placeholder' => $txt,
             'attribs' => array(
-            	'readonly' => 'readonly',
+            	//'readonly' => 'readonly',
             	'rows' => 6,
-            	'data-kcfinder' => Category_Model_DbTable_Category::IMG_FOLDER
+            	'data-kcfinder-type' => Category_Model_DbTable_Category::IMG_FOLDER,
+            	'data-kcfinder-exts' => '|*img',
+            	'data-kcfinder-upload_dir' => $kcfinderUploadDir,
 			),
+			'class' => 'form-control input-sm kcfinder',
             'order' => ($eleOrder += 100),
             'addon_prepend' => FORM_HTML_KCFINDER_PICKER,
-            'addon_append' => FORM_HTML_KCFINDER_REMOVE
+            'addon_append' => FORM_HTML_KCFINDER_PREVIEW_N_REMOVE
         ));
         // +++ 
         $elements[] = $element = $this->createElement('textarea', 'note', array(

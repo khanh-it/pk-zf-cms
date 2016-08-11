@@ -57,8 +57,9 @@ class Default_Form_Account_Crud extends Twitter_Bootstrap3_Form
             'placeholder' => $txt,
             'attribs' => array(
             	'readonly' => 'readonly',
-            	'data-kcfinder' => Default_Model_DbTable_Account::AVATAR_FOLDER
+            	'data-kcfinder-type' => Default_Model_DbTable_Account::AVATAR_FOLDER
 			),
+			'class' => 'form-control input-sm kcfinder',
             'order' => ($eleOrder += 100),
             'addon_prepend' => FORM_HTML_KCFINDER_PICKER,
             'addon_append' => FORM_HTML_KCFINDER_REMOVE

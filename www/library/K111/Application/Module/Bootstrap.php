@@ -44,16 +44,43 @@ class K111_Application_Module_Bootstrap extends Zend_Application_Module_Bootstra
      * @var string
      */
     protected $_moduleNameUC = '';
+	/**
+     * Return current module name undercore
+     *
+     * @return string
+     */
+    public function getModuleNameUC()
+    {
+        return $this->_moduleNameUC;
+    }
     
     /**
      * @var Default navigation's static file name.
      */
     protected $_nav_filename_static = 'nav.static.php';
+	/**
+     * Return default navigation's static file name.
+     *
+     * @return string
+     */
+    public function getNavFilenameStatic()
+    {
+        return $this->_nav_filename_static;
+    }
     
     /**
      * @var Default navigation's dynamic file name.
      */
     protected $_nav_filename_dynamic = 'nav.dynamic.php';
+	/**
+     * Return default navigation's static file name.
+     *
+     * @return string
+     */
+    public function getNavFilenameDynamic()
+    {
+        return $this->_nav_filename_dynamic;
+    }
     
     /**
      * Load navigation?
@@ -76,7 +103,7 @@ class K111_Application_Module_Bootstrap extends Zend_Application_Module_Bootstra
      * @var array
      */
     protected static $_instances;
-    
+	
     /**
      * Constructor
      *
@@ -135,15 +162,18 @@ class K111_Application_Module_Bootstrap extends Zend_Application_Module_Bootstra
         
         // Load navigation's static file.
         self::setDataNavigation(require "{$navDir}/{$this->_nav_filename_static}");
+		
+		// Make ref to current bootstrap instance
+		$bt = $this;
 
         // Load navigation's dynamic file.
-        $this->_eventManager->attach('__SYSTEM__.dispatchLoopStartup', function(Zend_EventManager_Event $e) use ($navDir) {
+        $this->_eventManager->attach('__SYSTEM__.dispatchLoopStartup', function(Zend_EventManager_Event $e) use ($bt, $navDir) {
             // Call helper: check if current request for current module?
             $isMCAMatch = $e->getTarget()->isMCAMatch(array(
-                'module' => $this->_moduleNameUC 
+                'module' => $bt->getModuleNameUC()
             ));
             if ($isMCAMatch) {
-                self::setDataNavigation(require "{$navDir}/{$this->_nav_filename_dynamic}");
+        		$bt::setDataNavigation(require "{$navDir}" . $bt->getNavFilenameDynamic());
             }
         });
         

@@ -121,7 +121,6 @@ class ACL {
 	 * @var array
 	 */
 	protected static $_checkAccessOptions;
-	
 	/**
 	 * Set check access options
 	 * 
@@ -130,7 +129,15 @@ class ACL {
 	 */
 	public static function setCheckAccessOptions(array $options) {
 		self::$_checkAccessOptions = (array)$options;
-	} 
+	}
+	/**
+	 * Get check access options
+	 * 
+	 * @return array 
+	 */
+	public static function getCheckAccessOptions() {
+		return self::$_checkAccessOptions;
+	}
 	
     /**
      * Handle account's access permission checking
@@ -151,12 +158,14 @@ class ACL {
             if ($front->getDispatcher()->isDispatchable($request)) {
                 // Call helper function to check account's access permission.
                 $isAccessAllowed = ACL::isAccessAllowed($request);
+				// Get check access options
+				$checkAccessOptions = (array)ACL::getCheckAccessOptions();
 				
 				// Case: not login
 				if (is_null($isAccessAllowed)) {
 					// Get, +format params
 					// +++ 
-					$urlNoLoginParams = (array)self::$_checkAccessOptions['url_no_login_params'];
+					$urlNoLoginParams = $checkAccessOptions['url_no_login_params'];
 					
 					// Forward request (redirect)
 		            return $request
@@ -170,7 +179,7 @@ class ACL {
 				} elseif (false === $isAccessAllowed) {
 					// Get, +format params
 					// +++ 
-					$urlAccessDeniedParams = (array)self::$_checkAccessOptions['url_access_denied_params'];
+					$urlAccessDeniedParams = $checkAccessOptions['url_access_denied_params'];
 					
 					// Forward request (redirect)
 		            return $request

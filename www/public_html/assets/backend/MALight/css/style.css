@@ -32,22 +32,6 @@ form label.control-label.required::after {content: " (*)";color: red;}
 .lang-icons-16 img {width: 16px;}
 .lang-icons-24 img {width: 24px;}
 .lang-icons-32 img {width: 32px;}
-/* +++  */
-.gallery-popup-trigger {display:inline-block;}
-.gallery-popup-overlay {
-	width: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1001;
-    height: 100%;
-    overflow: auto;
-}
-.gallery-popup {
-	min-width: 480px;
-    max-width: 96%;
-    margin: 2% auto;
-}
 
 /* +++ bootstrap-select */
 .bootstrap-select {min-width: 120px;}
@@ -55,3 +39,14 @@ form label.control-label.required::after {content: " (*)";color: red;}
 .bootstrap-select .dropdown-menu {max-width: 100%; overflow: hidden;}
 .form-inline .bootstrap-select {max-width: 320px;}
 .form-inline .bootstrap-select .dropdown-menu {max-width: 320px;}
+
+/* +++ gallery-popup */
+.gallery-popup-trigger {display:inline-block;}
+.gallery-popup-overlay {width: 100%; position: fixed; top: 0; left: 0; z-index: 1001; height: 100%; overflow: auto;padding: 80px 2% 2% 2%;}
+.gallery-popup {width: 480px;max-width: 100%;margin: auto;min-height: 100%;}
+.gallery-popup-header {padding: 6px;}
+.gallery-popup-fimg {display: block;}
+.gallery-popup-fimg img {width: 100%; max-height: 200px;}
+.gallery-popup-body {padding: 15px;}
+.gallery-popup-body .col {padding-bottom: 15px;}
+/* +++ ./gallery-popup */

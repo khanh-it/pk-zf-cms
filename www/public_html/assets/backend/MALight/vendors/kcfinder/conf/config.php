@@ -128,12 +128,15 @@ $_CONFIG = array(
 
 // @author khanhdtp
 // (C) Custom types (auto genrated by session)
-$KEY = '_KCFinderType';
-if ($_GET[$KEY]) {
+$KEY = array('type' => '_KCFinderType', 'exts' => '_KCFinderExts');
+if (isset($_GET[$KEY['type']])) {
 	// 
-	$_SESSION[$KEY] = $_GET[$KEY];
+	$_SESSION[$KEY['type']] = $_GET[$KEY['type']];
+	$_SESSION[$KEY['exts']] = $_GET[$KEY['exts']];
 	//
-	$href = $_GET; unset($href[$KEY]);
+	$href = $_GET; 
+	unset($href[$KEY['type']], $href[$KEY['exts']]);
+	// 
 	header('Location: ' 
 		. str_replace("?{$_SERVER['QUERY_STRING']}", '', $_SERVER['REQUEST_URI']) 
 		. (($href = http_build_query($href)) ? "?{$href}" : '')
@@ -141,6 +144,8 @@ if ($_GET[$KEY]) {
 	exit();
 }
 // +++ 
-if ($_SESSION[$KEY]) {
-	$_CONFIG['types'] = array($_SESSION[$KEY] => '') + $_CONFIG['types'];
+if ($_SESSION[$KEY['type']]) {
+	$_CONFIG['types'] = array(
+		(string)$_SESSION[$KEY['type']] => (string)$_SESSION[$KEY['exts']]
+	) + $_CONFIG['types'];
 }
