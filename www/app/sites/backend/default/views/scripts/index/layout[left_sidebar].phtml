@@ -10,25 +10,54 @@
 	<div class="s-profile">
         <a href="#" data-ma-action="profile-menu-toggle">
             <div class="sp-pic">
-                <img src="img/profile-pics/1.jpg" alt="">
+                <img src="<?php echo Default_Model_DbTable_Account::returnAvatarWebPath($this->authIdentity->avatar); ?>" alt="">
             </div>
             <div class="sp-info">
-                Malinda Hollaway
+                <?php echo $this->authIdentity->fullname; ?>
+                <small>[<?php echo $this->authIdentity->username; ?>]</small>
                 <i class="zmdi zmdi-caret-down"></i>
             </div>
         </a>
         <ul class="main-menu">
             <li>
-                <a href="profile-about.html"><i class="zmdi zmdi-account"></i> View Profile</a>
+            	<?php
+            		// View profile url
+            		$url = $this->url(array(
+            			'module' => 'default',
+            			'controller' => 'account',
+            			'action' => 'profile'
+					), 'default', true);
+            	?>
+                <a href="<?php echo $url; ?>">
+                	<i class="zmdi zmdi-face"></i> <?php echo $this->translate('Hồ sơ cá nhân'); ?>
+                </a>
             </li>
             <li>
-                <a href="#"><i class="zmdi zmdi-input-antenna"></i> Privacy Settings</a>
+            	<?php
+            		// Settings url
+            		$url = $this->url(array(
+            			'module' => 'default',
+            			'controller' => 'account',
+            			'action' => 'settings',
+            			'_act' => 'edit'
+					), 'default', true);
+            	?>
+                <a href="<?php echo $url; ?>">
+                	<i class="zmdi zmdi-settings"></i> <?php echo $this->translate('Cài đặt khác'); ?>
+                </a>
             </li>
             <li>
-                <a href="#"><i class="zmdi zmdi-settings"></i> Settings</a>
-            </li>
-            <li>
-                <a href="#"><i class="zmdi zmdi-time-restore"></i> Logout</a>
+            	<?php
+            		// Logout url
+            		$url = $this->url(array(
+            			'module' => 'default',
+            			'controller' => 'account',
+            			'action' => 'logout'
+					), 'default', true);
+            	?>
+                <a href="<?php echo $url; ?>">
+                	<i class="zmdi zmdi-time-restore"></i> <?php echo $this->translate('Đăng xuất'); ?>
+				</a>
             </li>
         </ul>
     </div>

@@ -182,10 +182,88 @@ class AccountController extends K111_Controller_Action
 	}
 	
 	/**
-	 *
+	 * Action: view, +edit profile
 	 */
 	public function profileAction()
 	{
+		// Fetch data
+		$entity = $this->_repo->find($this->_authIdentity->id)->current();
+		
+		// Check data valid?
+		if (!$entity) {
+			throw new Exception($this->view->translate('Account data not found'), 500);
+		}
+		
+	    // Define var # view's data;
+	    $vData = array();
+		
+	    // Define var # form;
+	    $vData['form'] = $form = new Default_Form_Account_Profile();
+		// +++ Fill form's elemnents data
+		// +++ +++
+		 
+	    // Process on POST
+	    if ($this->_request->isPost()) {
+	        // Get post data
+	        $postData = $this->_request->getPost();
+	        
+	        // Check form valid?
+	        if ($form->isValid($postData)) {
+	        	// Get form data;
+	            $formValues = $form->getValues();
+				
+	            // Form has no errors?
+	            if (!$form->hasErrors()) {
+    	            // Fill entity data
+					// +++ Don't reset password if has no input
+					if ('' == (string)$formValues['password']) {
+						unset($formValues['password']);
+					}
+					// +++ 
+    	            $entity->setFromArray($formValues);
+					
+    	            // +++ Get last insert id (if any)
+    	            $entityId = $entity->save();
+					
+					// Change account's info in session;
+                	$zAuth = Zend_Auth::getInstance();
+					$zAuth->getStorage()->write((object)array_merge((array)$this->_authIdentity, $formValues)); 
+    	            
+    	            // Inform
+    	            $this->_helper->flashMessenger->addMessage(
+    	                $this->view->translate('Cập nhật hồ sơ cá nhân thành công!'),
+    	                'layout-messages'
+                    );
+    	            
+    	            // Redirect
+    	            switch ($postData['_act']) {
+    	            	// +++ apply
+    	                case 'apply' : {
+                            $this->_helper->redirector(
+                                $this->_request->getActionName(),
+                                $this->_request->getControllerName(),
+                                $this->_request->getModuleName(),
+                                $this->_request->getUserParams()
+                            );
+    	                } break;
+    	            }
+	            }
+	        }
+
+		// Case: on page's first load
+	    } else {
+	    	// Fill form's data;
+	    	if ($entity) {
+		    	// +++ 
+				$formData = $entity->toArray();
+				// +++ 
+				$form->populate($formData);
+			}
+		}
+	    
+	    // Render view
+	    $this->view->assign(array_merge($vData, array(
+		)));
 	}
 	
 	/**

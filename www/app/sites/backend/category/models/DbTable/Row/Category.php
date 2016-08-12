@@ -6,22 +6,6 @@
 class Category_Model_DbTable_Row_Category extends K111_Db_Table_Row_BitStat
 {
 	/**
-	 * @var array category types
-	 */
-	const TYPE_PRODUCT = 'PRODUCT';
-	/**
-	 * Return category's types
-	 * @return array 
-	 */
-	public static function returnTypes() {
-		$return = array(
-			self::TYPE_PRODUCT => 'Product'
-		);
-		
-		return $return;
-	}
-	
-	/**
 	 * Check parent_id data valid?
 	 * @param $parentId int|string Parent id
 	 * @return this
@@ -74,7 +58,7 @@ class Category_Model_DbTable_Row_Category extends K111_Db_Table_Row_BitStat
 	 * @return string
 	 */
 	public function returnImgsWebPath() {
-		return Category_Model_DbTable_Category::returnImgsWebPath($this->avatar);
+		return Category_Model_DbTable_Category::returnImgsWebPath($this->imgs);
 	}
 	
 	/**
@@ -90,7 +74,7 @@ class Category_Model_DbTable_Row_Category extends K111_Db_Table_Row_BitStat
 		    $date = new DateTime();
 			$this->modifyData('created_time', $date->format('Y-m-d H:i:s'));
 			// +++ Type 
-			$this->modifyData('type', $this->getTable()->getDefaultType());
+			$this->modifyData('type', Category_Model_DbTable_Category::getDefaultType());
 		}
 		// +++ Always use default phrase context!
 		$this->modifyData('phrase', Category_Model_DbTable_Category::PHRASE);

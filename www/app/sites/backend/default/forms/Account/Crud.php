@@ -52,17 +52,20 @@ class Default_Form_Account_Crud extends Twitter_Bootstrap3_Form
             'order' => ($eleOrder += 100)
         )); 
 		// +++ 
+		$kcfinderUploadDir = Default_Model_DbTable_Account::returnAvatarWebPath('/');
         $elements[] = $element = $this->createElement('text', 'avatar', array(
             'label' => $txt = $view->translate('Ảnh đại diện'),
             'placeholder' => $txt,
             'attribs' => array(
             	'readonly' => 'readonly',
-            	'data-kcfinder-type' => Default_Model_DbTable_Account::AVATAR_FOLDER
+            	'data-kcfinder-type' => Default_Model_DbTable_Account::AVATAR_FOLDER,
+            	'data-kcfinder-exts' => '*img',
+            	'data-kcfinder-upload_dir' => $kcfinderUploadDir
 			),
 			'class' => 'form-control input-sm kcfinder',
             'order' => ($eleOrder += 100),
             'addon_prepend' => FORM_HTML_KCFINDER_PICKER,
-            'addon_append' => FORM_HTML_KCFINDER_REMOVE
+            'addon_append' => FORM_HTML_KCFINDER_PREVIEW_N_REMOVE
         ));
         // +++ 
         $elements[] = $element = $this->createElement('textarea', 'note', array(

@@ -46,5 +46,9 @@ define('FORM_HTML_ALIAS_REMOVE', '<a href="javascript:void(0);" onclick="jQuery(
 //
 define('LANG_SELECT', '-- Chọn --');
 
+//
+//
+define('LANG_USE_TAGS_HELP', 'Phân cách các tags bởi dấu phẩy `,`. VD: tag-1, tag_2.');
+
 
 // ===== ./LANGUAGE =====/

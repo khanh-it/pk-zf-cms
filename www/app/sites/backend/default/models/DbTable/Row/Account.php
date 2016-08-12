@@ -12,7 +12,7 @@ class Default_Model_DbTable_Row_Account extends K111_Db_Table_Row_BitStat
 	 */
 	public function setPassword($password) {
 		// Format input
-		$this->modifyData('group_id', md5($password));
+		$this->modifyData('password', md5($password));
 
 		return $this;
 	}

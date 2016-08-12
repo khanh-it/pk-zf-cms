@@ -56,11 +56,13 @@ class IndexController extends K111_Controller_Action
 	public function layoutAction() {
 	    // Get, define vars
 	    $vData = array();
-	    // Layout's components;
+	    // +++ Layout's components;
 	    $vData['components'] = $this->_getParam('components');
 	    if (!is_array($vData['components'])) {
 	        $vData['components'] = self::$_LAYOUT_COMPONENTS;
 	    }
+		// +++ Account's info
+		$vData['authIdentity'] = $this->_authIdentity; 
 	    
 	    // Render VIEW;
 	    $this->view->assign($vData);

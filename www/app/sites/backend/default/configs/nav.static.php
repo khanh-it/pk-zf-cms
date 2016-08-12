@@ -27,14 +27,14 @@ return array(
             'uri' => ''
         ),*/
         // group
-        'group' => array(
+        'default.group' => array(
             'label' => '[i class="zmdi zmdi-layers"][/i] [span]Nhóm tài khoản[/span] [i class="fa fa-angle-left pull-right"][/i]',
             'class' => '',
             'uri' => '#',
             'pages' => array(
                 // 
                 'index' => array(
-                    'label' => '[i class="zmdi zmdi-layers"][/i] [span]Danh mục[/span]',
+                    'label' => '[i class="zmdi zmdi-layers"][/i] [span]Danh sách[/span]',
                     'module' => 'default',
                     'controller' => 'group',
                     'action' => 'index',
@@ -49,15 +49,16 @@ return array(
             )
         ),
         // end.group
-        // account
-        'account' => array(
+        
+        // account //
+        'default.account' => array(
             'label' => '[i class="zmdi zmdi-layers"][/i] [span]Tài khoản[/span] [i class="fa fa-angle-left pull-right"][/i]',
             'class' => '',
-            'uri' => '#',
+            'uri' => 'javascript:void(0);',
             'pages' => array(
                 //
                 'index' => array(
-                'label' => '[i class="zmdi zmdi-layers"][/i] [span]Danh mục[/span]',
+                	'label' => '[i class="zmdi zmdi-layers"][/i] [span]Danh sách[/span]',
                     'module' => 'default',
                     'controller' => 'account',
                     'action' => 'index',
@@ -68,10 +69,27 @@ return array(
                     'module' => 'default',
                     'controller' => 'account',
                     'action' => 'insert',
+                ),
+                //
+                'profile' => array(
+                    'label' => '[i class="zmdi zmdi-layers"][/i] [span]Hồ sơ cá nhân[/span]',
+                    'module' => 'default',
+                    'controller' => 'account',
+                    'action' => 'profile',
+                    'visible' => false,
+                ),
+                //
+                'settings' => array(
+                    'label' => '[i class="zmdi zmdi-layers"][/i] [span]Cài đặt khác[/span]',
+                    'module' => 'default',
+                    'controller' => 'account',
+                    'action' => 'settings',
+                    'visible' => false,
                 )
             )
         ),
-        // end.account
+        // end.account //
+        
     // end.system
     //) 
 );

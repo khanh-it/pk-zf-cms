@@ -66,7 +66,7 @@ class CategoryContext {
  * Class category context
  * @author khanhdtp
  */
-class Category_Model_Util_CategoryContextManager extends Default_Model_Util_Abstract
+class Category_Model_DbTable_Util_CategoryContextManager extends Default_Model_DbTable_Util_Abstract
 {
     /**
 	 * Create new category context instance

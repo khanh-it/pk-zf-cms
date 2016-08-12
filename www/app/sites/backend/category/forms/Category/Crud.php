@@ -59,8 +59,8 @@ class Category_Form_Category_Crud extends Twitter_Bootstrap3_Form
             'attribs' => array(
             	//'readonly' => 'readonly',
             	'rows' => 6,
-            	'data-kcfinder-type' => Category_Model_DbTable_Category::IMG_FOLDER,
-            	'data-kcfinder-exts' => '|*img',
+            	'data-kcfinder-type' => Category_Model_DbTable_Category::returnImgFolder(),
+            	'data-kcfinder-exts' => '*img',
             	'data-kcfinder-upload_dir' => $kcfinderUploadDir,
 			),
 			'class' => 'form-control input-sm kcfinder',

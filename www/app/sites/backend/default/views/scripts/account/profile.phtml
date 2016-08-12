@@ -1,0 +1,26 @@
+<?php
+/**
+ * Script view: account # view, +edit profile
+ * @author khanhdtp
+ */
+// Toolbars
+$this->Bt3NavLinks(array(
+	$this->Bt3NavLinks()->iconApply()
+));
+?>
+<div id="controller" class="card">
+	<div class="card-body card-padding">
+	<?php 
+	    // Render form
+	    echo $this->form;
+	?>
+	</div>
+</div>
+<?php
+// CSS:
+// +++ Inline style;
+$this->HeadStyleAction($this->curRequest, null, array());
+
+// CSS:
+// +++ Inline script;
+$this->HeadScriptAction($this->curRequest, null, array());

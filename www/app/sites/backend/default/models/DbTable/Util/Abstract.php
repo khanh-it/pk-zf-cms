@@ -2,7 +2,7 @@
 /**
  * 
  */
-abstract class Default_Model_Util_Abstract
+abstract class Default_Model_DbTable_Util_Abstract
 {
 	/**
 	 * @var array options

@@ -16,7 +16,7 @@
 (function($){
 	// @var {Object} Templates
 	var tmpl = {
-		'popup': '<div class="gallery-popup-overlay hidden"><div class="card GalleryPopup z-depth-3">'
+		'popup': '<div class="gallery-popup-overlay hidden"><div class="card gallery-popup z-depth-3">'
 			+ '<div class="clearfix gallery-popup-header">'
 				+ '<h5 class="pull-left"></h5>'
 				+ '<a href="#" class="btn btn-sm btn-danger pull-right gallery-popup-x"><span class="glyphicon glyphicon-remove"></span></a>'
@@ -50,6 +50,10 @@
 				.find('.gallery-popup-body').html(obj.body).end()
 			;
 		})
+	// Show popup
+		.on('show', function(evt, options){
+			$galleryPopup.hide().removeClass('hidden').fadeIn('fast');
+		})
 	// Close popup
 		.on('click', '.gallery-popup-x', function(evt){
 			// Prevent default
@@ -69,7 +73,7 @@
 			// Format optionsdiv
 			options = $.extend(true, {
 			// +++ popup title
-				'title': 'Preview images (gallery)',
+				'title': 'View images (gallery)',
 			// +++ images
 				'imgs': []
 			}, options || {});
@@ -84,8 +88,6 @@
 					}
 					html.push(tmpl.popupItemCol.replace(/{{src}}/g, options.imgs[i]));
 				}
-			}
-			if (html.length) {
 				//
 				html = tmpl.popupItemRow[0] + html.join('') + tmpl.popupItemRow[1];
 				// Set data
@@ -95,9 +97,8 @@
 					'body': html
 				}]);
 				// Show popup
-				$galleryPopup.hide().removeClass('hidden').fadeIn('fast');
+				$galleryPopup.triggerHandler('show', [options]);
 			}
-			
 			// Return
 			return this;
 		}

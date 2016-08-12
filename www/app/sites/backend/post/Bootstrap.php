@@ -1,17 +1,13 @@
 <?php
 /**
+ * Module's bootstrap
+ * @author khanhdtp
  */
 class Post_Bootstrap extends K111_Application_Module_Bootstrap
 {
     /**
-     * 
+     * Load module's navigation?
+     * @var bool
      */
-    protected function _initABC() {
-        return;
-        echo ($this->getModuleName());
-        
-        $evtMan = K111_EventManager_EventManager::getInstance();
-        
-        $evtMan->trigger('Default.Module_Bootstrap');
-    }
+    protected $_loadNavigation = true;
 }

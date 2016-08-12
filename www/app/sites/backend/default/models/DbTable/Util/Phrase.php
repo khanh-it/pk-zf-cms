@@ -2,7 +2,7 @@
 /**
  * @author khanhdtp
  */
-class Default_Model_Util_Phrase extends Default_Model_Util_Abstract
+class Default_Model_DbTable_Util_Phrase extends Default_Model_DbTable_Util_Abstract
 {
 	/**
 	 * @var Default_Model_DbTable_Phrase 
@@ -23,7 +23,7 @@ class Default_Model_Util_Phrase extends Default_Model_Util_Abstract
 	}
 	
 	/**
-	 * @var Default_Model_Util_Phrase
+	 * @var Default_Model_DbTable_Util_Phrase
 	 */
 	protected static $_instance;
 	

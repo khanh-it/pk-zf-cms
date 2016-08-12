@@ -28,9 +28,9 @@ class Category_IndexController extends K111_Controller_Action
 		/* Initialize action controller here */
 		// +++ Format, + get options (from others forwared controllers)
 		$this->_options = $this->_request->getParam('_options', array());
+		$this->_request->setParam('_options', null);
 		// +++ Check for required option
-		$categoryTypes = Category_Model_DbTable_Row_Category::returnTypes();
-		if (!$categoryTypes[$this->_options['type']]) {
+		if (!$this->_options['type']) {
 			throw new Zend_Controller_Action_Exception("Category type is missing!");
 		}
 		// +++ Sync module/controller/action name?
@@ -44,8 +44,8 @@ class Category_IndexController extends K111_Controller_Action
 			$this->_request->setActionName($this->_request->getParam('action'));
 		}
 		// +++ Entity's repo;
+		Category_Model_DbTable_Category::setDefaultType($this->_options['type']);
 		$this->_repo = new Category_Model_DbTable_Category();
-		$this->_repo->setDefaultType($this->_options['type']);
 	}
 	
 	/**
@@ -60,8 +60,8 @@ class Category_IndexController extends K111_Controller_Action
 	    
 	    // Define var # view's data;
 	    $vData = array();
-		// +++ @var Default_Model_Util_Phrase
-		$vData['phrUtil'] = $phrUtil = Default_Model_Util_Phrase::getInstance();
+		// +++ @var Default_Model_DbTable_Util_Phrase
+		$vData['phrUtil'] = $phrUtil = Default_Model_DbTable_Util_Phrase::getInstance();
 	     
 	    // Define var # form;
 	    $vData['form'] = $form = new Category_Form_Category_Index();
@@ -154,8 +154,8 @@ class Category_IndexController extends K111_Controller_Action
 		
 	    // Define var # view's data;
 	    $vData = array();
-		// +++ @var Default_Model_Util_Phrase
-		$vData['phrUtil'] = $phrUtil = Default_Model_Util_Phrase::getInstance();
+		// +++ @var Default_Model_DbTable_Util_Phrase
+		$vData['phrUtil'] = $phrUtil = Default_Model_DbTable_Util_Phrase::getInstance();
 		
 		// Get language info
 		list($langKey, $langData) = Language::getDefault();
@@ -440,8 +440,8 @@ class Category_IndexController extends K111_Controller_Action
 	    $vData = array();
 		// +++ Entity object
 		$vData['entity'] = $entity;
-		// +++ @var Default_Model_Util_Phrase
-		$vData['phrUtil'] = $phrUtil = Default_Model_Util_Phrase::getInstance();
+		// +++ @var Default_Model_DbTable_Util_Phrase
+		$vData['phrUtil'] = $phrUtil = Default_Model_DbTable_Util_Phrase::getInstance();
 		
 		// Get language info
 		// +++ List of languages
