@@ -3,6 +3,9 @@
  * Script view: group # crud
  * @author khanhdtp
  */
+// Get K111_AssetsFinder
+$assetsFinder = K111_AssetsFinder::getInstance();
+
 // Toolbars
 $this->Bt3NavLinks(array(
 	$this->contOpts['isActUpdate'] ? $this->Bt3NavLinks()->iconApply() : '', 
@@ -30,7 +33,11 @@ $this->HeadStyleAction($this->curRequest, null, array(
 	'action' => 'crud'
 ));
 
-// CSS:
+// JS:
+// +++ Lib: ckeditor
+$this->headScript()->appendFile(
+	$assetsFinder->files('ckeditor/ckeditor.js', 'lib'), null, array('minify_disabled' => true)
+);
 // +++ Inline script;
 $this->HeadScriptAction($this->curRequest, null, array(
 	'module' => 'post',

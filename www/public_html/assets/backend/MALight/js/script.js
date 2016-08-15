@@ -350,5 +350,30 @@
 			}
 		}
 	});
-// ./KCFinder //	
+// ./KCFinder //
+
+// CKEditor //
+if (window.CKEDITOR) {
+	// Auto init 
+	$(document).find('textarea[data-ckeditor]').each(function(idx){
+		// Get configs, +format config
+		var $this = $(this), config = $this.data('ckeditor');
+		// +++ KCFinder Integration?
+		var KCFinderLibraryPath = '/assets/backend/MALight/vendors/kcfinder/';
+		if (config.filebrowser) {
+			$.extend(config, {
+				filebrowserBrowseUrl: KCFinderLibraryPath + 'browse.php?opener=ckeditor&type=' + config.filebrowser,
+				filebrowserImageBrowseUrl: KCFinderLibraryPath + 'browse.php?opener=ckeditor&type=' + config.filebrowser,
+				filebrowserFlashBrowseUrl: KCFinderLibraryPath + 'browse.php?opener=ckeditor&type=' + config.filebrowser//,
+				//filebrowserUploadUrl: KCFinderLibraryPath + 'upload.php?opener=ckeditor&type=' + config.filebrowser,
+				//filebrowserImageUploadUrl: KCFinderLibraryPath + 'upload.php?opener=ckeditor&type=' + config.filebrowser,
+				//filebrowserFlashUploadUrl: KCFinderLibraryPath + 'upload.php?opener=ckeditor&type=' + config.filebrowser
+			});			
+		}
+		 
+		// Init ckeditor instance(s);
+		CKEDITOR.replace(this, config);
+	});
+}
+// ./CKEditor //
 })(jQuery);

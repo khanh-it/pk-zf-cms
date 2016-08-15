@@ -22,6 +22,7 @@ class Post_Form_Post_Crud extends Twitter_Bootstrap3_Form
             'multiple' => 'multiple',
 			'class' => 'selectpicker show-tick',
 			'data-live-search' => 'true',
+			'registerInArrayValidator' => false,
             'order' => ($eleOrder += 100),
         ));
         // +++ 
@@ -46,13 +47,14 @@ class Post_Form_Post_Crud extends Twitter_Bootstrap3_Form
 		;
 		// +++ 
 		$kcfinderUploadDir = current(Post_Model_DbTable_Post::returnImgsWebPath('/'));
+		$kcfinderType = Post_Model_DbTable_Post::returnImgFolder();
         $elements[] = $element = $this->createElement('textarea', 'imgs', array(
             'label' => $txt = $view->translate('Hình ảnh'),
             'placeholder' => $txt,
             'attribs' => array(
             	//'readonly' => 'readonly',
             	'rows' => 6,
-            	'data-kcfinder-type' => Post_Model_DbTable_Post::returnImgFolder(),
+            	'data-kcfinder-type' => $kcfinderType,
             	'data-kcfinder-exts' => '*img',
             	'data-kcfinder-upload_dir' => $kcfinderUploadDir,
 			),
@@ -67,9 +69,11 @@ class Post_Form_Post_Crud extends Twitter_Bootstrap3_Form
             'placeholder' => $txt,
             'attribs' => array(
             	'rows' => 4,
-            	'data-ckeditor-toolbar' => '', // Default toolbar
+            	'data-ckeditor' => json_encode(array(
+            		'toolbar' => 'Basic' // Use toolbar `basic`
+				))
 			),
-			'class' => 'form-control input-sm ckeditor',
+			'class' => 'form-control input-sm',
             'order' => ($eleOrder += 100)
         ));
 		// +++
@@ -78,9 +82,12 @@ class Post_Form_Post_Crud extends Twitter_Bootstrap3_Form
             'placeholder' => $txt,
             'attribs' => array(
             	'rows' => 6,
-            	'data-ckeditor-toolbar' => '', // Default toolbar
+            	'data-ckeditor' => json_encode(array(
+            		//'toolbar' => '' // Use default toolbar
+            		'filebrowser' => $kcfinderType 
+				))
 			),
-			'class' => 'form-control input-sm ckeditor',
+			'class' => 'form-control input-sm',
             'order' => ($eleOrder += 100)
         ));
         // +++ 

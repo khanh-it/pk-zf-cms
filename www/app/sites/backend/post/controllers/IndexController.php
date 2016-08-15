@@ -184,23 +184,14 @@ class Post_IndexController extends K111_Controller_Action
 					$formValues['alias'] ?: $formValues['name']
 				);
 				
+				Zend_Debug::dump($formValues);die();
+				
 				// Extract phrase data
 				$phrData = $phrUtil->extractPhrData($formValues);
 				if (!$options['isActUpdate']) {
 					$phrData = array_filter($phrData);
 				}
 				
-    	        // Check duplicate code!
-    	        $dataExists = $this->_repo->checkExistsByCode($formValues['code'], array(
-    	        	'exclude_id' => array($entity->id) 
-				));
-                if ($dataExists) {
-    	            $form
-    	               ->getElement('code')
-    	                   ->addError($txt = $this->view->translate('Mã bài viết đã tồn tại!'))
-    	            ;
-                }
-	            
 	            // Form has no errors?
 	            if (!$form->hasErrors()) {
 	                // Create new entity (if not any)
