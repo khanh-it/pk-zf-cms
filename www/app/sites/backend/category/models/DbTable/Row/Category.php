@@ -57,8 +57,10 @@ class Category_Model_DbTable_Row_Category extends K111_Db_Table_Row_BitStat
 	 * @param $avatar string Account's avatar
 	 * @return string
 	 */
-	public function returnImgsWebPath() {
-		return Category_Model_DbTable_Category::returnImgsWebPath($this->imgs);
+	public function returnImgsWebPath($type = null) {
+		return Category_Model_DbTable_Category::returnImgsWebPath(
+			$this->imgs, $type ?: $this->getTable()->getDefaultType()
+		);
 	}
 	
 	/**
@@ -74,7 +76,7 @@ class Category_Model_DbTable_Row_Category extends K111_Db_Table_Row_BitStat
 		    $date = new DateTime();
 			$this->modifyData('created_time', $date->format('Y-m-d H:i:s'));
 			// +++ Type 
-			$this->modifyData('type', Category_Model_DbTable_Category::getDefaultType());
+			$this->modifyData('type', $this->getTable()->getDefaultType());
 		}
 		// +++ Always use default phrase context!
 		$this->modifyData('phrase', Category_Model_DbTable_Category::PHRASE);

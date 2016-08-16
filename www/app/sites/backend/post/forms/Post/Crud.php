@@ -109,7 +109,7 @@ class Post_Form_Post_Crud extends Twitter_Bootstrap3_Form
             'order' => ($eleOrder += 100),
         ));
 		// +++ Tag(s)
-        $elements[] = $element = $this->createElement('text', 'tag_ids', array(
+        $elements[] = $element = $this->createElement('text', 'tags_str', array(
             'label' => $txt = $view->translate('Tags'),
             'placeholder' => $txt,
             'maxlength' => 250,

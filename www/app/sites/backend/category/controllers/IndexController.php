@@ -44,8 +44,8 @@ class Category_IndexController extends K111_Controller_Action
 			$this->_request->setActionName($this->_request->getParam('action'));
 		}
 		// +++ Entity's repo;
-		Category_Model_DbTable_Category::setDefaultType($this->_options['type']);
 		$this->_repo = new Category_Model_DbTable_Category();
+		$this->_repo->setDefaultType($this->_options['type']);
 	}
 	
 	/**
@@ -59,7 +59,10 @@ class Category_IndexController extends K111_Controller_Action
 		$params = $this->_getAllParams();
 	    
 	    // Define var # view's data;
-	    $vData = array();
+	    $vData = array(
+	    // +++ Controller's options
+	    	'controllerOptions' => $this->_options
+		);
 		// +++ @var Default_Model_DbTable_Util_Phrase
 		$vData['phrUtil'] = $phrUtil = Default_Model_DbTable_Util_Phrase::getInstance();
 	     
@@ -153,7 +156,10 @@ class Category_IndexController extends K111_Controller_Action
 		$options['isActDetail'] = ('detail' == $options['act']);
 		
 	    // Define var # view's data;
-	    $vData = array();
+	    $vData = array(
+	    // +++ Controller's options
+	    	'controllerOptions' => $this->_options
+		);
 		// +++ @var Default_Model_DbTable_Util_Phrase
 		$vData['phrUtil'] = $phrUtil = Default_Model_DbTable_Util_Phrase::getInstance();
 		
@@ -161,7 +167,10 @@ class Category_IndexController extends K111_Controller_Action
 		list($langKey, $langData) = Language::getDefault();
 		
 	    // Define var # form;
-	    $vData['form'] = $form = new Category_Form_Category_Crud();
+	    $vData['form'] = $form = new Category_Form_Category_Crud(array(
+	    // +++ Controller's options
+	    	'controllerOptions' => $this->_options
+		));
 		// +++ Load SEO Tools elements
 		$phrUtil->buildFormSEOToolsElements($form);
 		// +++ Disable elements on detail mode
@@ -195,6 +204,8 @@ class Category_IndexController extends K111_Controller_Action
 				$formValues['alias'] = $this->_helper->common->str2Alias(
 					$formValues['alias'] ?: $formValues['name']
 				);
+				// +++ imgs
+				$formValues['imgs'] = trim($formValues['imgs']);
 				
 				// Extract phrase data
 				$phrData = $phrUtil->extractPhrData($formValues);

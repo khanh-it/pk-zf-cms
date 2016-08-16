@@ -6,6 +6,9 @@
 // Get Zend_Controller_Front;
 $front = Zend_Controller_Front::getInstance();
 
+// Controller's options
+$contOpts = (array)$this->controllerOptions;
+
 // Toolbars
 $this->Bt3NavLinks(array(
     $this->Bt3NavLinks()->iconNew(),
@@ -84,7 +87,7 @@ $this->Bt3NavLinks(array(
 					<td align="center" class="text-nowrap">
 					<?php 
 						// Images
-						$imgs = (array)Category_Model_DbTable_Category::returnImgsWebPath($item['imgs']);
+						$imgs = (array)Category_Model_DbTable_Category::returnImgsWebPath($item['imgs'], $contOpts['type']);
 						$firstImg = trim($imgs[0]);
 						if ($firstImg):
 					?>

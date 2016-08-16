@@ -12,7 +12,7 @@ $this->Bt3NavLinks(array(
     $this->Bt3NavLinks()->iconDelete()
 ));
 ?>
-<div class="card">
+<div id="controller" class="card">
 	<!-- card-header -->
 	<div class="card-header">
 		<?php
@@ -37,6 +37,7 @@ $this->Bt3NavLinks(array(
 					<th><?php echo $this->Bt3ManageTools()->mToolSorter($this->translate('Tiêu đề'), 'name'); ?></th>
 					<th width="10" class="text-nowrap"><?php echo $this->translate('Hình ảnh'); ?></th>
 					<th><?php echo $this->translate('Ghi chú'); ?></th>
+					<th><?php echo $this->translate('Danh mục'); ?></th>
                     <th width="10">
                     	<abbr title="<?php echo $this->translate('Kích hoạt?'); ?>">
                     		<?php echo $this->translate('K.Hoạt?'); ?>
@@ -65,6 +66,18 @@ $this->Bt3NavLinks(array(
                 foreach ($this->paginator as $item):
 					// Available languages
 					$availLangs = (array)array_keys($item->findChildrenEntry());
+					
+					// Categories
+					$categoryEntitiesByPost = (array)$item->findChildrenPostCategory();
+					$itemCateOpts = array_intersect_key((array)$this->cateOpts, $categoryEntitiesByPost);
+					// +++ 
+					$categoryHtml = empty($itemCateOpts) ? '' : (
+						'<ol><li>' 
+							. implode('</li><li>', $itemCateOpts)
+						. '</li></ol>' 
+					);
+					// +++ 
+					unset($categoryEntitiesByPost); 
         ?>
 				<tr>
 					<td align="center" class="text-nowrap"><?php echo ++$no; ?></td>
@@ -94,6 +107,15 @@ $this->Bt3NavLinks(array(
 					?>
 					</td>
 					<td><?php echo $item->note; ?></td>
+					<td>
+					<?php
+						if (!empty($itemCateOpts)):
+					?>
+						<a class="a-popover" title="<?php echo $this->translate('Danh mục'); ?>" data-placement="left" data-html="true" data-content="<?php echo htmlspecialchars($categoryHtml) ?>" href="javascript:void(0);">
+							<?php echo current($itemCateOpts); ?>
+						</a>
+					<?php endif; ?>
+					</td>
 					<td align="center" class="text-nowrap">
 						<?php echo $this->Bt3ManageTools()->mToolActiveToggler($item->id, $item->active); ?>
 					</td>

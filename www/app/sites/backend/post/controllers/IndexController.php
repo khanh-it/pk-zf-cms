@@ -19,6 +19,11 @@ class Post_IndexController extends K111_Controller_Action
 	 * @var Post_Model_DbTable_Category
 	 */ 
 	protected $_repoCategory;
+	
+	/**
+	 * @var Post_Model_DbTable_PostCategory
+	 */ 
+	protected $_repoPostCategory;
 		
     /**
      * (non-PHPdoc)
@@ -46,10 +51,17 @@ class Post_IndexController extends K111_Controller_Action
 		}
 		// +++ Entity's repo(s);
 		// +++ +++ Post
-		Post_Model_DbTable_Post::setDefaultType($this->_options['type']);
 		$this->_repo = new Post_Model_DbTable_Post();
-		// +++ +++ Category 
+		$this->_repo->setDefaultType(
+			$this->_options['type']
+		);
+		// +++ +++ Category
 		$this->_repoCategory = new Post_Model_DbTable_Category();
+		$this->_repoCategory->setDefaultType(
+			Post_Model_DbTable_Post::CATEGORY_TYPE_POST
+		);
+		// +++ +++ PostCategory
+		$this->_repoPostCategory = new Post_Model_DbTable_PostCategory();
 	}
 	
 	/**
@@ -70,11 +82,11 @@ class Post_IndexController extends K111_Controller_Action
 	    // Define var # form;
 	    $vData['form'] = $form = new Post_Form_Post_Index();
 		// +++ Category
-		$cateOpts = $this->_repoCategory->flatternDataRecursive(
+		$vData['cateOpts'] = $this->_repoCategory->flatternDataRecursive(
 			$this->_repoCategory->fetchDataRecursive(),
 			array('build_option' => true)
 		);
-		$form->category_id && $form->category_id->setMultiOptions($cateOpts);
+		$form->category_id && $form->category_id->setMultiOptions($vData['cateOpts']);
 		// +++ Fill form's data;
 		$vData['form']->populate($params);
 		
@@ -146,6 +158,8 @@ class Post_IndexController extends K111_Controller_Action
 	    $vData = array();
 		// +++ @var Default_Model_DbTable_Util_Phrase
 		$vData['phrUtil'] = $phrUtil = Default_Model_DbTable_Util_Phrase::getInstance();
+		// +++ @var Default_Model_DbTable_Util_Tag
+		$vData['tagUtil'] = $tagUtil = Default_Model_DbTable_Util_Tag::getInstance();
 		
 		// Get language info
 		list($langKey, $langData) = Language::getDefault();
@@ -183,8 +197,10 @@ class Post_IndexController extends K111_Controller_Action
 				$formValues['alias'] = $this->_helper->common->str2Alias(
 					$formValues['alias'] ?: $formValues['name']
 				);
-				
-				Zend_Debug::dump($formValues);die();
+				// +++ imgs
+				$formValues['imgs'] = trim($formValues['imgs']);
+				// +++ tags
+				$formValues['tags_str'] = trim($formValues['tags_str']);
 				
 				// Extract phrase data
 				$phrData = $phrUtil->extractPhrData($formValues);
@@ -212,6 +228,19 @@ class Post_IndexController extends K111_Controller_Action
     	            // +++ Get last insert id (if any)
     	            $entityId = $entity->save();
 					
+					// Save PostCategory data
+					$this->_repoPostCategory->insertPostCategory(
+						$entity->id, 
+						$formValues['category_id'], 
+						array(
+						// Opitons
+						// +++ clean old post data
+							'clean_old_post_data' => true,
+						// +++ Creator
+							'create_account_id' => $this->_authIdentity->id
+						)
+					);
+					
 					// Save phrase data?
 					if ($langKey && !empty($phrData)) {
 						$phrUtil->savePhrase(
@@ -219,7 +248,18 @@ class Post_IndexController extends K111_Controller_Action
 							$entity->id, $langKey, $phrData
 						);
 					}
-    	            
+					
+					// Save tag data?
+					$tagUtil->saveTag(
+						Post_Model_DbTable_Post::TAG,
+						$entity->id, $entity->tags_str,
+						// Options 
+						array(
+						// +++ Clean old data
+							'clean_old_data' => true
+						)
+					);
+					
     	            // Inform
     	            $this->_helper->flashMessenger->addMessage(
     	                $this->view->translate('Thao tác dữ liệu thành công!'),
@@ -265,6 +305,9 @@ class Post_IndexController extends K111_Controller_Action
 	    	if ($entity) {
 		    	// +++ 
 				$formData = $entity->toArray();
+				// +++ Category
+				$arrCategoryRowByPost = $entity->findChildrenPostCategory();
+				$formData['category_id'] = array_keys($arrCategoryRowByPost);
 				// +++ Phrase Data # SEO TOOLS
 				$phrData = (array)$entity->findChildrenEntry($langKey);
 				$formData = array_merge($formData, $phrUtil->prefixPhrData($phrData));

@@ -70,9 +70,9 @@ class Category_Model_DbTable_Category extends K111_Db_Table
 	 * @param $type string Category's type
 	 * @return string
 	 */
-	public static function returnImgFolder($type = null) {
+	public static function returnImgFolder($type) {
 		// Format input 
-		$type = trim($type ?: self::getDefaultType());
+		$type = trim($type);
 		$type = strtolower(preg_replace("/[^_\-\.A-Za-z0-9]/", '', $type));
 		// Return
 		return self::IMG_FOLDER . "--{$type}";
@@ -81,15 +81,16 @@ class Category_Model_DbTable_Category extends K111_Db_Table
 	 * Return category's images uploaded web path
 	 * 
 	 * @param $imgs string|array Category's images
+	 * @param $type string Category's type
 	 * @return string|array
 	 */
-	public static function returnImgsWebPath($imgs) {
+	public static function returnImgsWebPath($imgs, $type) {
 		$imgs = array_filter(is_array($imgs) ? $imgs : explode("\n", trim($imgs)));
 		if (!empty($imgs)) {
 			// Get K111_AssetsFinder;
 			$assetsFinder = K111_AssetsFinder::getInstance();
 			// Image folder 
-			$imgFolder = self::returnImgFolder();
+			$imgFolder = self::returnImgFolder($type);
 			// +++
 			foreach ($imgs as $key => $img) {
 				if (!$img) {
@@ -105,15 +106,15 @@ class Category_Model_DbTable_Category extends K111_Db_Table
 	/**
 	 * Default category's type
 	 */
-	protected static $_defaultType;
+	protected $_defaultType;
 	/**
 	 * Get default category's type
 	 * 
 	 * @return string Category type
 	 */
-	public static function getDefaultType() {
+	public function getDefaultType() {
 		// Return;
-		return self::$_defaultType;
+		return $this->_defaultType;
 	} 
 	/**
 	 * Set default category's type
@@ -121,8 +122,8 @@ class Category_Model_DbTable_Category extends K111_Db_Table
 	 * @param $type string Category type
 	 * @return void
 	 */
-	public static function setDefaultType($type) {
-		self::$_defaultType = (string)$type;
+	public function setDefaultType($type) {
+		$this->_defaultType = (string)$type;
 		// Return;
 		return $this;
 	}
@@ -179,7 +180,7 @@ class Category_Model_DbTable_Category extends K111_Db_Table
         }
 		// +++ type?
         $options['type'] = array_filter(
-        	(array)($options['type'] ?: self::$_defaultType)
+        	(array)($options['type'] ?: $this->_defaultType)
 		);
         if (!empty($options['type'])) {
             $select
@@ -337,7 +338,7 @@ class Category_Model_DbTable_Category extends K111_Db_Table
 		);
 		// +++ type?
 		$options['type'] = array_filter(
-			(array)($options['type'] ?: self::$_defaultType)
+			(array)($options['type'] ?: $this->_defaultType)
 		);
 		if (!empty($options['type'])) {
 			$where['type IN (?)'] = $options['type'];

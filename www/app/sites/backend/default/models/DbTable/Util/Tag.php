@@ -5,21 +5,39 @@
 class Default_Model_DbTable_Util_Tag extends Default_Model_DbTable_Util_Abstract
 {
 	/**
+	 * @var K111_Filter_NoSpecialChar
+	 */
+	protected $_filterNoSpecialChar;
+	
+	/**
+	 *
+	 * @var ZF_Filter_Unicode
+	 */
+	protected $_filterNoMark;
+	
+	/**
 	 * @var Default_Model_DbTable_Tag 
 	 */
 	protected $_repo;
 	
 	/**
-	 * @var string 
+	 * @var Default_Model_DbTable_TagItem 
 	 */
-	const PHR_DATA_PREFIX = 'phr_data__';
+	protected $_repoTagItem;
 	
 	/**
 	 * Constructor
 	 */
 	protected function __construct(){
 		// Initialize
-		$this->_repo = new Default_Model_DbTable_Tag();  
+		// @var Default_Model_DbTable_Tag
+		$this->_repo = new Default_Model_DbTable_Tag();
+		// @var Default_Model_DbTable_TagItem
+		$this->_repoTagItem = new Default_Model_DbTable_TagItem();
+		// @var K111_Filter_NoSpecialChar
+		$this->_filterNoSpecialChar = new K111_Filter_NoSpecialChar();
+		// @var K111_Filter_NoMark
+		$this->_filterNoMark = new K111_Filter_NoMark();
 	}
 	
 	/**
@@ -43,225 +61,111 @@ class Default_Model_DbTable_Util_Tag extends Default_Model_DbTable_Util_Abstract
 	}
 	
 	/**
-	 * Build form form elements for SEO TOOL(s)
+	 * Create string alias
 	 * 
-	 * @param $_form null|Zend_Form From instance
-	 * @param $options array An array of options
-	 * @return array An array of SEO TOOL elements
+	 * @param string $value Filter string
+	 * @param string $replacement Replacement char for special chars        	
+	 * @return string
 	 */
-	public function buildFormSEOToolsElements($_form = null, $options = array()) {
-		// Elements
-		$elements = array();
-		// +++ 
-		$form = ($_form instanceof Zend_Form) ? $_form : new Zend_Form();
-		// +++ 
-		$view = $form->getView();
-		// +++ Element's orders
-		$_order = (int)(PHP_INT_MAX / 2);
-		// +++
-		
-		// Format, get options
-		$options['element_name_prefix'] = is_null($options['element_name_prefix']) 
-			? self::PHR_DATA_PREFIX
-			: $options['element_name_prefix']
-		; 
-		
-		// dummy element, used as label spliter
-		$elements[] = $element = $form->createElement('text', '_SEOToolsLabel_', array(
-			'label' => $txt = ('--- <u>' . $view->translate("SEO TOOLS:") . '</u> ---'),
-			'ignore' => true,
-			'attribs' => array(
-				'style' => 'display:none;',
-			),
-			'order' => ($_order += 100)
+	public function str2Alias($value, $replacement = '-') {
+		return strtolower(str_replace(
+			array(' '), 
+			array($replacement), 
+			$this->_filterNoSpecialChar->filter(
+				$this->_filterNoMark->filter($value),
+				$replacement
+			)
 		));
-		$element->getDecorator('label')
-			->setOption('class', 'h3')
-			->setOption('escape', false)
-			->setOption('style', 'margin:0')
-		;
-		
-		// page's title
-		$elements[] = $element = $form->createElement('text', "{$options['element_name_prefix']}seo_title", array(
-			'label' => $txt = $view->translate("Page's title"),
-			'attribs' => array(
-				'class' => 'form-control input-sm',
-				'maxlength' => '255',
-				'placeholder' => $txt
-			),
-			'order' => ($_order += 100)
-		));
-		
-		// meta keywords
-		$elements[] = $element = $form->createElement('text', "{$options['element_name_prefix']}seo_meta_keywords", array(
-			'label' => $txt = $view->translate("Page's meta keywords"),
-			'attribs' => array(
-				'class' => 'form-control input-sm',
-				'maxlength' => '250',
-				'placeholder' => $txt
-			),
-			'order' => ($_order += 100)
-		));
-		
-		// meta description
-		$elements[] = $element = $form->createElement('text', "{$options['element_name_prefix']}seo_meta_description", array(
-			'label' => $txt = $view->translate("Page's meta description"),
-			'attribs' => array(
-				'class' => 'form-control input-sm',
-				'maxlength' => '255',
-				'placeholder' => $txt
-			),
-			'order' => ($_order += 100)
-		));
-		
-		// html_meta 
-		$elements[] = $element = $form->createElement('textarea', "{$options['element_name_prefix']}seo_html_meta", array(
-			'label' => $txt = $view->translate("Page's html meta"),
-			'attribs' => array(
-				'class' => 'form-control input-sm',
-				'rows' => 6,
-				'placeholder' => $txt
-			),
-			'order' => ($_order += 100)
-		));
-		
-		// Add elements
-		$form->addElements($elements);
-		
-		// Return
-		return $elements;
-	}
-
-	/**
-	 * Extract tag data from array (remove keys)
-	 * 
-	 * @param $data array An array data
-	 * @return array
-	 */
-	public function extractPhrData(array &$data) {
-		// Tag data
-		$phrData = array();
-		// +++ 
-		$phrDataPrefix = self::PHR_DATA_PREFIX;
-		// 
-		foreach ($data as $key => $value) {
-			if (0 === strpos($key, $phrDataPrefix)) {
-				$phrData[
-					str_replace($phrDataPrefix, '', $key)
-				] = $value;
-				// Remove key(s)
-				unset($data[$key]);
-			}
-		}
-		
-		// Return
-		return $phrData;
 	}
 	
 	/**
-	 * Change array data keys by prepend prefix 
+	 * Helper: convert tags string (commas seperated into array)
 	 * 
-	 * @param $data array An array data
-	 * @return array
+	 * @param $data string Tags string
+	 * @return array 
 	 */
-	public function prefixPhrData(array $data) {
-		// Prefix 
-		$phrDataPrefix = self::PHR_DATA_PREFIX;
-		// 
-		foreach ($data as $key => $value) {
-			if (0 !== strpos($key, $phrDataPrefix)) {
-				$data["{$phrDataPrefix}{$key}"] = $value;
-				// Remove old key(s)
-				unset($data[$key]);
-			}
-		}
+	public function str2Arr($data) {
+		// Format data
+		$data = trim($data);
+		
+		// Format output data
+		$tags = array_map(function($val){
+			return trim($val);
+		}, explode(',', $data));
 		
 		// Return
-		return $data;
+		return array_filter($tags);
+	}
+	
+	/**
+	 * Helper: format tag string
+	 * 
+	 * @param $data string Tag string
+	 * @return array 
+	 */
+	public function formatTagName($data) {
+		return strtolower($data);
 	}
 	
 	/**
 	 * Save tag(s) data
 	 * 
 	 * @param $context string Context string
-	 * @param $relId int|string Relative object's id
-	 * @param $lang 
+	 * @param $itemId int|string Item object's id
+	 * @param $data string Commas seperated tags
 	 * @return array
 	 */
-	public function saveTag($context, $relId, $lang, array $data) {
-		// Build selector
-		$select = $this->_repo->buildFetchDataSelector($options = array(
-			'context' => $context,
-			'rel_id' => $relId,
-			'lang' => $lang
-		));
+	public function saveTag($context, $itemId, $data, array $options = array()) {
+		// Format data
+		$data = $this->str2Arr($data);
 		
-		// Fetch data, +get output data grouped 
-		$phrColumns = (array)$this->_repo->fetchAll($select)
-			->getGroupedData($context, $relId, $lang, array(
-				'get_data_only' => false
-			))
-		;
-		// Loop
-		foreach ($data as $phrColumn => $phrData) {
-			// Create new row (if not any)
-			$row = $phrColumns[$phrColumn];
-			if (!$row) {
-				$row = $this->_repo->createRow();
-				$row->setFromArray(array(
-					'phr_context' => $context,
-					'phr_rel_id' => $relId,
-					'phr_lang' => $lang,
-					'phr_column' => $phrColumn
+		// Format options
+		
+		// Clean old data?
+		if ($options['clean_old_data']) {
+			$this->_repoTagItem->delete(array(
+				'context = ?' => $context,
+				'item_id = ?' => $itemId
+			));
+		}
+		
+		// Return data
+		$tagRows = array();
+		
+		if (!empty($data)) {
+			foreach ($data as $tagName) {
+				// Format data
+				$tagName = $this->formatTagName($tagName);
+				//
+				$row = $this->_repo->fetchRow(array(
+					'name = ?' => $tagName
 				));
+				if (!$row) {
+					$row = $this->_repo->createRow(array(
+					// +++ name 
+						'name' => $tagName,
+					// +++ alias
+						'alias' => $this->str2Alias($tagName),
+					));
+					$row->save();
+				}
+				// 
+				$rowTagItem = $this->_repoTagItem->createRow(array(
+				// +++  
+					'tag_id' => $row->id,
+				// +++ 
+					'item_id' => $itemId,
+				// +++ 
+					'context' => $context,
+				));
+				$rowTagItem->save();
+				
+				//
+				$tagRows[] = $row;
 			}
-			// Set data
-			$row->phr_data = $phrData;
-			
-			// Save data to database
-			$row->save();
 		}
 		
 		// Return
-		return $this;
-	}
-
-	/**
-	 * Get available languages by context and relative id(s)
-	 * 
-	 * @param $context string Context string 
-	 * @param relIds array An array of object's relative id(s)
-	 * @return array
-	 */
-	public function getAvailableLanguages($context, $relIds) {
-		// Format data
-		// +++ 
-		$context = trim($context);
-		// +++ 
-		$relIds = ($isRelIdsArr = is_array($relIds)) ? $relIds : (array)$relIds;
-		
-		// Empty data?
-		if (!$context || empty($relIds)) {
-			return array();
-		}
-		// Return data
-		$return = array();
-		// Build selector
-		$selector = $this->_repo->buildFetchDataSelector(array(
-			'phr_context' => $context,
-			'phr_rel_id' => $relIds,
-		));
-		// Fetch data
-		$phrData = (array)$this->_repo->fetchAll($selector)->getGroupedData($context);
-		foreach ($phrData as $relId => $phrDataItem) {
-			foreach ($phrDataItem as $lang => $phrColumns) {
-				$phrColumns = array_filter($phrColumns);
-				if (!empty($phrColumns)) {
-					$return[$relId][] = $lang;
-				}
-			}
-		}
-		// Return;
-		return $isRelIdsArr ? $return : current($return);
+		return $tagRows;
 	}
 }

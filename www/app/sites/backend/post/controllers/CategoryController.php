@@ -9,11 +9,6 @@
  */
 class Post_CategoryController extends K111_Controller_Action
 {
-	/**
-	 * @var string Category's type
-	 */
-	const CATEGORY_TYPE = 'POST';
-	
     /**
      * (non-PHPdoc)
      * @see Zend_Controller_Action::init()
@@ -24,7 +19,7 @@ class Post_CategoryController extends K111_Controller_Action
 		$this->getRequest()
 			->setParam('_options', array(
 			// Default post's type
-				'type' => self::CATEGORY_TYPE,
+				'type' => Post_Model_DbTable_Post::CATEGORY_TYPE_POST,
 			// Auto sync module/controller/action for request
 				'syncModuleName' => true,
 				'syncControllerName' => true,
@@ -47,7 +42,7 @@ class Post_CategoryController extends K111_Controller_Action
 		$this->forward(
 			$this->_request->getActionName(),
 			'index',
-			'post',
+			'category',
 			$this->_request->getUserParams()
 		);
 	}
@@ -66,7 +61,7 @@ class Post_CategoryController extends K111_Controller_Action
 		$this->forward(
 			$this->_request->getActionName(),
 			'index',
-			'post',
+			'category',
 			$this->_request->getUserParams()
 		);
 	}
@@ -85,7 +80,7 @@ class Post_CategoryController extends K111_Controller_Action
 		$this->forward(
 			$this->_request->getActionName(),
 			'index',
-			'post',
+			'category',
 			$this->_request->getUserParams()
 		);
 	}
@@ -104,7 +99,7 @@ class Post_CategoryController extends K111_Controller_Action
 		$this->forward(
 			$this->_request->getActionName(),
 			'index',
-			'post',
+			'category',
 			$this->_request->getUserParams()
 		);
 	}
@@ -123,7 +118,7 @@ class Post_CategoryController extends K111_Controller_Action
 		$this->forward(
 			$this->_request->getActionName(),
 			'index',
-			'post',
+			'category',
 			$this->_request->getUserParams()
 		);
 	}
@@ -142,7 +137,7 @@ class Post_CategoryController extends K111_Controller_Action
 		$this->forward(
 			$this->_request->getActionName(),
 			'index',
-			'post',
+			'category',
 			$this->_request->getUserParams()
 		);
 	}
@@ -161,7 +156,7 @@ class Post_CategoryController extends K111_Controller_Action
 		$this->forward(
 			$this->_request->getActionName(),
 			'index',
-			'post',
+			'category',
 			$this->_request->getUserParams()
 		);
 	}

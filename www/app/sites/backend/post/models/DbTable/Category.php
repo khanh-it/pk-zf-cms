@@ -6,7 +6,7 @@ class Post_Model_DbTable_Category extends Category_Model_DbTable_Category
 	/**
 	 * Default category's type
 	 */
-	protected static $_defaultType = 'POST';
+	protected $_defaultType = 'POST';
 	
     /**
      * Classname for row
@@ -19,7 +19,8 @@ class Post_Model_DbTable_Category extends Category_Model_DbTable_Category
 	 */
 	protected $_dependentTables = array(
 		'Post_Model_DbTable_Category',
-		'Post_Model_DbTable_CategoryEntry'
+		'Post_Model_DbTable_CategoryEntry',
+		'Post_Model_DbTable_PostCategory'
 	);
 	
     /**

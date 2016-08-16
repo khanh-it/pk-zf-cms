@@ -13,6 +13,11 @@ class Post_Model_DbTable_Post extends K111_Db_Table
 	 */
 	const TAG = 'POST';
 	
+	/**
+	 * @var string Category's type: POST
+	 */
+	const CATEGORY_TYPE_POST = 'POST';
+	
     /**
      * The table name.
      * @var string
@@ -41,7 +46,8 @@ class Post_Model_DbTable_Post extends K111_Db_Table
 	 */
 	protected $_dependentTables = array(
 		'Post_Model_DbTable_PostEntry',
-		'Post_Model_DbTable_TagItem'
+		'Post_Model_DbTable_TagItem',
+		'Post_Model_DbTable_PostCategory'
 	);
 	
     /**
@@ -70,9 +76,9 @@ class Post_Model_DbTable_Post extends K111_Db_Table
 	 * @param $type string Post's type
 	 * @return string
 	 */
-	public static function returnImgFolder($type = null) {
+	public static function returnImgFolder($type) {
 		// Format input 
-		$type = trim($type ?: self::getDefaultType());
+		$type = trim($type);
 		$type = strtolower(preg_replace("/[^_\-\.A-Za-z0-9]/", '', $type));
 		// Return
 		return self::IMG_FOLDER . "--{$type}";
@@ -80,16 +86,17 @@ class Post_Model_DbTable_Post extends K111_Db_Table
 	/**
 	 * Return post's images uploaded web path
 	 * 
+	 * @param $type string Post's type
 	 * @param $imgs string|array Post's images
 	 * @return string|array
 	 */
-	public static function returnImgsWebPath($imgs) {
+	public static function returnImgsWebPath($imgs, $type) {
 		$imgs = array_filter(is_array($imgs) ? $imgs : explode("\n", trim($imgs)));
 		if (!empty($imgs)) {
 			// Get K111_AssetsFinder;
 			$assetsFinder = K111_AssetsFinder::getInstance();
 			// Image folder 
-			$imgFolder = self::returnImgFolder();
+			$imgFolder = self::returnImgFolder($type);
 			// +++
 			foreach ($imgs as $key => $img) {
 				if (!$img) {
@@ -105,15 +112,15 @@ class Post_Model_DbTable_Post extends K111_Db_Table
 	/**
 	 * Default post's type
 	 */
-	protected static $_defaultType;
+	protected $_defaultType;
 	/**
 	 * Get default post's type
 	 * 
 	 * @return string Post type
 	 */
-	public static function getDefaultType() {
+	public function getDefaultType() {
 		// Return;
-		return self::$_defaultType;
+		return $this->_defaultType;
 	} 
 	/**
 	 * Set default post's type
@@ -121,8 +128,8 @@ class Post_Model_DbTable_Post extends K111_Db_Table
 	 * @param $type string Post type
 	 * @return void
 	 */
-	public static function setDefaultType($type) {
-		self::$_defaultType = (string)$type;
+	public function setDefaultType($type) {
+		$this->_defaultType = (string)$type;
 		// Return;
 		return $this;
 	}
@@ -165,7 +172,7 @@ class Post_Model_DbTable_Post extends K111_Db_Table
         }
 		// +++ type?
         $options['type'] = array_filter(
-        	(array)($options['type'] ?: self::$_defaultType)
+        	(array)($options['type'] ?: $this->_defaultType)
 		);
         if (!empty($options['type'])) {
             $select

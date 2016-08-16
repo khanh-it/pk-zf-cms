@@ -13,6 +13,10 @@ class Category_Form_Category_Crud extends Twitter_Bootstrap3_Form
     {
         // Get VIEW;
         $view = $this->getView();
+		
+		// Get controller options
+		$contOpts = (array)$this->getAttrib('controllerOptions');
+		$this->removeAttrib('controllerOptions');
         
         // Define elements
         $eleOrder = 0; $elements = array();
@@ -52,14 +56,16 @@ class Category_Form_Category_Crud extends Twitter_Bootstrap3_Form
 			->setOption('tag', 'small')
 		;
 		// +++ 
-		$kcfinderUploadDir = current(Category_Model_DbTable_Category::returnImgsWebPath('/'));
+		$kcfinderUploadDir = current(
+			Category_Model_DbTable_Category::returnImgsWebPath('/', $contOpts['type'])
+		);
         $elements[] = $element = $this->createElement('textarea', 'imgs', array(
             'label' => $txt = $view->translate('Hình ảnh'),
             'placeholder' => $txt,
             'attribs' => array(
             	//'readonly' => 'readonly',
             	'rows' => 6,
-            	'data-kcfinder-type' => Category_Model_DbTable_Category::returnImgFolder(),
+            	'data-kcfinder-type' => Category_Model_DbTable_Category::returnImgFolder($contOpts['type']),
             	'data-kcfinder-exts' => '*img',
             	'data-kcfinder-upload_dir' => $kcfinderUploadDir,
 			),
