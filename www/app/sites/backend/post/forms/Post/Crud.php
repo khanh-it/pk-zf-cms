@@ -13,6 +13,10 @@ class Post_Form_Post_Crud extends Twitter_Bootstrap3_Form
     {
         // Get VIEW;
         $view = $this->getView();
+		
+		// Get controller options
+		$contOpts = (array)$this->getAttrib('controllerOptions');
+		$this->removeAttrib('controllerOptions');
         
         // Define elements
         $eleOrder = 0; $elements = array();
@@ -46,8 +50,10 @@ class Post_Form_Post_Crud extends Twitter_Bootstrap3_Form
 			->setOption('tag', 'small')
 		;
 		// +++ 
-		$kcfinderUploadDir = current(Post_Model_DbTable_Post::returnImgsWebPath('/'));
-		$kcfinderType = Post_Model_DbTable_Post::returnImgFolder();
+		$kcfinderUploadDir = current(
+			Post_Model_DbTable_Post::returnImgsWebPath('/', $contOpts['type'])
+		);
+		$kcfinderType = Post_Model_DbTable_Post::returnImgFolder($contOpts['type']);
         $elements[] = $element = $this->createElement('textarea', 'imgs', array(
             'label' => $txt = $view->translate('Hình ảnh'),
             'placeholder' => $txt,
@@ -108,17 +114,6 @@ class Post_Form_Post_Crud extends Twitter_Bootstrap3_Form
             'value' => Post_Model_DbTable_Row_Post::STAT_YES,
             'order' => ($eleOrder += 100),
         ));
-		// +++ Tag(s)
-        $elements[] = $element = $this->createElement('text', 'tags_str', array(
-            'label' => $txt = $view->translate('Tags'),
-            'placeholder' => $txt,
-            'maxlength' => 250,
-            'order' => ($eleOrder += 100),
-            'description' => '(' . $view->translate(LANG_USE_TAGS_HELP) . ')',
-        ));
-		$element->getDecorator('description')
-			->setOption('tag', 'small')
-		;
         
         // Add elements
         $this->addElements($elements);

@@ -48,44 +48,36 @@ class Default_Model_DbTable_Group extends K111_Db_Table
 	 * @return Zend_Db_Table_Selector
      */
     public function buildFetchDataSelector(array $options = array(), array $order = array()) {
-        // 
+        // Init select
         $select = $this->select()
 			->from($this->_name)
 		;
+		$bind = $select->getBind();
         
         // Filter data;
         $dbA = $select->getAdapter();
         // +++ keyword
         $options['keyword'] = trim($options['keyword']);
         if ($options['keyword']) {
-            $subOrWhere = array(
+        	$bind['keyword'] = "%{$options['keyword']}%";
+            $select->where(implode(' OR ', array(
                 '(' . $dbA->quoteIdentifier('code') . ' LIKE :keyword)',
                 '(' . $dbA->quoteIdentifier('name') . ' LIKE :keyword)'
-            );
-            $select
-                ->where(implode(' OR ', $subOrWhere))
-                ->bind(array(
-                    'keyword' => "%{$options['keyword']}%"
-                ))
-            ;
+            )));
         }
 		// +++ code?
 		$options['code'] = array_filter((array)($options['code']));
         if (!empty($options['code'])) {
-            $select
-                ->where('code IN (?)', $options['code'])
-            ;
+            $select->where('code IN (?)', $options['code']);
         }
 		// +++ active?
         $options['active'] = trim($options['active']);
         if ('' != $options['active']) {
-            $select
-                ->where('active = :active', $options['active'])
-                ->bind(array(
-                    'active' => $options['active']
-                ))
-            ;
+            $select->where('active = ?', $options['active']);
         }
+		// +++ Bind filter data 
+		$select->bind($bind);
+        //die($select);
         
         // Return;
         return $select;

@@ -53,7 +53,7 @@ CREATE TABLE `tbl_account` (
 
 /*Data for the table `tbl_account` */
 
-insert  into `tbl_account`(`id`,`group_id_json`,`group_id`,`username`,`password`,`avatar`,`fullname`,`last_login_time`,`settings`,`active`,`draft`,`note`,`create_account_id`,`created_time`,`last_modified_account_id`,`last_modified_time`) values (1,'',9,'admin','e10adc3949ba59abbe56e057f20f883e','/khanh-avatar.jpg','Administrator',NULL,NULL,1,NULL,'',NULL,'2016-07-26 11:10:36',NULL,NULL);
+insert  into `tbl_account`(`id`,`group_id_json`,`group_id`,`username`,`password`,`avatar`,`fullname`,`last_login_time`,`settings`,`active`,`draft`,`note`,`create_account_id`,`created_time`,`last_modified_account_id`,`last_modified_time`) values (1,'',9,'admin','e10adc3949ba59abbe56e057f20f883e','/khanh-avatar.jpg','khanhdtp',NULL,NULL,1,NULL,'',NULL,'2016-07-26 11:10:36',NULL,NULL);
 
 /*Table structure for table `tbl_category` */
 
@@ -76,7 +76,7 @@ CREATE TABLE `tbl_category` (
   `last_modified_time` datetime DEFAULT NULL COMMENT 'Last modified time',
   `phrase` varchar(8) NOT NULL DEFAULT 'CATEGORY' COMMENT 'Phrase''s context string',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `UNIQUE_CODE` (`code`,`type`),
+  UNIQUE KEY `UNIQUE_IDX1` (`code`,`type`),
   KEY `IDX_name` (`name`),
   KEY `IDX_type` (`type`),
   KEY `IDX_active` (`active`),
@@ -84,7 +84,6 @@ CREATE TABLE `tbl_category` (
   KEY `CATEGORY__PARENT` (`parent_id`),
   KEY `CATEGORY__CREATE_ACCOUNT` (`create_account_id`),
   KEY `CATEGORY__LAST_MODIFIED_ACCOUNT` (`last_modified_account_id`),
-  KEY `IDX_phrase` (`phrase`),
   KEY `IDX_alias` (`alias`),
   CONSTRAINT `CATEGORY__CREATE_ACCOUNT` FOREIGN KEY (`create_account_id`) REFERENCES `tbl_account` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `CATEGORY__LAST_MODIFIED_ACCOUNT` FOREIGN KEY (`last_modified_account_id`) REFERENCES `tbl_account` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
@@ -141,7 +140,7 @@ CREATE TABLE `tbl_phrase` (
   PRIMARY KEY (`phr_id`),
   UNIQUE KEY `UNIQUE_ROW` (`phr_context`,`phr_rel_id`,`phr_lang`,`phr_column`),
   KEY `IDX_column_n_data` (`phr_column`,`phr_data`(255))
-) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8 COMMENT='Language''s phrases..!';
+) ENGINE=InnoDB AUTO_INCREMENT=72 DEFAULT CHARSET=utf8 COMMENT='Language''s phrases..!';
 
 /*Data for the table `tbl_phrase` */
 
@@ -168,17 +167,18 @@ CREATE TABLE `tbl_post` (
   `last_modified_time` datetime DEFAULT NULL COMMENT 'Last modified time',
   `phrase` varchar(4) NOT NULL DEFAULT 'POST' COMMENT 'Phrase''s context string',
   `tag` varchar(4) NOT NULL DEFAULT 'POST' COMMENT 'Tag''s context string',
-  `tag_ids` varchar(255) NOT NULL DEFAULT '' COMMENT 'Tag''s id(s) string',
   PRIMARY KEY (`id`),
   KEY `IDX_name` (`name`),
   KEY `IDX_type` (`type`),
   KEY `IDX_active` (`active`),
   KEY `IDX_created_time` (`created_time`),
-  KEY `CATEGORY__CREATE_ACCOUNT` (`create_account_id`),
-  KEY `CATEGORY__LAST_MODIFIED_ACCOUNT` (`last_modified_account_id`),
-  KEY `IDX_phrase` (`phrase`),
-  KEY `IDX_draft` (`draft`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='Post object, hold many types of data (article, news, pages...)';
+  KEY `IDX_draft` (`draft`),
+  KEY `POST__CREATE_ACCOUNT` (`create_account_id`),
+  KEY `POST__LAST_MODIFIED_ACCOUNT` (`last_modified_account_id`),
+  KEY `IDX_alias` (`alias`),
+  CONSTRAINT `POST__CREATE_ACCOUNT` FOREIGN KEY (`create_account_id`) REFERENCES `tbl_account` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `POST__LAST_MODIFIED_ACCOUNT` FOREIGN KEY (`last_modified_account_id`) REFERENCES `tbl_account` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='Post object, hold many types of data (article, news, pages...)';
 
 /*Data for the table `tbl_post` */
 
@@ -187,21 +187,84 @@ CREATE TABLE `tbl_post` (
 DROP TABLE IF EXISTS `tbl_post_category`;
 
 CREATE TABLE `tbl_post_category` (
-  `id` bigint(20) NOT NULL,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `post_id` bigint(20) DEFAULT NULL,
   `category_id` int(11) DEFAULT NULL,
   `create_account_id` int(11) DEFAULT NULL COMMENT 'Creator id',
   `created_time` datetime DEFAULT NULL COMMENT 'Created time',
   PRIMARY KEY (`id`),
-  KEY `POST_CATEGORY__POST` (`post_id`),
+  UNIQUE KEY `UNIQUE_IDX1` (`post_id`,`category_id`),
   KEY `POST_CATEGORY__CATEGORY` (`category_id`),
   KEY `POST_CATEGORY__CREATOR` (`create_account_id`),
-  CONSTRAINT `POST_CATEGORY__POST` FOREIGN KEY (`post_id`) REFERENCES `tbl_post` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `POST_CATEGORY__CATEGORY` FOREIGN KEY (`category_id`) REFERENCES `tbl_category` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `POST_CATEGORY__CREATOR` FOREIGN KEY (`create_account_id`) REFERENCES `tbl_account` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='n - n table, post + category';
+  CONSTRAINT `POST_CATEGORY__CREATOR` FOREIGN KEY (`create_account_id`) REFERENCES `tbl_account` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `POST_CATEGORY__POST` FOREIGN KEY (`post_id`) REFERENCES `tbl_post` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8 COMMENT='n - n table, post + category';
 
 /*Data for the table `tbl_post_category` */
+
+/*Table structure for table `tbl_product` */
+
+DROP TABLE IF EXISTS `tbl_product`;
+
+CREATE TABLE `tbl_product` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'Primary key',
+  `type` varchar(25) NOT NULL DEFAULT '' COMMENT 'Product''s type',
+  `code` varchar(25) DEFAULT NULL COMMENT 'Product''s code',
+  `name` varchar(255) NOT NULL DEFAULT '' COMMENT 'Product''s name',
+  `alias` varchar(255) NOT NULL DEFAULT '' COMMENT 'Product''s name no mark',
+  `sku` varchar(255) DEFAULT NULL COMMENT 'Product''s sku',
+  `imgs` text COMMENT 'Product''s images',
+  `content` text COMMENT 'Product''s content',
+  `price` double NOT NULL DEFAULT '0' COMMENT 'Product''s price',
+  `price_dropped` double NOT NULL DEFAULT '0' COMMENT 'Product''s price dropped',
+  `viewed` int(11) NOT NULL DEFAULT '0' COMMENT 'Product''s viewed count',
+  `note` varchar(512) NOT NULL DEFAULT '' COMMENT 'Product''s note',
+  `active` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Flag: is active?',
+  `draft` datetime DEFAULT NULL COMMENT 'Datetime: mark as data draft?',
+  `create_account_id` int(11) DEFAULT NULL COMMENT 'Creator id',
+  `created_time` datetime DEFAULT NULL COMMENT 'Created time',
+  `last_modified_account_id` int(11) DEFAULT NULL COMMENT 'Last modifier id',
+  `last_modified_time` datetime DEFAULT NULL COMMENT 'Last modified time',
+  `phrase` varchar(7) NOT NULL DEFAULT 'PRODUCT' COMMENT 'Phrase''s context string',
+  `tag` varchar(7) NOT NULL DEFAULT 'PRODUCT' COMMENT 'Tag''s context string',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UNIQUE_IDX_code` (`code`),
+  UNIQUE KEY `UNIQUE_IDX_sku` (`sku`),
+  KEY `IDX_name` (`name`),
+  KEY `IDX_type` (`type`),
+  KEY `IDX_active` (`active`),
+  KEY `IDX_created_time` (`created_time`),
+  KEY `IDX_draft` (`draft`),
+  KEY `PRODUCT__CREATE_ACCOUNT` (`create_account_id`),
+  KEY `PRODUCT__LAST_MODIFIED_ACCOUNT` (`last_modified_account_id`),
+  KEY `IDX_price` (`price`),
+  KEY `IDX_alias` (`alias`),
+  CONSTRAINT `PRODUCT__CREATE_ACCOUNT` FOREIGN KEY (`create_account_id`) REFERENCES `tbl_account` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `PRODUCT__LAST_MODIFIED_ACCOUNT` FOREIGN KEY (`last_modified_account_id`) REFERENCES `tbl_account` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Product';
+
+/*Data for the table `tbl_product` */
+
+/*Table structure for table `tbl_product_category` */
+
+DROP TABLE IF EXISTS `tbl_product_category`;
+
+CREATE TABLE `tbl_product_category` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `product_id` bigint(20) DEFAULT NULL,
+  `category_id` int(11) DEFAULT NULL,
+  `create_account_id` int(11) DEFAULT NULL COMMENT 'Creator id',
+  `created_time` datetime DEFAULT NULL COMMENT 'Created time',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UNIQUE_IDX1` (`product_id`,`category_id`),
+  KEY `PRODUCT_CATEGORY__CATEGORY` (`category_id`),
+  KEY `PRODUCT_CATEGORY__CREATOR` (`create_account_id`),
+  CONSTRAINT `PRODUCT_CATEGORY__PRODUCT` FOREIGN KEY (`product_id`) REFERENCES `tbl_product` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `PRODUCT_CATEGORY__CATEGORY` FOREIGN KEY (`category_id`) REFERENCES `tbl_category` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='n - n table, product + category';
+
+/*Data for the table `tbl_product_category` */
 
 /*Table structure for table `tbl_tag` */
 
@@ -216,11 +279,11 @@ CREATE TABLE `tbl_tag` (
   UNIQUE KEY `UNIQUE_IDX_name` (`name`),
   KEY `IDX_alias` (`alias`),
   KEY `IDX_created_time` (`created_time`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='tag, tagging';
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COMMENT='tag, tagging';
 
 /*Data for the table `tbl_tag` */
 
-insert  into `tbl_tag`(`id`,`name`,`alias`,`created_time`) values (1,'Bai viet 1','bai-viet-1','2016-08-12 15:05:31'),(2,'Bai viet 2','bai-viet-2','2016-08-12 15:05:45');
+insert  into `tbl_tag`(`id`,`name`,`alias`,`created_time`) values (3,'tag 1','tag-1','2016-08-16 13:22:04'),(4,'tag 2','tag-2','2016-08-16 13:22:04'),(5,'tag 3','tag-3','2016-08-16 13:22:05'),(6,'tag 4','tag-4','2016-08-16 13:22:52'),(7,'bai viet 1','bai-viet-1','2016-08-17 15:20:19'),(8,'bai viet so 1','bai-viet-so-1','2016-08-17 15:20:19'),(9,'post title','post-title','2016-08-17 15:26:40'),(10,'post title 1','post-title-1','2016-08-17 15:26:40'),(11,'記事のタイトル','記事のタイトル','2016-08-17 15:29:43'),(12,'記事のタイトル1','記事のタイトル1','2016-08-17 15:29:44');
 
 /*Table structure for table `tbl_tag_item` */
 

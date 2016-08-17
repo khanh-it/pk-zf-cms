@@ -1,8 +1,11 @@
 <?php
 /**
- * Script view: group # language
+ * Script view: post # language
  * @author khanhdtp
  */
+// Get K111_AssetsFinder
+$assetsFinder = K111_AssetsFinder::getInstance();
+
 // Toolbars
 $this->Bt3NavLinks(array(
 	$this->Bt3NavLinks()->iconApply(), 
@@ -21,10 +24,7 @@ $languages = (array)$this->languages;
 				echo $this->translate('Danh mục')
 			?>:</span>&nbsp;
 			<span class="label label-info"><?php
-				echo $this->entity->name . ($this->entity->code
-					? (' [' . $this->entity->code . ']')
-					: ''
-				);
+				echo $this->entity->name;
 			?></span>
 		</h4><br/>
 		
@@ -63,7 +63,11 @@ $this->HeadStyleAction($this->curRequest, null, array(
 	'action' => 'lang'
 ));
 
-// CSS:
+// JS:
+// +++ Lib: ckeditor
+$this->headScript()->appendFile(
+	$assetsFinder->files('ckeditor/ckeditor.js', 'lib'), null, array('minify_disabled' => true)
+);
 // +++ Inline script;
 $this->HeadScriptAction($this->curRequest, null, array(
 	'module' => 'post',

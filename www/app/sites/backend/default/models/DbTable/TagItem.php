@@ -49,6 +49,7 @@ class Default_Model_DbTable_TagItem extends K111_Db_Table
         $select = $this->select()
 			->from($this->_name)
 		;
+		$bind = $select->getBind();
         
         // Filter data;
         $dbA = $select->getAdapter();

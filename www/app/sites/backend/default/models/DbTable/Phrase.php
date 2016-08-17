@@ -42,37 +42,33 @@ class Default_Model_DbTable_Phrase extends K111_Db_Table
         $select = $this->select()
 			->from($this->_name)
 		;
+		$bind = $select->getBind();
         
         // Filter data;
         $dbA = $select->getAdapter();
         // +++ context?
         $options['phr_context'] = array_filter((array)($options['phr_context']));
         if (!empty($options['phr_context'])) {
-            $select
-                ->where('phr_context IN (?)', $options['phr_context'])
-            ;
+            $select->where('phr_context IN (?)', $options['phr_context']);
         }
 		// +++ relative id(s)?
 		$options['phr_rel_id'] = array_filter((array)($options['phr_rel_id']));
         if (!empty($options['phr_rel_id'])) {
-            $select
-                ->where('phr_rel_id IN (?)', $options['phr_rel_id'])
-            ;
+            $select->where('phr_rel_id IN (?)', $options['phr_rel_id']);
         }
 		// +++ lang?
 		$options['phr_lang'] = array_filter((array)($options['phr_lang']));
         if (!empty($options['phr_lang'])) {
-            $select
-                ->where('phr_lang IN ()', $options['phr_lang'])
-            ;
+            $select->where('phr_lang IN ()', $options['phr_lang']);
         }
 		// +++ colum?
 		$options['phr_column'] = array_filter((array)($options['phr_column']));
         if (!empty($options['phr_column'])) {
-            $select
-                ->where('phr_column IN ()', $options['phr_column'])
-            ;
+            $select->where('phr_column IN ()', $options['phr_column']);
         }
+		// +++ Bind filter data 
+		$select->bind($bind);
+        //die($select);
         
         // Return;
         return $select;

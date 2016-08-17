@@ -80,7 +80,10 @@ class Post_IndexController extends K111_Controller_Action
 		$vData['phrUtil'] = $phrUtil = Default_Model_DbTable_Util_Phrase::getInstance();
 	     
 	    // Define var # form;
-	    $vData['form'] = $form = new Post_Form_Post_Index();
+	    $vData['form'] = $form = new Post_Form_Post_Index(array(
+	    // +++ Controller's options
+	    	'controllerOptions' => $this->_options
+		));
 		// +++ Category
 		$vData['cateOpts'] = $this->_repoCategory->flatternDataRecursive(
 			$this->_repoCategory->fetchDataRecursive(),
@@ -165,7 +168,12 @@ class Post_IndexController extends K111_Controller_Action
 		list($langKey, $langData) = Language::getDefault();
 		
 	    // Define var # form;
-	    $vData['form'] = $form = new Post_Form_Post_Crud();
+	    $vData['form'] = $form = new Post_Form_Post_Crud(array(
+	    // +++ Controller's options
+	    	'controllerOptions' => $this->_options
+		));
+		// +++ Load Tagging Tools Elements
+		$phrUtil->buildFormTaggingToolsElements($form);
 		// +++ Load SEO Tools elements
 		$phrUtil->buildFormSEOToolsElements($form);
 		// +++ Disable elements on detail mode
@@ -197,10 +205,6 @@ class Post_IndexController extends K111_Controller_Action
 				$formValues['alias'] = $this->_helper->common->str2Alias(
 					$formValues['alias'] ?: $formValues['name']
 				);
-				// +++ imgs
-				$formValues['imgs'] = trim($formValues['imgs']);
-				// +++ tags
-				$formValues['tags_str'] = trim($formValues['tags_str']);
 				
 				// Extract phrase data
 				$phrData = $phrUtil->extractPhrData($formValues);
@@ -230,9 +234,7 @@ class Post_IndexController extends K111_Controller_Action
 					
 					// Save PostCategory data
 					$this->_repoPostCategory->insertPostCategory(
-						$entity->id, 
-						$formValues['category_id'], 
-						array(
+						$entity->id, $formValues['category_id'], array(
 						// Opitons
 						// +++ clean old post data
 							'clean_old_post_data' => true,
@@ -252,12 +254,7 @@ class Post_IndexController extends K111_Controller_Action
 					// Save tag data?
 					$tagUtil->saveTag(
 						Post_Model_DbTable_Post::TAG,
-						$entity->id, $entity->tags_str,
-						// Options 
-						array(
-						// +++ Clean old data
-							'clean_old_data' => true
-						)
+						$entity->id, $phrData['tags_str']
 					);
 					
     	            // Inform
@@ -464,6 +461,8 @@ class Post_IndexController extends K111_Controller_Action
 		$vData['entity'] = $entity;
 		// +++ @var Default_Model_DbTable_Util_Phrase
 		$vData['phrUtil'] = $phrUtil = Default_Model_DbTable_Util_Phrase::getInstance();
+		// +++ @var Default_Model_DbTable_Util_Tag
+		$vData['tagUtil'] = $tagUtil = Default_Model_DbTable_Util_Tag::getInstance();
 		
 		// Get language info
 		// +++ List of languages
@@ -481,6 +480,10 @@ class Post_IndexController extends K111_Controller_Action
 		
 	    // Define var # form;
 	    $vData['form'] = $form = new Post_Form_Post_Lang();
+		// +++ Load Tagging Tools elements
+		$phrUtil->buildFormTaggingToolsElements($form, array(
+			'element_name_prefix' => ''
+		));
 		// +++ Load SEO Tools elements
 		$phrUtil->buildFormSEOToolsElements($form, array(
 			'element_name_prefix' => ''
@@ -506,6 +509,12 @@ class Post_IndexController extends K111_Controller_Action
 					$phrUtil->savePhrase(
 						Post_Model_DbTable_Post::PHRASE,
 						$entity->id, $vData['langKey'], $formValues
+					);
+					
+					// Save tag data?
+					$tagUtil->saveTag(
+						Post_Model_DbTable_Post::TAG,
+						$entity->id, $formValues['tags_str']
 					);
 				
     	            // Inform

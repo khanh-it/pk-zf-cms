@@ -145,54 +145,59 @@ class Post_Model_DbTable_Post extends K111_Db_Table
     public function buildFetchDataSelector(array $options = array(), array $order = array()) {
         // Init select
         $select = $this->select()
+			//->setIntegrityCheck(false)
 			->from($this->_name)
 		;
+		$bind = $select->getBind();
         
         // Filter data;
         $dbA = $select->getAdapter();
         // +++ keyword
         $options['keyword'] = trim($options['keyword']);
         if ($options['keyword']) {
-            $subOrWhere = array(
+        	$bind['keyword'] = "%{$options['keyword']}%";
+            $select->where(implode(' OR ', array(
                 '(' . $dbA->quoteIdentifier('name') . ' LIKE :keyword)'
-            );
-            $select
-                ->where(implode(' OR ', $subOrWhere))
-                ->bind(array(
-                    'keyword' => "%{$options['keyword']}%"
-                ))
-            ;
+            )));
         }
 		// +++ id?
 		$options['exclude_id'] = array_filter((array)($options['exclude_id']));
         if (!empty($options['exclude_id'])) {
-            $select
-                ->where('id NOT IN (?)', $options['exclude_id'])
-            ;
+            $select->where('id NOT IN (?)', $options['exclude_id']);
         }
 		// +++ type?
         $options['type'] = array_filter(
         	(array)($options['type'] ?: $this->_defaultType)
 		);
         if (!empty($options['type'])) {
-            $select
-                ->where('type IN (?)', $options['type'])
-            ;
+            $select->where('type IN (?)', $options['type']);
         }
 		// +++ active?
         $options['active'] = trim($options['active']);
         if ('' != $options['active']) {
-            $select
-                ->where('active = :active', $options['active'])
-                ->bind(array(
-                    'active' => $options['active']
-                ))
-            ;
+            $select->where('active = ?', $options['active']);
         }
 		// +++ draft?
         if (isset($options['draft'])) {
             $select->where('draft IS NOT NULL');
         }
+		// +++ category
+		$options['category_id'] = array_filter((array)($options['category_id']));
+        if (!empty($options['category_id'])) {
+        	// Relative DbTable objects
+			$repoPostCategory = new Post_Model_DbTable_PostCategory();
+			// Build sub where selector
+        	$subSelector = $repoPostCategory->select()
+				->where('category_id IN (?)', $options['category_id'])
+				->where($dbA->quoteIdentifier('post_id') 
+					. ' = ' . $dbA->quoteIdentifier($this->_name . '.id')
+				)
+			;
+            $select->where('EXISTS (' . (new Zend_Db_Expr($subSelector)) . ')');
+        }
+		
+		// +++ Bind filter data 
+		$select->bind($bind);
         //die($select);
         
         // Return;

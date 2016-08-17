@@ -138,65 +138,46 @@ class Category_Model_DbTable_Category extends K111_Db_Table
      */
     public function buildFetchDataSelector(array $options = array(), array $order = array()) {
         // Init select
-        $select = $this->select()/*
-			->setIntegrityCheck(false)
+        $select = $this->select()
 			->from($this->_name)
-			->joinLeft(
-				'tbl_phrase',
-				'phr_context = phrase AND phr_rel_id = id',
-				array()
-			)*/
 		;
+		$bind = $select->getBind();
         
         // Filter data;
         $dbA = $select->getAdapter();
         // +++ keyword
         $options['keyword'] = trim($options['keyword']);
         if ($options['keyword']) {
-            $subOrWhere = array(
+        	$bind['keyword'] = "%{$options['keyword']}%";
+            $select->where(implode(' OR ', array(
                 '(' . $dbA->quoteIdentifier('code') . ' LIKE :keyword)',
                 '(' . $dbA->quoteIdentifier('name') . ' LIKE :keyword)'
-            );
-            $select
-                ->where(implode(' OR ', $subOrWhere))
-                ->bind(array(
-                    'keyword' => "%{$options['keyword']}%"
-                ))
-            ;
+            )));
         }
 		// +++ id?
 		$options['exclude_id'] = array_filter((array)($options['exclude_id']));
         if (!empty($options['exclude_id'])) {
-            $select
-                ->where('id NOT IN (?)', $options['exclude_id'])
-            ;
+            $select->where('id NOT IN (?)', $options['exclude_id']);
         }
 		// +++ parent?
         $options['parent_id'] = array_filter((array)($options['parent_id']));
         if (!empty($options['parent_id'])) {
-            $select
-                ->where('parent_id IN (?)', $options['parent_id'])
-            ;
+            $select->where('parent_id IN (?)', $options['parent_id']);
         }
 		// +++ type?
         $options['type'] = array_filter(
         	(array)($options['type'] ?: $this->_defaultType)
 		);
         if (!empty($options['type'])) {
-            $select
-                ->where('type IN (?)', $options['type'])
-            ;
+            $select->where('type IN (?)', $options['type']);
         }
 		// +++ active?
         $options['active'] = trim($options['active']);
         if ('' != $options['active']) {
-            $select
-                ->where('active = :active', $options['active'])
-                ->bind(array(
-                    'active' => $options['active']
-                ))
-            ;
+            $select->where('active = ?', $options['active']);
         }
+		// +++ Bind filter data 
+		$select->bind($bind);
         //die($select);
         
         // Return;

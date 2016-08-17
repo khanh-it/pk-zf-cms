@@ -46,16 +46,18 @@ class Default_Model_DbTable_Tag extends K111_Db_Table
         $select = $this->select()
 			->from($this->_name)
 		;
+		$bind = $select->getBind();
         
         // Filter data;
         $dbA = $select->getAdapter();
         // +++ name?
         $options['name'] = array_filter((array)($options['name']));
         if (!empty($options['name'])) {
-            $select
-                ->where('name IN (?)', $options['name'])
-            ;
+            $select->where('name IN (?)', $options['name']);
         }
+		// +++ Bind filter data 
+		$select->bind($bind);
+        //die($select);
         
         // Return;
         return $select;

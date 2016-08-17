@@ -121,8 +121,8 @@ class Default_Model_DbTable_Util_Tag extends Default_Model_DbTable_Util_Abstract
 		
 		// Format options
 		
-		// Clean old data?
-		if ($options['clean_old_data']) {
+		// Keep old data?
+		if (!$options['keep_old_data']) {
 			$this->_repoTagItem->delete(array(
 				'context = ?' => $context,
 				'item_id = ?' => $itemId

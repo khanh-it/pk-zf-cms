@@ -110,11 +110,21 @@ $this->Bt3NavLinks(array(
 					<td>
 					<?php
 						if (!empty($itemCateOpts)):
+							// Case: has multi category
+							if (($count = count($itemCateOpts)) > 1):
 					?>
 						<a class="a-popover" title="<?php echo $this->translate('Danh mục'); ?>" data-placement="left" data-html="true" data-content="<?php echo htmlspecialchars($categoryHtml) ?>" href="javascript:void(0);">
-							<?php echo current($itemCateOpts); ?>
+							<i class="glyphicon glyphicon-list"></i> <?php echo current($itemCateOpts) . ('...(' . $count . ')')  ?>
 						</a>
-					<?php endif; ?>
+					<?php 
+							else:
+					?>
+						<span><?php echo current($itemCateOpts); ?></span>
+					<?php
+							endif;
+							unset($count);
+						endif; 
+					?>
 					</td>
 					<td align="center" class="text-nowrap">
 						<?php echo $this->Bt3ManageTools()->mToolActiveToggler($item->id, $item->active); ?>

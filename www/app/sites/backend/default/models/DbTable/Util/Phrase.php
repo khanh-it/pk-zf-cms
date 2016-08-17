@@ -43,6 +43,68 @@ class Default_Model_DbTable_Util_Phrase extends Default_Model_DbTable_Util_Abstr
 	}
 	
 	/**
+	 * Build form form elements for TAG(s)
+	 * 
+	 * @param $_form null|Zend_Form From instance
+	 * @param $options array An array of options
+	 * @return array An array of TAG(s) elements
+	 */
+	public function buildFormTaggingToolsElements($_form = null, $options = array()) {
+		// Elements
+		$elements = array();
+		// +++ 
+		$form = ($_form instanceof Zend_Form) ? $_form : new Zend_Form();
+		// +++ 
+		$view = $form->getView();
+		// +++ Element's orders
+		$_order = 0;
+		foreach ($form->getElements() as $frmEle) {
+			$_order = max($_order, $frmEle->getOrder());
+		}
+		// +++
+		
+		// Format, get options
+		$eleNamePrefix = ($options['element_name_prefix'] = is_null($options['element_name_prefix']) 
+			? self::PHR_DATA_PREFIX
+			: $options['element_name_prefix']
+		);
+		
+		// dummy element, used as label spliter
+		$elements[] = $element = $form->createElement('text', '_TaggingToolsLabel_', array(
+			'label' => $txt = ('--- <u>' . $view->translate("TAGGING:") . '</u> ---'),
+			'ignore' => true,
+			'attribs' => array('style' => 'display:none;',),
+			'order' => ($_order += 100)
+		));
+		$element->getDecorator('label')
+			->setOption('class', 'h3')
+			->setOption('escape', false)
+			->setOption('style', 'margin:0')
+		;
+		
+		// tag(s) string
+		$elements[] = $element = $form->createElement('text', "{$eleNamePrefix}tags_str", array(
+			'label' => $txt = $view->translate("Tags"),
+			'attribs' => array(
+				'class' => 'form-control input-sm',
+				'maxlength' => '255',
+				'placeholder' => $txt
+			),
+			'order' => ($_order += 100),
+            'description' => $view->translate('(Phân cách các tags bởi dấu phẩy `,`. VD: tag-1, tag_2.)'),
+		));
+		$element->getDecorator('description')
+			->setOption('tag', 'small')
+		;
+		
+		// Add elements
+		$form->addElements($elements);
+		
+		// Return
+		return $elements;
+	}
+	
+	/**
 	 * Build form form elements for SEO TOOL(s)
 	 * 
 	 * @param $_form null|Zend_Form From instance
@@ -57,18 +119,21 @@ class Default_Model_DbTable_Util_Phrase extends Default_Model_DbTable_Util_Abstr
 		// +++ 
 		$view = $form->getView();
 		// +++ Element's orders
-		$_order = (int)(PHP_INT_MAX / 2);
+		$_order = 0;
+		foreach ($form->getElements() as $frmEle) {
+			$_order = max($_order, $frmEle->getOrder());
+		}
 		// +++
 		
 		// Format, get options
-		$options['element_name_prefix'] = is_null($options['element_name_prefix']) 
+		$eleNamePrefix = ($options['element_name_prefix'] = is_null($options['element_name_prefix']) 
 			? self::PHR_DATA_PREFIX
 			: $options['element_name_prefix']
-		; 
+		); 
 		
 		// dummy element, used as label spliter
 		$elements[] = $element = $form->createElement('text', '_SEOToolsLabel_', array(
-			'label' => $txt = ('--- <u>' . $view->translate("SEO TOOLS:") . '</u> ---'),
+			'label' => $txt = ('--- <u>' . $view->translate("SEO:") . '</u> ---'),
 			'ignore' => true,
 			'attribs' => array(
 				'style' => 'display:none;',
@@ -82,7 +147,7 @@ class Default_Model_DbTable_Util_Phrase extends Default_Model_DbTable_Util_Abstr
 		;
 		
 		// page's title
-		$elements[] = $element = $form->createElement('text', "{$options['element_name_prefix']}seo_title", array(
+		$elements[] = $element = $form->createElement('text', "{$eleNamePrefix}seo_title", array(
 			'label' => $txt = $view->translate("Page's title"),
 			'attribs' => array(
 				'class' => 'form-control input-sm',
@@ -93,7 +158,7 @@ class Default_Model_DbTable_Util_Phrase extends Default_Model_DbTable_Util_Abstr
 		));
 		
 		// meta keywords
-		$elements[] = $element = $form->createElement('text', "{$options['element_name_prefix']}seo_meta_keywords", array(
+		$elements[] = $element = $form->createElement('text', "{$eleNamePrefix}seo_meta_keywords", array(
 			'label' => $txt = $view->translate("Page's meta keywords"),
 			'attribs' => array(
 				'class' => 'form-control input-sm',
@@ -104,7 +169,7 @@ class Default_Model_DbTable_Util_Phrase extends Default_Model_DbTable_Util_Abstr
 		));
 		
 		// meta description
-		$elements[] = $element = $form->createElement('text', "{$options['element_name_prefix']}seo_meta_description", array(
+		$elements[] = $element = $form->createElement('text', "{$eleNamePrefix}seo_meta_description", array(
 			'label' => $txt = $view->translate("Page's meta description"),
 			'attribs' => array(
 				'class' => 'form-control input-sm',
@@ -115,7 +180,7 @@ class Default_Model_DbTable_Util_Phrase extends Default_Model_DbTable_Util_Abstr
 		));
 		
 		// html_meta 
-		$elements[] = $element = $form->createElement('textarea', "{$options['element_name_prefix']}seo_html_meta", array(
+		$elements[] = $element = $form->createElement('textarea', "{$eleNamePrefix}seo_html_meta", array(
 			'label' => $txt = $view->translate("Page's html meta"),
 			'attribs' => array(
 				'class' => 'form-control input-sm',
