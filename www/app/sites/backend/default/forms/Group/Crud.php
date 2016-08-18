@@ -20,6 +20,8 @@ class Default_Form_Group_Crud extends Twitter_Bootstrap3_Form
         $elements[] = $element = $this->createElement('text', 'code', array(
             'label' => $txt = $view->translate('Mã nhóm tài khoản'),
             'placeholder' => $txt,
+            'class' => 'form-control input-sm',
+            'maxlength' => '25',
             'required' => true,
             'order' => ($eleOrder += 100),
         ));
@@ -27,6 +29,8 @@ class Default_Form_Group_Crud extends Twitter_Bootstrap3_Form
         $elements[] = $element = $this->createElement('text', 'name', array(
             'label' => $txt = $view->translate('Tên nhóm tài khoản'),
             'placeholder' => $txt,
+            'class' => 'form-control input-sm',
+            'maxlength' => '250',
             'required' => true,
             'order' => ($eleOrder += 100)
         ));
@@ -34,6 +38,7 @@ class Default_Form_Group_Crud extends Twitter_Bootstrap3_Form
         $elements[] = $element = $this->createElement('textarea', 'note', array(
             'label' => $txt = $view->translate('Ghi chú'),
             'placeholder' => $txt,
+            'class' => 'form-control input-sm',
             'rows' => 4,
             'order' => ($eleOrder += 100)
         ));

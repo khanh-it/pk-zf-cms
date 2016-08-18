@@ -20,6 +20,7 @@ class Category_Form_Category_Lang extends Twitter_Bootstrap3_Form
         $elements[] = $element = $this->createElement('text', 'name', array(
             'label' => $txt = $view->translate('Tên danh mục'),
             'placeholder' => $txt,
+            'class' => 'form-control input-sm',
             'maxlength' => 250,
             'order' => ($eleOrder += 100)
         ));
@@ -27,6 +28,7 @@ class Category_Form_Category_Lang extends Twitter_Bootstrap3_Form
         $elements[] = $element = $this->createElement('text', 'alias', array(
             'label' => $txt = $view->translate('Alias - Tên danh mục'),
             'placeholder' => $txt,
+            'class' => 'form-control input-sm',
             'maxlength' => 250,
             'order' => ($eleOrder += 100),
             'addon_append' => FORM_HTML_ALIAS_REMOVE,

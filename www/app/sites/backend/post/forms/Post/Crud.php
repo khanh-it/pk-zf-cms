@@ -24,7 +24,7 @@ class Post_Form_Post_Crud extends Twitter_Bootstrap3_Form
         $elements[] = $element = $this->createElement('select', 'category_id[]', array(
             'label' => $txt = $view->translate('Danh mục'),
             'multiple' => 'multiple',
-			'class' => 'selectpicker show-tick',
+			'class' => 'form-control input-sm selectpicker show-tick',
 			'data-live-search' => 'true',
 			'registerInArrayValidator' => false,
             'order' => ($eleOrder += 100),
@@ -33,6 +33,7 @@ class Post_Form_Post_Crud extends Twitter_Bootstrap3_Form
         $elements[] = $element = $this->createElement('text', 'name', array(
             'label' => $txt = $view->translate('Tiêu đề'),
             'placeholder' => $txt,
+            'class' => 'form-control input-sm',
             'maxlength' => 250,
             'required' => true,
             'order' => ($eleOrder += 100)
@@ -41,6 +42,7 @@ class Post_Form_Post_Crud extends Twitter_Bootstrap3_Form
         $elements[] = $element = $this->createElement('text', 'alias', array(
             'label' => $txt = $view->translate('Alias - Tiêu đề'),
             'placeholder' => $txt,
+            'class' => 'form-control input-sm',
             'maxlength' => 250,
             'order' => ($eleOrder += 100),
             'addon_append' => FORM_HTML_ALIAS_REMOVE,
@@ -69,6 +71,20 @@ class Post_Form_Post_Crud extends Twitter_Bootstrap3_Form
             'addon_prepend' => FORM_HTML_KCFINDER_PICKER,
             'addon_append' => FORM_HTML_KCFINDER_PREVIEW_N_REMOVE
         ));
+		// +++ 
+        $elements[] = $element = $this->createElement('text', 'viewed', array(
+            'label' => $txt = $view->translate('Lượt xem'),
+            'placeholder' => '0',
+            'class' => 'form-control input-sm text-right numeric',
+            'maxlength' => 15,
+            'value' => 0,
+            'order' => ($eleOrder += 100),
+            'addon_append' => FORM_HTML_VIEWED_ADDON,
+            'description' => $view->translate('(Tổng số lượt xem trên website)'),
+        )); 
+		$element->getDecorator('description')
+			->setOption('tag', 'small')
+		;
 		// +++ 
         $elements[] = $element = $this->createElement('textarea', 'content_short', array(
             'label' => $txt = $view->translate('Nội dung rút gọn'),
@@ -100,6 +116,7 @@ class Post_Form_Post_Crud extends Twitter_Bootstrap3_Form
         $elements[] = $element = $this->createElement('textarea', 'note', array(
             'label' => $txt = $view->translate('Ghi chú'),
             'placeholder' => $txt,
+            'class' => 'form-control input-sm',
             'rows' => 4,
             'order' => ($eleOrder += 100)
         ));

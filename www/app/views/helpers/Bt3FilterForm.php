@@ -24,11 +24,11 @@
 class App_View_Helper_Bt3FilterForm extends Zend_View_Helper_Abstract {
     
     /**
-     * 
+     * @var string Template
      */
-    protected static $_html = '<div id="filter-form-wrapper" class="clearfix">
-            <div class="pull-left">__left__</div>
-            <div class="pull-right">__right__</div>
+    protected static $_html = '<div id="filter-form-wrapper" class="row">
+            <div class="col-xs-11">__left__</div>
+            <div class="col-xs-1">__right__</div>
         </div>'
     ;
     
@@ -63,6 +63,7 @@ class App_View_Helper_Bt3FilterForm extends Zend_View_Helper_Abstract {
 	            $element = $elementsLeft->createElement('button', '__btn-submit', array(
 	                'label' => '<span class="' . $this->_submitBtnIcon . '"></span>',
 	                'attribs' => array(
+	                	'name' => '',
 	                    'class' => 'btn-primary btn-form-filter',
 	                    'type' => 'submit',
 	                    'escape' => false
@@ -76,6 +77,7 @@ class App_View_Helper_Bt3FilterForm extends Zend_View_Helper_Abstract {
 	            $element = $elementsLeft->createElement('button', '__btn-reset', array(
 	                'label' => '<span class="' . $this->_resetBtnIcon . '"></span>',
 	                'attribs' => array(
+	                	'name' => '',
 	                	'class' => 'btn-default btn-form-filter',
 	                    'type' => 'reset',
 	                    'escape' => false

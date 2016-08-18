@@ -38,6 +38,11 @@ define('FORM_HTML_KCFINDER_PREVIEW_N_REMOVE', FORM_HTML_KCFINDER_PREVIEW . '&nbs
 define('FORM_HTML_ALIAS_REMOVE', '<a href="javascript:void(0);" onclick="jQuery(this).parents(\'.input-group\').find(\'input[name]\').val(\'\');" class="btn btn-sm btn-danger alias-remove">'
 	. '<i class="glyphicon glyphicon-remove"></i>' 
 . '</a>');
+
+//
+//
+//
+define('FORM_HTML_VIEWED_ADDON', '<i class="glyphicon glyphicon-eye-open"></i>');
 // ===== ./FORM =====/
 
 

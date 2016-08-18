@@ -38,6 +38,11 @@ $this->Bt3NavLinks(array(
 					<th width="10" class="text-nowrap"><?php echo $this->translate('Hình ảnh'); ?></th>
 					<th><?php echo $this->translate('Ghi chú'); ?></th>
 					<th><?php echo $this->translate('Danh mục'); ?></th>
+					<th width="10">
+                    	<abbr title="<?php echo $this->translate('Lượt xem'); ?>">
+                    		<?php echo $this->translate('L.Xem?'); ?>
+                    	</abbr>
+                    </th>
                     <th width="10">
                     	<abbr title="<?php echo $this->translate('Kích hoạt?'); ?>">
                     		<?php echo $this->translate('K.Hoạt?'); ?>
@@ -113,7 +118,7 @@ $this->Bt3NavLinks(array(
 							// Case: has multi category
 							if (($count = count($itemCateOpts)) > 1):
 					?>
-						<a class="a-popover" title="<?php echo $this->translate('Danh mục'); ?>" data-placement="left" data-html="true" data-content="<?php echo htmlspecialchars($categoryHtml) ?>" href="javascript:void(0);">
+						<a class="a-popover" title="<?php echo $this->translate('Danh mục'); ?>" data-placement="top" data-html="true" data-content="<?php echo htmlspecialchars($categoryHtml) ?>" href="javascript:void(0);">
 							<i class="glyphicon glyphicon-list"></i> <?php echo current($itemCateOpts) . ('...(' . $count . ')')  ?>
 						</a>
 					<?php 
@@ -125,6 +130,9 @@ $this->Bt3NavLinks(array(
 							unset($count);
 						endif; 
 					?>
+					</td>
+					<td align="center" class="text-nowrap">
+						<?php echo number_format((int)$item->viewed); ?>
 					</td>
 					<td align="center" class="text-nowrap">
 						<?php echo $this->Bt3ManageTools()->mToolActiveToggler($item->id, $item->active); ?>

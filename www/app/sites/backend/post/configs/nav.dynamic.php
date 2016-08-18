@@ -10,85 +10,92 @@ $reqParams = $frontReq->getParams();
  
 // Return
 return array(
-	// post.category //
-    'post.category' => array(
+	'post' => array(
+        'label' => '[i class="zmdi zmdi-layers"][/i] [span]Bài viết[/span] [i class="fa fa-angle-left pull-right"][/i]',
+        'class' => '',
+        'uri' => 'javascript:void(0);',
         'pages' => array(
-            'index' => array(
-                'pages' => array(
-                	// Create
-					'create' => array(
-		                'label' => '[i class="zmdi zmdi-layers"][/i] [span]Thêm mới[/span]',
-		                'module' => 'post',
-		                'controller' => 'category',
-		                'action' => 'create',
-		                'visible' => false
-		            ),
-		            // Update
-		            'update' => array(
-		                'label' => '[i class="zmdi zmdi-layers"][/i] [span]Cập nhật[/span]',
-		                'module' => 'post',
-		                'controller' => 'category',
-		                'action' => 'update',
-		                'visible' => false,
-		                'params' => array(
-		                	'id' => $reqParams['id'], 
+			// category //
+		    'category' => array(
+		        'pages' => array(
+		            'index' => array(
+		                'pages' => array(
+		                	// Create
+							'create' => array(
+				                'label' => '[i class="zmdi zmdi-layers"][/i] [span]Thêm mới[/span]',
+				                'module' => 'post',
+				                'controller' => 'category',
+				                'action' => 'create',
+				                'visible' => false
+				            ),
+				            // Update
+				            'update' => array(
+				                'label' => '[i class="zmdi zmdi-layers"][/i] [span]Cập nhật[/span]',
+				                'module' => 'post',
+				                'controller' => 'category',
+				                'action' => 'update',
+				                'visible' => false,
+				                'params' => array(
+				                	'id' => $reqParams['id'], 
+								)
+				            ),
+				            // Detail
+				            'detail' => array(
+				                'label' => '[i class="zmdi zmdi-layers"][/i] [span]Xem chi tiết[/span]',
+				                'module' => 'post',
+				                'controller' => 'category',
+				                'action' => 'detail',
+				                'visible' => false,
+				                'params' => array(
+				                	'id' => $reqParams['id'], 
+								)
+				            )
 						)
 		            ),
-		            // Detail
-		            'detail' => array(
-		                'label' => '[i class="zmdi zmdi-layers"][/i] [span]Xem chi tiết[/span]',
-		                'module' => 'post',
-		                'controller' => 'category',
-		                'action' => 'detail',
-		                'visible' => false,
-		                'params' => array(
-		                	'id' => $reqParams['id'], 
-						)
-		            )
 				)
-            ),
+		    ),
+		    // end.category //
+		    
+		    // post //
+		    'post' => array(
+		        'pages' => array(
+		            'index' => array(
+		                'pages' => array(
+		                	// Create
+				            'create' => array(
+				                'label' => '[i class="zmdi zmdi-layers"][/i] [span]Thêm mới[/span]',
+				                'module' => 'post',
+				                'controller' => 'post',
+				                'action' => 'create',
+				                'visible' => false
+				            ),
+				            // Update
+				            'update' => array(
+				                'label' => '[i class="zmdi zmdi-layers"][/i] [span]Cập nhật[/span]',
+				                'module' => 'post',
+				                'controller' => 'post',
+				                'action' => 'update',
+				                'visible' => false,
+				                'params' => array(
+				                	'id' => $reqParams['id'], 
+								)
+				            ),
+				            // Detail
+				            'detail' => array(
+				                'label' => '[i class="zmdi zmdi-layers"][/i] [span]Xem chi tiết[/span]',
+				                'module' => 'post',
+				                'controller' => 'post',
+				                'action' => 'detail',
+				                'visible' => false,
+				                'params' => array(
+				                	'id' => $reqParams['id'], 
+								)
+				            )
+						),
+					),
+				)
+		    ),
+		    // end.post //
 		)
-    ),
-    // end.post.category //
-    
-    // post.post //
-    'post.post' => array(
-        'pages' => array(
-            'index' => array(
-                'pages' => array(
-                	// Create
-		            'create' => array(
-		                'label' => '[i class="zmdi zmdi-layers"][/i] [span]Thêm mới[/span]',
-		                'module' => 'post',
-		                'controller' => 'post',
-		                'action' => 'create',
-		                'visible' => false
-		            ),
-		            // Update
-		            'update' => array(
-		                'label' => '[i class="zmdi zmdi-layers"][/i] [span]Cập nhật[/span]',
-		                'module' => 'post',
-		                'controller' => 'post',
-		                'action' => 'update',
-		                'visible' => false,
-		                'params' => array(
-		                	'id' => $reqParams['id'], 
-						)
-		            ),
-		            // Detail
-		            'detail' => array(
-		                'label' => '[i class="zmdi zmdi-layers"][/i] [span]Xem chi tiết[/span]',
-		                'module' => 'post',
-		                'controller' => 'post',
-		                'action' => 'detail',
-		                'visible' => false,
-		                'params' => array(
-		                	'id' => $reqParams['id'], 
-						)
-		            )
-				),
-			),
-		)
-    ),
-    // end.post.post // 
+	)
 );

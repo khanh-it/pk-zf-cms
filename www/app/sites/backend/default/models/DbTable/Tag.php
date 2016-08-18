@@ -50,6 +50,15 @@ class Default_Model_DbTable_Tag extends K111_Db_Table
         
         // Filter data;
         $dbA = $select->getAdapter();
+		// +++ keyword
+        $options['keyword'] = trim($options['keyword']);
+        if ($options['keyword']) {
+        	$bind['keyword'] = "%{$options['keyword']}%";
+            $select->where(implode(' OR ', array(
+                '(' . $dbA->quoteIdentifier('name') . ' LIKE :keyword)',
+                '(' . $dbA->quoteIdentifier('alias') . ' LIKE :keyword)'
+            )));
+        }
         // +++ name?
         $options['name'] = array_filter((array)($options['name']));
         if (!empty($options['name'])) {

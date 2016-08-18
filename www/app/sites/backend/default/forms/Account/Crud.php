@@ -19,7 +19,7 @@ class Default_Form_Account_Crud extends Twitter_Bootstrap3_Form
 		// +++ 
         $elements[] = $element = $this->createElement('select', 'group_id', array(
             'label' => $txt = $view->translate('Nhóm tài khoản'),
-			'class' => 'selectpicker show-tick',
+			'class' => 'form-control input-sm selectpicker show-tick',
 			'data-live-search' => 'true',
             'order' => ($eleOrder += 100),
         ));
@@ -28,6 +28,7 @@ class Default_Form_Account_Crud extends Twitter_Bootstrap3_Form
             'label' => $txt = $view->translate('Tên đăng nhập'),
             'placeholder' => $txt,
             'maxlength' => 250,
+            'class' => 'form-control input-sm',
             'required' => true,
             'order' => ($eleOrder += 100),
         ));
@@ -36,6 +37,7 @@ class Default_Form_Account_Crud extends Twitter_Bootstrap3_Form
             'label' => $txt = $view->translate('Mật khẩu'),
             'placeholder' => $txt,
             'maxlength' => 50,
+            'class' => 'form-control input-sm',
             'required' => true,
             'order' => ($eleOrder += 100),
             'addon_append' => '<label class="control-label">'
@@ -48,6 +50,7 @@ class Default_Form_Account_Crud extends Twitter_Bootstrap3_Form
             'label' => $txt = $view->translate('Tên tài khoản'),
             'placeholder' => $txt,
             'maxlength' => 250,
+            'class' => 'form-control input-sm',
             'required' => true,
             'order' => ($eleOrder += 100)
         )); 
@@ -71,6 +74,7 @@ class Default_Form_Account_Crud extends Twitter_Bootstrap3_Form
         $elements[] = $element = $this->createElement('textarea', 'note', array(
             'label' => $txt = $view->translate('Ghi chú'),
             'placeholder' => $txt,
+            'class' => 'form-control input-sm',
             'rows' => 4,
             'order' => ($eleOrder += 100)
         ));

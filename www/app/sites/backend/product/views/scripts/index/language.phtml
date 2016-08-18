@@ -1,0 +1,82 @@
+<?php
+/**
+ * Script view: product # language
+ * @author khanhdtp
+ */
+// Get K111_AssetsFinder
+$assetsFinder = K111_AssetsFinder::getInstance();
+
+// Toolbars
+$this->Bt3NavLinks(array(
+	$this->Bt3NavLinks()->iconApply(), 
+    $this->Bt3NavLinks()->iconSaveAndClose(),
+    $this->Bt3NavLinks()->iconClose()
+));
+
+// Languages
+$languages = (array)$this->languages;
+?>
+<div id="controller" class="card">
+	<div class="card-body card-padding">
+		<!-- Object info -->
+		<h4 class="clearfix">
+			<span class="label label-primary"><?php
+				echo $this->translate('Sản phẩm')
+			?>:</span>&nbsp;
+			<span class="label label-info"><?php
+				echo $this->entity->name . ($this->entity->code
+					? (' [' . $this->entity->code . ']')
+					: ''
+				) . ($this->entity->sku
+					? (' [' . $this->entity->sku . ']')
+					: ''
+				);
+			?></span>
+		</h4><br/>
+		
+		<!-- Buttons -->
+		<?php
+			foreach ($languages as $langKey => $langData):
+				// Switch tab url  
+				$url = $this->url(array('lang' => $langKey), 'default');
+				// Is current tab active?
+				$activeStr = ($this->langKey == $langKey) ? 'btn-primary' : '';
+		?>
+		<a class="btn btn-sm btn-default <?php echo $activeStr; ?>" href="<?php echo $url; ?>" role="button">
+			<img class="lang-icon" src="<?php echo $langData['icon'] ?>" />
+			<?php echo $langData['name'] ?>
+		</a>
+		<?php endforeach; ?>
+	
+		<!-- Tab panes -->
+		<div class="tab-content">
+			<div role="tabpanel" class="tab-pane active">
+				<?php
+					// Render form
+					echo $this -> form;
+				?>
+			</div>
+			<div role="tabpanel" class="tab-pane">&nbps;</div>
+		</div>
+	</div>
+</div>
+<?php
+// CSS:
+// +++ Inline style;
+$this->HeadStyleAction($this->curRequest, null, array(
+	'module' => 'product',
+	'controller' => 'index',
+	'action' => 'lang'
+));
+
+// JS:
+// +++ Lib: ckeditor
+$this->headScript()->appendFile(
+	$assetsFinder->files('ckeditor/ckeditor.js', 'lib'), null, array('minify_disabled' => true)
+);
+// +++ Inline script;
+$this->HeadScriptAction($this->curRequest, null, array(
+	'module' => 'product',
+	'controller' => 'index',
+	'action' => 'lang'
+));

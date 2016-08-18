@@ -1,0 +1,117 @@
+<?php
+/**
+ * Script view: list tag 
+ * @author khanhdtp
+ */
+// Get Zend_Controller_Front;
+$front = Zend_Controller_Front::getInstance();
+
+// Toolbars
+$this->Bt3NavLinks(array(
+	//$this->Bt3NavLinks()->iconNew(),
+    //$this->Bt3NavLinks()->iconDelete()
+));
+?>
+<div class="card">
+	<!-- card-header -->
+	<div class="card-header">
+		<?php
+			// Filter form;
+			echo $this->Bt3FilterForm()->render($this->form, $this->formSearch);
+		?><br/>
+		<h2>
+			<small><?php
+			  	echo $this->translate('Tổng số dòng') . ': ' . ($totalItemsCount = $this->paginator->getTotalItemCount()) . '.';
+			?></small>
+		</h2>
+	</div>
+	<!-- ./card-header -->
+	<form id="admin-form" class="card-body table-responsive" enctype="application/x-www-form-urlencoded" method="post" action="">
+		<table id="tbl-data-list" class="table table-bordered table-condensed table-hover">
+            <thead>
+                <tr>
+					<th width="10">#</th>
+					<th width="10" class="text-center hidden">
+						<?php echo $this->Bt3ManageTools()->mToolCheckerToggler(); ?>
+					</th>
+					<th width="10" class="text-nowrap"><?php echo $this->translate('Name'); ?></th>
+					<th width="10" class="text-nowrap"><?php echo $this->translate('Alias'); ?></th>
+                    <th width="10">
+                    	<abbr title="<?php echo $this->translate('Lượt xem?'); ?>">
+                    		<?php echo $this->translate('L.Xem?'); ?>
+                    	</abbr>
+                    </th>
+                    <th width="10">
+                    	<abbr title="<?php echo $this->translate('Thời gian tạo?'); ?>">
+                    		<?php echo $this->translate('T.G.Tạo?'); ?>
+                    	</abbr>
+                    </th>
+					<th width="10">
+						<abbr title="<?php echo $this->translate('Quản lý'); ?>">
+							<?php echo $this->translate('Q.Lý?'); ?>
+						</abbr>
+					</th>
+				</tr>
+            </thead>
+            <tbody>
+        <?php
+            if ($totalItemsCount):
+				// Manage tools 
+				$manageBtnLinks = array(
+					'detail' => $this->Bt3ManageTools()->mBtnDetail(),
+					'edit' => $this->Bt3ManageTools()->mBtnEdit(),
+					'delete' => $this->Bt3ManageTools()->mBtnDelete(),
+				);
+                //
+                $no = 0;
+                //
+                foreach ($this->paginator as $item):
+        ?>
+				<tr>
+					<td align="center" class="text-nowrap"><?php echo ++$no; ?></td>
+					<td align="center" class="text-center hidden">
+						<?php echo $this->Bt3ManageTools()->mToolChecker($item->id); ?>
+					</td>
+					<td>
+						<?php echo $item->name; ?>
+					</td>
+					<td>
+						<?php echo $item->alias; ?>
+					</td>
+					<td align="right" class="text-nowrap"><?php echo number_format((int)$item->viewed); ?></td>
+					<td align="center" class="text-nowrap"><?php echo $item->created_time; ?></td>
+					<td class="text-nowrap">
+					<?php
+						/*$manageBtns = array(
+							'__detail_' => str_replace(array('__id__'), array($item->id), $manageBtnLinks['detail']),
+							'__update_' => str_replace(array('__id__'), array($item->id), $manageBtnLinks['edit']),
+							'__delete_' => str_replace(array('__id__'), array($item->id), $manageBtnLinks['delete'])
+						);
+						echo implode("\n", $manageBtns);*/
+					?>
+					</td>
+				</tr>
+        <?php 
+                endforeach;
+            endif;
+        ?>
+			</tbody>
+		</table>
+	</form>
+	<!-- /.box-body -->
+	<div class="card-header clearfix">
+        <div class="pull-right">
+            <?php
+                echo $this->paginationControl($this->paginator); 
+            ?>
+        </div>
+	</div>
+</div>
+<?php
+// CSS:
+// +++ Inline style;
+$this->HeadStyleAction($this->curRequest);
+
+// CSS:
+// +++ Inline script;
+$this->HeadScriptAction($this->curRequest);

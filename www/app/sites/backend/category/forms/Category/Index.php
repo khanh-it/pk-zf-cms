@@ -25,13 +25,14 @@ class Category_Form_Category_Index extends Twitter_Bootstrap3_Form_Inline
         $elements[] = $element = $this->createElement('text', 'keyword', array(
             'label' => $txt = $view->translate('Từ khóa'),
             'placeholder' => $txt,
+            'class' => 'form-control input-sm',
             'order' => ($eleOrder += 100),
         ));
 		// +++ 
         $elements[] = $element = $this->createElement('select', 'parent_id', array(
             'label' => $txt = $view->translate('Danh mục cha'),
             'addon_prepend' => $txt,
-            'class' => 'selectpicker show-tick',
+            'class' => 'form-control input-sm selectpicker show-tick',
             'data-live-search' => 'true',
             'data-width' => '',
             'order' => ($eleOrder += 100),
@@ -40,6 +41,7 @@ class Category_Form_Category_Index extends Twitter_Bootstrap3_Form_Inline
         $elements[] = $element = $this->createElement('select', 'active', array(
             'label' => $txt = $view->translate('Kích hoạt?'),
             'addon_prepend' => $txt,
+            'class' => 'form-control input-sm',
             'multiOptions' => array('' => $view->translate('- Chọn -')) + Category_Model_DbTable_Row_Category::returnBitStats(),
             'order' => ($eleOrder += 100),
         ));

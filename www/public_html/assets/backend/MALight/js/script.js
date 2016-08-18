@@ -344,7 +344,7 @@
 							return file.substr(file.indexOf(type) + type.length);
 						});
 						hasMultiFiles && files.unshift($input.val());
-						$input.val(hasMultiFiles ? files.join('\n'): files.pop());
+						$input.val($.trim(hasMultiFiles ? files.join('\n'): files.pop()));
 					}, hasMultiFiles);
 				}
 			}

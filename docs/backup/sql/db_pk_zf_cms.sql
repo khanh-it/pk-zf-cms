@@ -55,6 +55,28 @@ CREATE TABLE `tbl_account` (
 
 insert  into `tbl_account`(`id`,`group_id_json`,`group_id`,`username`,`password`,`avatar`,`fullname`,`last_login_time`,`settings`,`active`,`draft`,`note`,`create_account_id`,`created_time`,`last_modified_account_id`,`last_modified_time`) values (1,'',9,'admin','e10adc3949ba59abbe56e057f20f883e','/khanh-avatar.jpg','khanhdtp',NULL,NULL,1,NULL,'',NULL,'2016-07-26 11:10:36',NULL,NULL);
 
+/*Table structure for table `tbl_cart` */
+
+DROP TABLE IF EXISTS `tbl_cart`;
+
+CREATE TABLE `tbl_cart` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'Primary',
+  `type` varchar(25) NOT NULL DEFAULT '' COMMENT 'Cart''s type',
+  `code` varchar(25) DEFAULT NULL COMMENT 'Cart''s code',
+  `payment_method` varchar(15) NOT NULL DEFAULT '' COMMENT 'Cart''s payment method',
+  `transport_method` varchar(15) NOT NULL DEFAULT '' COMMENT 'Cart''s transport method',
+  `total_qty` double NOT NULL DEFAULT '0' COMMENT 'Cart''s total product''s quantity',
+  `total_price` double NOT NULL DEFAULT '0' COMMENT 'Cart''s total product''s price',
+  `note` varchar(512) NOT NULL DEFAULT '' COMMENT 'Cart''s user noted',
+  `create_account_id` int(11) DEFAULT NULL COMMENT 'Creator id',
+  `created_time` datetime DEFAULT NULL COMMENT 'Created time',
+  `last_modified_account_id` int(11) DEFAULT NULL COMMENT 'Last modifier id',
+  `last_modified_time` datetime DEFAULT NULL COMMENT 'Last modified time',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Cart';
+
+/*Data for the table `tbl_cart` */
+
 /*Table structure for table `tbl_category` */
 
 DROP TABLE IF EXISTS `tbl_category`;
@@ -67,6 +89,7 @@ CREATE TABLE `tbl_category` (
   `alias` varchar(255) NOT NULL DEFAULT '' COMMENT 'Category''s name no mark',
   `type` varchar(25) NOT NULL DEFAULT '' COMMENT 'Category''s type',
   `imgs` text COMMENT 'Category''s images',
+  `viewed` int(11) NOT NULL DEFAULT '0' COMMENT 'Viewed count',
   `note` varchar(512) NOT NULL DEFAULT '' COMMENT 'Category''s note',
   `active` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Flag: is active?',
   `draft` datetime DEFAULT NULL COMMENT 'Datetime: mark as data draft?',
@@ -92,7 +115,7 @@ CREATE TABLE `tbl_category` (
 
 /*Data for the table `tbl_category` */
 
-insert  into `tbl_category`(`id`,`parent_id`,`code`,`name`,`alias`,`type`,`imgs`,`note`,`active`,`draft`,`create_account_id`,`created_time`,`last_modified_account_id`,`last_modified_time`,`phrase`) values (2,NULL,'dm_san_pham_1','Danh mục sản phẩm 1','danh-muc-san-pham-1','PRODUCT','/9.png\r\n/8.png\r\n/4.png\r\n/1.png\r\n/2.png\r\n/3.png\r\n/5.png\r\n/6.png\r\n/7.png','@author khanhdtp',1,NULL,1,NULL,1,'2016-08-11 14:40:42','CATEGORY'),(3,NULL,'cate3','Cate 3','cate-3','PRODUCT','/2.png\r\n/3.png\r\n/4.png\r\n/5.png\r\n/6.png\r\n/7.png\r\n/8.png\r\n/9.png','',1,NULL,1,NULL,1,'2016-08-11 11:12:53','CATEGORY'),(11,NULL,'cate1.1.2','Cate 1.1.2','cate-1-1-2','PRODUCT','/6.png\r\n/1.png\r\n/2.png\r\n/3.png\r\n/4.png\r\n/5.png\r\n/7.png\r\n/8.png\r\n/9.png','',1,NULL,1,NULL,1,'2016-08-11 15:23:08','CATEGORY'),(12,NULL,'TIN_TUC','Tin tức','tin-tuc','POST','\r\n/multi_columns_based_index.png\r\n/reundant_indexes.png\r\n/Workspace%201_022.png\r\n/Workspace%201_026.png','Danh mục tin tức chung (@author khanhdtp)',1,NULL,1,'2016-08-12 13:00:55',NULL,NULL,'CATEGORY'),(13,NULL,'TUYEN_DUNG','Tuyển dụng','tuyen-dung','POST','\r\n/TuyenDung/Selection_001.png\r\n/TuyenDung/Selection_002.png\r\n/TuyenDung/Selection_003.png','Tuyển dụng',1,NULL,1,'2016-08-12 13:10:19',NULL,NULL,'CATEGORY'),(14,NULL,'GIOI_THIEU','Giới thiệu','gioi-thieu','POST','\r\n/GioiThieu/Selection_004.png\r\n/GioiThieu/Selection_005.png\r\n/GioiThieu/Selection_006.png','Giới thiệu',1,NULL,1,'2016-08-12 13:11:10',NULL,NULL,'CATEGORY'),(15,12,'TIN_TUC--THE_THAO','Thể thao','the-thao','POST','\r\n/TinTuc/TheThao/Selection_006.png\r\n/TinTuc/TheThao/Selection_007.png\r\n/TinTuc/TheThao/Selection_008.png','Thể thao',1,NULL,1,'2016-08-12 13:13:46',NULL,NULL,'CATEGORY'),(16,12,'TIN_TUC--DU_LICH','Du lịch','du-lich','POST','\r\n/TinTuc/DuLich/Selection_010.png\r\n/TinTuc/DuLich/Selection_011.png\r\n/TinTuc/DuLich/Selection_012.png','Du lịch',1,NULL,1,'2016-08-12 13:14:30',NULL,NULL,'CATEGORY');
+insert  into `tbl_category`(`id`,`parent_id`,`code`,`name`,`alias`,`type`,`imgs`,`viewed`,`note`,`active`,`draft`,`create_account_id`,`created_time`,`last_modified_account_id`,`last_modified_time`,`phrase`) values (2,NULL,'dm_san_pham_1','Danh mục sản phẩm 1','danh-muc-san-pham-1','PRODUCT','/9.png\r\n/8.png\r\n/4.png\r\n/1.png\r\n/2.png\r\n/3.png\r\n/5.png\r\n/6.png\r\n/7.png',0,'@author khanhdtp',1,NULL,1,NULL,1,'2016-08-11 14:40:42','CATEGORY'),(3,NULL,'cate3','Cate 3','cate-3','PRODUCT','/2.png\r\n/3.png\r\n/4.png\r\n/5.png\r\n/6.png\r\n/7.png\r\n/8.png\r\n/9.png',0,'',1,NULL,1,NULL,1,'2016-08-11 11:12:53','CATEGORY'),(11,NULL,'cate1.1.2','Cate 1.1.2','cate-1-1-2','PRODUCT','/6.png\r\n/1.png\r\n/2.png\r\n/3.png\r\n/4.png\r\n/5.png\r\n/7.png\r\n/8.png\r\n/9.png',0,'',1,NULL,1,NULL,1,'2016-08-11 15:23:08','CATEGORY'),(12,NULL,'TIN_TUC','Tin tức','tin-tuc','POST','/multi_columns_based_index.png\r\n/reundant_indexes.png\r\n/Workspace%201_022.png\r\n/Workspace%201_026.png',1234,'Danh mục tin tức chung (@author khanhdtp)',1,NULL,1,'2016-08-12 13:00:55',1,'2016-08-18 10:20:29','CATEGORY'),(13,NULL,'TUYEN_DUNG','Tuyển dụng','tuyen-dung','POST','\r\n/TuyenDung/Selection_001.png\r\n/TuyenDung/Selection_002.png\r\n/TuyenDung/Selection_003.png',0,'Tuyển dụng',1,NULL,1,'2016-08-12 13:10:19',NULL,NULL,'CATEGORY'),(14,NULL,'GIOI_THIEU','Giới thiệu','gioi-thieu','POST','\r\n/GioiThieu/Selection_004.png\r\n/GioiThieu/Selection_005.png\r\n/GioiThieu/Selection_006.png',0,'Giới thiệu',1,NULL,1,'2016-08-12 13:11:10',NULL,NULL,'CATEGORY'),(15,12,'TIN_TUC--THE_THAO','Thể thao','the-thao','POST','\r\n/TinTuc/TheThao/Selection_006.png\r\n/TinTuc/TheThao/Selection_007.png\r\n/TinTuc/TheThao/Selection_008.png',0,'Thể thao',1,NULL,1,'2016-08-12 13:13:46',NULL,NULL,'CATEGORY'),(16,12,'TIN_TUC--DU_LICH','Du lịch','du-lich','POST','\r\n/TinTuc/DuLich/Selection_010.png\r\n/TinTuc/DuLich/Selection_011.png\r\n/TinTuc/DuLich/Selection_012.png',0,'Du lịch',1,NULL,1,'2016-08-12 13:14:30',NULL,NULL,'CATEGORY');
 
 /*Table structure for table `tbl_group` */
 
@@ -140,11 +163,11 @@ CREATE TABLE `tbl_phrase` (
   PRIMARY KEY (`phr_id`),
   UNIQUE KEY `UNIQUE_ROW` (`phr_context`,`phr_rel_id`,`phr_lang`,`phr_column`),
   KEY `IDX_column_n_data` (`phr_column`,`phr_data`(255))
-) ENGINE=InnoDB AUTO_INCREMENT=72 DEFAULT CHARSET=utf8 COMMENT='Language''s phrases..!';
+) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8 COMMENT='Language''s phrases..!';
 
 /*Data for the table `tbl_phrase` */
 
-insert  into `tbl_phrase`(`phr_id`,`phr_context`,`phr_rel_id`,`phr_lang`,`phr_column`,`phr_data`) values (13,'CATEGORY','11','vi','seo_title',''),(14,'CATEGORY','11','vi','seo_meta_keywords',''),(15,'CATEGORY','11','vi','seo_meta_description',''),(16,'CATEGORY','11','vi','seo_html_meta',''),(17,'CATEGORY','2','en','name','Product category name 1'),(18,'CATEGORY','2','en','alias','product-category-name-1'),(19,'CATEGORY','2','en','seo_title','PC page\'s title'),(20,'CATEGORY','2','en','seo_meta_keywords','PC page\'s meta keywords'),(21,'CATEGORY','2','en','seo_meta_description','PC page\'s meta description'),(22,'CATEGORY','2','en','seo_html_meta','<meta />'),(23,'CATEGORY','2','jp','name','製品カテゴリ'),(24,'CATEGORY','2','jp','alias','製品カテゴリ'),(25,'CATEGORY','2','jp','seo_title','Page\'s title # 製品カテゴリ'),(26,'CATEGORY','2','jp','seo_meta_keywords','Page\'s meta keyword # 製品カテゴリ'),(27,'CATEGORY','2','jp','seo_meta_description','Page\'s meta description # 製品カテゴリ'),(28,'CATEGORY','2','jp','seo_html_meta','<meta data-html=\"製品カテゴリ\" />'),(29,'CATEGORY','12','vi','seo_title','Tin tức'),(30,'CATEGORY','12','vi','seo_meta_keywords','Tin tức'),(31,'CATEGORY','12','vi','seo_meta_description','Tin tức'),(32,'CATEGORY','12','vi','seo_html_meta','Tin tức'),(33,'CATEGORY','13','vi','seo_title','Tuyển dụng'),(34,'CATEGORY','13','vi','seo_meta_keywords','Tuyển dụng'),(35,'CATEGORY','13','vi','seo_meta_description','Tuyển dụng'),(36,'CATEGORY','13','vi','seo_html_meta','Tuyển dụng'),(37,'CATEGORY','14','vi','seo_title','Giới thiệu'),(38,'CATEGORY','14','vi','seo_meta_keywords','Giới thiệu'),(39,'CATEGORY','14','vi','seo_meta_description','Giới thiệu'),(40,'CATEGORY','14','vi','seo_html_meta','Giới thiệu'),(41,'CATEGORY','15','vi','seo_title','Thể thao'),(42,'CATEGORY','15','vi','seo_meta_keywords','Thể thao'),(43,'CATEGORY','15','vi','seo_meta_description','Thể thao'),(44,'CATEGORY','15','vi','seo_html_meta','Thể thao'),(45,'CATEGORY','16','vi','seo_title','Du lịch'),(46,'CATEGORY','16','vi','seo_meta_keywords','Du lịch'),(47,'CATEGORY','16','vi','seo_meta_description','Du lịch'),(48,'CATEGORY','16','vi','seo_html_meta','Du lịch');
+insert  into `tbl_phrase`(`phr_id`,`phr_context`,`phr_rel_id`,`phr_lang`,`phr_column`,`phr_data`) values (13,'CATEGORY','11','vi','seo_title',''),(14,'CATEGORY','11','vi','seo_meta_keywords',''),(15,'CATEGORY','11','vi','seo_meta_description',''),(16,'CATEGORY','11','vi','seo_html_meta',''),(17,'CATEGORY','2','en','name','Product category name 1'),(18,'CATEGORY','2','en','alias','product-category-name-1'),(19,'CATEGORY','2','en','seo_title','PC page\'s title'),(20,'CATEGORY','2','en','seo_meta_keywords','PC page\'s meta keywords'),(21,'CATEGORY','2','en','seo_meta_description','PC page\'s meta description'),(22,'CATEGORY','2','en','seo_html_meta','<meta />'),(23,'CATEGORY','2','jp','name','製品カテゴリ'),(24,'CATEGORY','2','jp','alias','製品カテゴリ'),(25,'CATEGORY','2','jp','seo_title','Page\'s title # 製品カテゴリ'),(26,'CATEGORY','2','jp','seo_meta_keywords','Page\'s meta keyword # 製品カテゴリ'),(27,'CATEGORY','2','jp','seo_meta_description','Page\'s meta description # 製品カテゴリ'),(28,'CATEGORY','2','jp','seo_html_meta','<meta data-html=\"製品カテゴリ\" />'),(29,'CATEGORY','12','vi','seo_title','Tin tức'),(30,'CATEGORY','12','vi','seo_meta_keywords','Tin tức'),(31,'CATEGORY','12','vi','seo_meta_description','Tin tức'),(32,'CATEGORY','12','vi','seo_html_meta','Tin tức'),(33,'CATEGORY','13','vi','seo_title','Tuyển dụng'),(34,'CATEGORY','13','vi','seo_meta_keywords','Tuyển dụng'),(35,'CATEGORY','13','vi','seo_meta_description','Tuyển dụng'),(36,'CATEGORY','13','vi','seo_html_meta','Tuyển dụng'),(37,'CATEGORY','14','vi','seo_title','Giới thiệu'),(38,'CATEGORY','14','vi','seo_meta_keywords','Giới thiệu'),(39,'CATEGORY','14','vi','seo_meta_description','Giới thiệu'),(40,'CATEGORY','14','vi','seo_html_meta','Giới thiệu'),(41,'CATEGORY','15','vi','seo_title','Thể thao'),(42,'CATEGORY','15','vi','seo_meta_keywords','Thể thao'),(43,'CATEGORY','15','vi','seo_meta_description','Thể thao'),(44,'CATEGORY','15','vi','seo_html_meta','Thể thao'),(45,'CATEGORY','16','vi','seo_title','Du lịch'),(46,'CATEGORY','16','vi','seo_meta_keywords','Du lịch'),(47,'CATEGORY','16','vi','seo_meta_description','Du lịch'),(48,'CATEGORY','16','vi','seo_html_meta','Du lịch'),(49,'PRODUCT','1','vi','tags_str','san pham, san pham 1'),(50,'PRODUCT','1','vi','seo_title','page\'s title : san pham 1'),(51,'PRODUCT','1','vi','seo_meta_keywords','page\'s meta keywords : san pham 1'),(52,'PRODUCT','1','vi','seo_meta_description','page\'s meta description : san pham 1'),(53,'PRODUCT','1','vi','seo_html_meta','Page\'s html meta : san pham 1'),(54,'PRODUCT','1','en','name','Product name 1'),(55,'PRODUCT','1','en','alias','product-name-1'),(56,'PRODUCT','1','en','content','<p>Product content 1</p>\r\n'),(57,'PRODUCT','1','en','tags_str','product name, product name 1'),(58,'PRODUCT','1','en','seo_title','PC page\'s title # product name 1'),(59,'PRODUCT','1','en','seo_meta_keywords','PC page\'s meta keywords # product name 1'),(60,'PRODUCT','1','en','seo_meta_description','PC page\'s meta description # product name 1'),(61,'PRODUCT','1','en','seo_html_meta','Page\'s html meta # product name 1');
 
 /*Table structure for table `tbl_post` */
 
@@ -158,6 +181,7 @@ CREATE TABLE `tbl_post` (
   `imgs` text COMMENT 'Post''s images',
   `content_short` text COMMENT 'Post''s short content',
   `content_full` longtext COMMENT 'Post''s full content',
+  `viewed` int(11) NOT NULL DEFAULT '0' COMMENT 'Viewed count',
   `note` varchar(512) NOT NULL DEFAULT '' COMMENT 'Post''s note',
   `active` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Flag: is active?',
   `draft` datetime DEFAULT NULL COMMENT 'Datetime: mark as data draft?',
@@ -178,7 +202,7 @@ CREATE TABLE `tbl_post` (
   KEY `IDX_alias` (`alias`),
   CONSTRAINT `POST__CREATE_ACCOUNT` FOREIGN KEY (`create_account_id`) REFERENCES `tbl_account` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `POST__LAST_MODIFIED_ACCOUNT` FOREIGN KEY (`last_modified_account_id`) REFERENCES `tbl_account` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='Post object, hold many types of data (article, news, pages...)';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Post object, hold many types of data (article, news, pages...)';
 
 /*Data for the table `tbl_post` */
 
@@ -187,19 +211,20 @@ CREATE TABLE `tbl_post` (
 DROP TABLE IF EXISTS `tbl_post_category`;
 
 CREATE TABLE `tbl_post_category` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `post_id` bigint(20) DEFAULT NULL,
-  `category_id` int(11) DEFAULT NULL,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'Primary',
+  `post_id` bigint(20) NOT NULL COMMENT 'Post''s id',
+  `category_id` int(11) NOT NULL COMMENT 'Category''s id',
   `create_account_id` int(11) DEFAULT NULL COMMENT 'Creator id',
   `created_time` datetime DEFAULT NULL COMMENT 'Created time',
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNIQUE_IDX1` (`post_id`,`category_id`),
   KEY `POST_CATEGORY__CATEGORY` (`category_id`),
   KEY `POST_CATEGORY__CREATOR` (`create_account_id`),
+  KEY `IDX_created_time` (`created_time`),
   CONSTRAINT `POST_CATEGORY__CATEGORY` FOREIGN KEY (`category_id`) REFERENCES `tbl_category` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `POST_CATEGORY__CREATOR` FOREIGN KEY (`create_account_id`) REFERENCES `tbl_account` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `POST_CATEGORY__POST` FOREIGN KEY (`post_id`) REFERENCES `tbl_post` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8 COMMENT='n - n table, post + category';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='n - n table, post + category';
 
 /*Data for the table `tbl_post_category` */
 
@@ -218,7 +243,8 @@ CREATE TABLE `tbl_product` (
   `content` text COMMENT 'Product''s content',
   `price` double NOT NULL DEFAULT '0' COMMENT 'Product''s price',
   `price_dropped` double NOT NULL DEFAULT '0' COMMENT 'Product''s price dropped',
-  `viewed` int(11) NOT NULL DEFAULT '0' COMMENT 'Product''s viewed count',
+  `qty` double NOT NULL DEFAULT '0' COMMENT 'Product''s quantity',
+  `viewed` int(11) NOT NULL DEFAULT '0' COMMENT 'Viewed count',
   `note` varchar(512) NOT NULL DEFAULT '' COMMENT 'Product''s note',
   `active` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Flag: is active?',
   `draft` datetime DEFAULT NULL COMMENT 'Datetime: mark as data draft?',
@@ -242,29 +268,56 @@ CREATE TABLE `tbl_product` (
   KEY `IDX_alias` (`alias`),
   CONSTRAINT `PRODUCT__CREATE_ACCOUNT` FOREIGN KEY (`create_account_id`) REFERENCES `tbl_account` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `PRODUCT__LAST_MODIFIED_ACCOUNT` FOREIGN KEY (`last_modified_account_id`) REFERENCES `tbl_account` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Product';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='Product';
 
 /*Data for the table `tbl_product` */
+
+insert  into `tbl_product`(`id`,`type`,`code`,`name`,`alias`,`sku`,`imgs`,`content`,`price`,`price_dropped`,`qty`,`viewed`,`note`,`active`,`draft`,`create_account_id`,`created_time`,`last_modified_account_id`,`last_modified_time`,`phrase`,`tag`) values (1,'PRODUCT','san-pham-01','Sản phẩm 01','san-pham-01','sku-01','/2016-08/14.jpg\r\n/2016-08/10.jpg\r\n/2016-08/19.jpg\r\n/2016-08/5.jpg\r\n/2016-08/6.jpg\r\n/2016-08/7.jpg','<p>Thong tin san pham...</p>\r\n',128000,0,0,2345,'ghi chu san pham (khanhdtp)',1,NULL,1,'2016-08-18 10:11:52',1,'2016-08-18 10:26:57','PRODUCT','PRODUCT');
 
 /*Table structure for table `tbl_product_category` */
 
 DROP TABLE IF EXISTS `tbl_product_category`;
 
 CREATE TABLE `tbl_product_category` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `product_id` bigint(20) DEFAULT NULL,
-  `category_id` int(11) DEFAULT NULL,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'Primary',
+  `product_id` bigint(20) NOT NULL COMMENT 'Product''s id',
+  `category_id` int(11) NOT NULL COMMENT 'Category''s id',
   `create_account_id` int(11) DEFAULT NULL COMMENT 'Creator id',
   `created_time` datetime DEFAULT NULL COMMENT 'Created time',
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNIQUE_IDX1` (`product_id`,`category_id`),
   KEY `PRODUCT_CATEGORY__CATEGORY` (`category_id`),
   KEY `PRODUCT_CATEGORY__CREATOR` (`create_account_id`),
-  CONSTRAINT `PRODUCT_CATEGORY__PRODUCT` FOREIGN KEY (`product_id`) REFERENCES `tbl_product` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `PRODUCT_CATEGORY__CATEGORY` FOREIGN KEY (`category_id`) REFERENCES `tbl_category` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='n - n table, product + category';
+  KEY `IDX_created_time` (`created_time`),
+  CONSTRAINT `PRODUCT_CATEGORY__CREATOR` FOREIGN KEY (`create_account_id`) REFERENCES `tbl_account` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `PRODUCT_CATEGORY__CATEGORY` FOREIGN KEY (`category_id`) REFERENCES `tbl_category` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `PRODUCT_CATEGORY__PRODUCT` FOREIGN KEY (`product_id`) REFERENCES `tbl_product` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='n - n table, product + category';
 
 /*Data for the table `tbl_product_category` */
+
+/*Table structure for table `tbl_product_rel` */
+
+DROP TABLE IF EXISTS `tbl_product_rel`;
+
+CREATE TABLE `tbl_product_rel` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'Primary',
+  `type` varchar(25) NOT NULL DEFAULT '' COMMENT 'Relationship type',
+  `product_id` bigint(20) NOT NULL COMMENT 'Product''s id',
+  `product_rel_id` bigint(20) NOT NULL COMMENT 'Product relationship''s id',
+  `create_account_id` int(11) DEFAULT NULL COMMENT 'Creator id',
+  `created_time` datetime DEFAULT NULL COMMENT 'Created time',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UNIQUE_IDX1` (`type`,`product_id`,`product_rel_id`),
+  KEY `PRODUCT_REL__PRODUCT` (`product_id`),
+  KEY `PRODUCT_REL__PRODUCT_REL` (`product_rel_id`),
+  KEY `PRODUCT_REL__CREATOR` (`create_account_id`),
+  CONSTRAINT `PRODUCT_REL__PRODUCT` FOREIGN KEY (`product_id`) REFERENCES `tbl_product` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `PRODUCT_REL__PRODUCT_REL` FOREIGN KEY (`product_rel_id`) REFERENCES `tbl_product` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `PRODUCT_REL__CREATOR` FOREIGN KEY (`create_account_id`) REFERENCES `tbl_account` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='n - n table, product + product';
+
+/*Data for the table `tbl_product_rel` */
 
 /*Table structure for table `tbl_tag` */
 
@@ -274,16 +327,17 @@ CREATE TABLE `tbl_tag` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary key',
   `name` varchar(255) NOT NULL DEFAULT '' COMMENT 'Tag''s name',
   `alias` varchar(255) NOT NULL DEFAULT '' COMMENT 'Tag''s alias',
+  `viewed` int(11) NOT NULL DEFAULT '0' COMMENT 'Viewed count',
   `created_time` datetime DEFAULT NULL COMMENT 'Created time',
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNIQUE_IDX_name` (`name`),
   KEY `IDX_alias` (`alias`),
   KEY `IDX_created_time` (`created_time`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COMMENT='tag, tagging';
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8 COMMENT='tag, tagging';
 
 /*Data for the table `tbl_tag` */
 
-insert  into `tbl_tag`(`id`,`name`,`alias`,`created_time`) values (3,'tag 1','tag-1','2016-08-16 13:22:04'),(4,'tag 2','tag-2','2016-08-16 13:22:04'),(5,'tag 3','tag-3','2016-08-16 13:22:05'),(6,'tag 4','tag-4','2016-08-16 13:22:52'),(7,'bai viet 1','bai-viet-1','2016-08-17 15:20:19'),(8,'bai viet so 1','bai-viet-so-1','2016-08-17 15:20:19'),(9,'post title','post-title','2016-08-17 15:26:40'),(10,'post title 1','post-title-1','2016-08-17 15:26:40'),(11,'記事のタイトル','記事のタイトル','2016-08-17 15:29:43'),(12,'記事のタイトル1','記事のタイトル1','2016-08-17 15:29:44');
+insert  into `tbl_tag`(`id`,`name`,`alias`,`viewed`,`created_time`) values (3,'tag 1','tag-1',0,'2016-08-16 13:22:04'),(4,'tag 2','tag-2',0,'2016-08-16 13:22:04'),(5,'tag 3','tag-3',0,'2016-08-16 13:22:05'),(6,'tag 4','tag-4',0,'2016-08-16 13:22:52'),(7,'bai viet 1','bai-viet-1',0,'2016-08-17 15:20:19'),(8,'bai viet so 1','bai-viet-so-1',0,'2016-08-17 15:20:19'),(9,'post title','post-title',0,'2016-08-17 15:26:40'),(10,'post title 1','post-title-1',0,'2016-08-17 15:26:40'),(11,'記事のタイトル','記事のタイトル',0,'2016-08-17 15:29:43'),(12,'記事のタイトル1','記事のタイトル1',0,'2016-08-17 15:29:44'),(13,'san pham','san-pham',0,'2016-08-18 10:11:52'),(14,'san pham 1','san-pham-1',0,'2016-08-18 10:11:52'),(15,'product name','product-name',0,'2016-08-18 10:36:59'),(16,'product name 1','product-name-1',0,'2016-08-18 10:36:59');
 
 /*Table structure for table `tbl_tag_item` */
 
@@ -297,6 +351,8 @@ CREATE TABLE `tbl_tag_item` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='tag, tagging (items)';
 
 /*Data for the table `tbl_tag_item` */
+
+insert  into `tbl_tag_item`(`tag_id`,`item_id`,`context`) values (15,'1','PRODUCT'),(16,'1','PRODUCT');
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

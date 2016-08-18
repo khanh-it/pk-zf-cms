@@ -40,7 +40,12 @@ class Post_Model_DbTable_PostCategory extends Category_Model_DbTable_Category
 // +++ Repo helpers
 	
 	/**
+	 * Insert post - category data
 	 * 
+	 * @param $postId int|string Post's id 
+	 * @param $categoryId int|string Category's id
+	 * @param $options array An array of options
+	 * @return array
 	 */
 	public function insertPostCategory($postId, $categoryId = null, array $options = array()) {
 		// Format data

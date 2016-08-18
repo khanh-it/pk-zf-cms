@@ -9,11 +9,6 @@
  */
 class Product_CategoryController extends K111_Controller_Action
 {
-	/**
-	 * @var string Category's type
-	 */
-	const CATEGORY_TYPE = 'PRODUCT';
-	
     /**
      * (non-PHPdoc)
      * @see Zend_Controller_Action::init()
@@ -24,7 +19,7 @@ class Product_CategoryController extends K111_Controller_Action
 		$this->getRequest()
 			->setParam('_options', array(
 			// Default category's type
-				'type' => self::CATEGORY_TYPE,
+				'type' => Product_Model_DbTable_Product::CATEGORY_TYPE_PRODUCT,
 			// Auto sync module/controller/action for request
 				'syncModuleName' => true,
 				'syncControllerName' => true,

@@ -20,6 +20,7 @@ class Default_Form_Account_Profile extends Twitter_Bootstrap3_Form
         $elements[] = $element = $this->createElement('text', 'username', array(
             'label' => $txt = $view->translate('Tên đăng nhập'),
             'placeholder' => $txt,
+            'class' => 'form-control input-sm',
             'readonly' => 'readonly',
             'disabled' => 'disabled',
             'ignore' => true,
@@ -29,6 +30,7 @@ class Default_Form_Account_Profile extends Twitter_Bootstrap3_Form
         $elements[] = $element = $this->createElement('text', 'fullname', array(
             'label' => $txt = $view->translate('Tên tài khoản'),
             'placeholder' => $txt,
+            'class' => 'form-control input-sm',
             'maxlength' => 250,
             'required' => true,
             'order' => ($eleOrder += 100)
@@ -37,6 +39,7 @@ class Default_Form_Account_Profile extends Twitter_Bootstrap3_Form
         $elements[] = $element = $this->createElement('password', 'password', array(
             'label' => $txt = $view->translate('Mật khẩu'),
             'placeholder' => $txt,
+            'class' => 'form-control input-sm',
             'maxlength' => 50,
             'description' => $view->translate('Nhập thông tin mật khảu mới nếu muốn thay đổi.'),
             'order' => ($eleOrder += 100),

@@ -3,8 +3,8 @@
  * 
  * @author khanhdtp
  * @MCAInfo({
- 	"name": "Group controller",
-	"info": "Group of accounts"
+ 	"name": "Nhóm tài khoản",
+	"info": "Quản lý nhóm tài khoản"
 })
  */
 class GroupController extends K111_Controller_Action

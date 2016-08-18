@@ -86,8 +86,8 @@ class Post_Model_DbTable_Post extends K111_Db_Table
 	/**
 	 * Return post's images uploaded web path
 	 * 
-	 * @param $type string Post's type
 	 * @param $imgs string|array Post's images
+	 * @param $type string Post's type
 	 * @return string|array
 	 */
 	public static function returnImgsWebPath($imgs, $type) {
