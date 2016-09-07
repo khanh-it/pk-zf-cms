@@ -51,12 +51,6 @@ $configs = array(
 		),
 		
 		'resources' => array(
-		// +++ Layout
-			'layout' => array(
-				'layout' => 'default',
-				'layoutPath' => "{$data['app_path']}/sites/{$data['app_site']}/_layouts/scripts/MALight",
-			),
-		// End.Layout
 		// +++ Multi modules
 			'modules' => true,
 		// End.Multi modules
@@ -86,7 +80,7 @@ $configs = array(
 					'minifyHeadScriptAction' => !isset($_GET['minHeadScriptAction'])
 				),
 			),
-		// Edn.Front controller
+		// End.Front controller
 		// +++ Cache manager
 			'cacheManager' => array(
 			// Used to cache hole page.

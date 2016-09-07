@@ -114,7 +114,6 @@ class K111_View_Helper_HeadLink extends Zend_View_Helper_HeadLink {
 		if (!self::$minify) {
 			return parent::toString($indent);
 		}
-		die('MinifyHeadLink');
 		
 		$indent = (null !== $indent) ? $this->getWhitespace($indent) : $this->getIndent();
 		$trimmedBaseUrl = trim($this->getBaseUrl(), '/');

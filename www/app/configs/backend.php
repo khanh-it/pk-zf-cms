@@ -7,10 +7,18 @@ $configs = array(
 // +++ default section
 	'__default' => array(
 		'resources' => array(
+		// +++ Layout
+			'layout' => array(
+				'layout' => 'default',
+				'layoutPath' => APPLICATION_PATH . "/sites/" . APPLICATION_SITE . "/_layouts/scripts/MALight",
+			),
+		// End.Layout
+		// +++ Front controller
 			'frontController' => array(
 				'baseUrl' => '/admincp/'
 			)
 		)
+		// End.Front controller
 	),
 // +++ `development` section
 	'development' => array(),

@@ -178,7 +178,6 @@ class K111_View_Helper_HeadScript extends Zend_View_Helper_HeadScript {
 		if (!self::$minify) {
 			return parent::toString($indent);
 		}
-		die('MinifyHeadScript');
 		
 		// An array of Script Items to be rendered
 		$items = array();
