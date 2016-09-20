@@ -1,0 +1,120 @@
+<?php
+/**
+ * Script view: list post
+ * @author khanhdtp
+ */
+// Get Zend_Controller_Front;
+$front = Zend_Controller_Front::getInstance();
+
+// Toolbars
+$this->Bt3NavLinks(array(
+    $this->Bt3NavLinks()->iconNew(),
+    $this->Bt3NavLinks()->iconDelete()
+));
+?>
+<div id="controller" class="card">
+	<!-- card-header -->
+	<div class="card-header">
+		<?php
+			// Filter form;
+			echo $this->Bt3FilterForm()->render($this->form, $this->formSearch);
+		?><br/>
+		<h2>
+			<small><?php
+			  	echo $this->translate('Tổng số dòng') . ': ' . ($totalItemsCount = $this->paginator->getTotalItemCount()) . '.';
+			?></small>
+		</h2>
+	</div>
+	<!-- ./card-header -->
+	<form id="admin-form" class="card-body table-responsive" enctype="application/x-www-form-urlencoded" method="post" action="">
+		<table id="tbl-data-list" class="table table-bordered table-condensed table-hover">
+            <thead>
+                <tr>
+					<th width="10">#</th>
+					<th width="10" class="text-center">
+						<?php echo $this->Bt3ManageTools()->mToolCheckerToggler(); ?>
+					</th>
+					<th><?php echo $this->Bt3ManageTools()->mToolSorter($this->translate('Mã cấu hình'), 'code'); ?></th>
+					<th><?php echo $this->Bt3ManageTools()->mToolSorter($this->translate('Tên cấu hình'), 'name'); ?></th>
+					<th><?php echo $this->translate('Ghi chú'); ?></th>
+					<th width="10">
+						<abbr title="<?php echo $this->translate('Quản lý'); ?>">
+							<?php echo $this->translate('Q.Lý?'); ?>
+						</abbr>
+					</th>
+				</tr>
+            </thead>
+            <tbody>
+        <?php
+            if ($totalItemsCount):
+				// Manage tools 
+				$manageBtnLinks = array(
+					'lang' => $this->Bt3ManageTools()->mBtnLang(),
+					'detail' => $this->Bt3ManageTools()->mBtnDetail(),
+					'edit' => $this->Bt3ManageTools()->mBtnEdit(),
+					'delete' => $this->Bt3ManageTools()->mBtnDelete(),
+				);
+                //
+                $no = 0;
+                //
+                foreach ($this->paginator as $item):
+					// Available languages
+					$availLangs = (array)array_keys($item->findChildrenEntry());
+        ?>
+				<tr>
+					<td align="center" class="text-nowrap"><?php echo ++$no; ?></td>
+					<td align="center" class="text-center">
+						<?php echo $this->Bt3ManageTools()->mToolChecker($item->id); ?>
+					</td>
+					<td>
+						<?php echo $item->code; ?>
+					</td>
+					<td>
+						<div class="clearfix lang-icons lang-icons-16">
+							<?php echo Language::renderLangIcons($availLangs); ?>
+						</div>
+						<?php echo $item->name; ?>
+					</td>
+					<td><?php echo $item->note; ?></td>
+					<td class="text-nowrap">
+					<?php
+						$manageBtns = array(
+							'__lang_' => str_replace(array('__id__'), array($item->id), $manageBtnLinks['lang']),
+							'__detail_' => str_replace(array('__id__'), array($item->id), $manageBtnLinks['detail']),
+							'__update_' => str_replace(array('__id__'), array($item->id), $manageBtnLinks['edit']),
+							'__delete_' => str_replace(array('__id__'), array($item->id), $manageBtnLinks['delete'])
+						);
+						echo implode("\n", $manageBtns);
+					?>
+					</td>
+				</tr>
+        <?php 
+                endforeach;
+            endif;
+        ?>
+			</tbody>
+		</table>
+	</form>
+	<!-- /.box-body -->
+	<div class="card-header clearfix">
+        <div class="pull-right">
+            <?php
+                echo $this->paginationControl($this->paginator); 
+            ?>
+        </div>
+	</div>
+</div>
+<?php
+// CSS:
+// +++ Inline style;
+$this->HeadStyleAction($this->curRequest, array(), array(
+	'module' => 'default',
+	'controller' => 'conf'
+));
+
+// CSS:
+// +++ Inline script;
+$this->HeadScriptAction($this->curRequest, array(), array(
+	'module' => 'default',
+	'controller' => 'conf'
+));

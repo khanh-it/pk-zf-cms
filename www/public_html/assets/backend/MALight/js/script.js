@@ -10,6 +10,104 @@
 })(jQuery);
 
 /**
+ * Force numeric input for textbox elements.
+ * @author khanhdtp
+ */
+(function($) {
+	// Check helpers
+	//if (!$.phpjs) { return !console.log('Missing lib `$.phpjs`.'); }
+	//  Selector.
+	var numericInputsSelector = "input[type='text'].numeric:not([readonly]):not(:disabled)";
+	//	Special chars.
+	var decPoint = ",", thousandPoint = ".", minusSign = "-", plusSign = "+";
+	// 	Bien: 
+	// +++ dung kiem tra xem su kien change da duoc thuc thi?
+	var inputLastKeydownVal = null;
+	$(document)
+		.on("keydown", numericInputsSelector, function(evt) {
+			inputLastKeydownVal = this.value;
+		})
+		.on("keypress paste", numericInputsSelector, function(evt) {
+			var kpTest = true,
+			    isCmdKey = ($.inArray(evt.which, [8, 9, 13, 0]) != -1)
+			;
+			if (!(evt.ctrlKey || isCmdKey)) {
+				var jThis = $(this), curVal = jThis.val();
+				//	Get charCode.
+				var charCode = String.fromCharCode(evt.which).toLowerCase();
+				if (// TH: trung dau so thap phan;
+					( (curVal.indexOf(decPoint) >= 0) && (charCode == decPoint) )
+					// TH: trung dau "-";
+					|| ( (curVal.indexOf(minusSign) >= 0) && (charCode == minusSign) )
+					// TH: trung dau "+"; 
+					|| ( (curVal.indexOf(plusSign) >= 0) && (charCode == plusSign) )
+				) {
+					return false;
+				}
+				kpTest = new RegExp("["/* +  thousandPoint*/
+				+ (jThis.hasClass("integer") ? "" : decPoint) + (jThis.hasClass("positive") ? "" : "\\-") + "0-9]").test(charCode);
+			}
+			//	Return;
+			return kpTest;
+		}).on("keyup", numericInputsSelector, function(evt) {
+			return;
+			var jThis = $(this), curVal = jThis.val();
+			// Cho phep nhap dau "-" o dau;
+			if (!jThis.hasClass("positive") && (minusSign == curVal)) { return true; }
+			// Cho phep nhap dau phan cach thap phan o cuoi;
+			if (!jThis.hasClass("integer") && (curVal.length > 1) &&  (decPoint == curVal[curVal.length - 1])) { return true; }
+			// Cho phep nhap so "0" o cuoi;
+			if ((curVal.indexOf(decPoint) >= 0) && ("0" == curVal[curVal.length - 1])) {
+				if (curVal.split(decPoint).pop().length < $.phpjs.MAX_DECIMALS) { return true; }
+			}
+			//  Ko can format du lieu.
+			    noFormat = jThis.hasClass('no-format __no-format__'),
+			//  Gia tri nhap
+			    newVal = (noFormat ? curVal : $.phpjs.escapeVnNumberFormat(curVal)),
+			//  Ko cho nhap so 0 (zero).
+			    noZero = jThis.hasClass('no-zero'),
+			//  Gioi han min: toi thieu.
+			    min = parseFloat(jThis.attr('data-min')),
+			//  Gioi han max: toi da.
+			    max = parseFloat(jThis.attr('data-max'))
+			;
+			//  Case: no zero allowed.
+			if (noZero && ("" != newVal) && (0 == (1 * newVal))) {
+				return !jThis.val("");
+			}
+			//  Case: min.
+			if (!isNaN(min) && ("" != newVal) && ((1 * newVal) < min)) {
+				return !jThis.val(noFormat ? min : $.phpjs.vnNumberFormat(min));
+			}
+			//  Case: max.
+			if (!isNaN(max) && ("" != newVal) && ((1 * newVal) > max)) {
+				return !jThis.val(noFormat ? max : $.phpjs.vnNumberFormat(max));
+			}
+			//  Format data output?
+			if (!noFormat && (curVal != inputLastKeydownVal)) {
+				var selectionEnd = 1 * (this && this.selectionEnd),
+				    newVal = $.phpjs.vnNumberFormat(newVal)
+				;
+				if (curVal != newVal) {
+					newVal = ((0 == (1 * newVal)) && noZero) ? "" : newVal;
+					jThis.val(newVal).prop('selectionEnd', selectionEnd + ((newVal && newVal.length) - (curVal && curVal.length)));
+				}
+			}
+		})
+		.on("focusin", numericInputsSelector, function(evt) {
+			var lastVal = this.value, changed = false;
+			$(this).one("change", function(){ changed = true; })
+				.one("focusout", function(evt){
+					if (!changed && (lastVal != this.value)) {
+						$(this).trigger(new jQuery.Event('change', {originalEvent: evt.originalEvent}));
+					}
+				})
+			;
+		})
+	;
+})(jQuery);
+
+/**
  * Gallery popup
  * @author khanhdtp
  */

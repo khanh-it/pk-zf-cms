@@ -139,8 +139,22 @@ class Product_Form_Product_Crud extends Twitter_Bootstrap3_Form
 			->setOption('tag', 'small')
 		;
 		// +++
-		$elements[] = $element = $this->createElement('textarea', 'content', array(
-            'label' => $txt = $view->translate('Thông tin sản phẩm'),
+		$elements[] = $element = $this->createElement('textarea', 'content_short', array(
+            'label' => $txt = $view->translate('Thông tin sản phẩm (rút gọn)'),
+            'placeholder' => $txt,
+            'attribs' => array(
+            	'rows' => 6,
+            	'data-ckeditor' => json_encode(array(
+            		'toolbar' => 'Basic', // Use toolbar `basic`
+            		'filebrowser' => $kcfinderType
+				))
+			),
+			'class' => 'form-control input-sm',
+            'order' => ($eleOrder += 100)
+        ));
+		// +++
+		$elements[] = $element = $this->createElement('textarea', 'content_full', array(
+            'label' => $txt = $view->translate('Thông tin sản phẩm (đầy đủ)'),
             'placeholder' => $txt,
             'attribs' => array(
             	'rows' => 6,

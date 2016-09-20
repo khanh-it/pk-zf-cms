@@ -18,6 +18,30 @@ return array(
         'class' => '',
         'uri' => 'javascript:void(0);',
         'pages' => array(
+        	// conf //
+	        'conf' => array(
+	            'label' => '[i class="zmdi zmdi-layers"][/i] [span]Cấu hình[/span] [i class="fa fa-angle-left pull-right"][/i]',
+	            'class' => '',
+	            'uri' => 'javascript:void(0);',
+	            'pages' => array(
+	                //
+	                'index' => array(
+	                	'label' => '[i class="zmdi zmdi-layers"][/i] [span]Danh sách[/span]',
+	                    'module' => 'default',
+	                    'controller' => 'conf',
+	                    'action' => 'index',
+	                ),
+	                //
+	                'insert' => array(
+	                    'label' => '[i class="zmdi zmdi-layers"][/i] [span]Thêm mới[/span]',
+	                    'module' => 'default',
+	                    'controller' => 'conf',
+	                    'action' => 'insert',
+	                ),
+	            )
+	        ),
+	        // end.conf //
+	        
 	        // group
 	        'group' => array(
 	            'label' => '[i class="zmdi zmdi-layers"][/i] [span]Nhóm tài khoản[/span] [i class="fa fa-angle-left pull-right"][/i]',

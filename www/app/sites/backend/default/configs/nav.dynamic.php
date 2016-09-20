@@ -12,6 +12,59 @@ $reqParams = $frontReq->getParams();
 return array(
 	'default' => array(
         'pages' => array(
+        	// conf //
+		    'conf' => array(
+		        'pages' => array(
+		            //
+		            'index' => array(
+		                'pages' => array(
+		                	// Create
+				            'create' => array(
+				                'label' => '[i class="zmdi zmdi-layers"][/i] [span]Thêm mới[/span]',
+				                'module' => 'default',
+				                'controller' => 'conf',
+				                'action' => 'create',
+				                'visible' => false,
+				            ),
+				            // Update
+				            'update' => array(
+				                'label' => '[i class="zmdi zmdi-layers"][/i] [span]Cập nhật[/span]',
+				                'module' => 'default',
+				                'controller' => 'conf',
+				                'action' => 'update',
+				                'visible' => false,
+				                'params' => array(
+				                	'id' => $reqParams['id'], 
+								)
+				            ),
+				            // Detail
+				            'detail' => array(
+				                'label' => '[i class="zmdi zmdi-layers"][/i] [span]Xem chi tiết[/span]',
+				                'module' => 'default',
+				                'controller' => 'conf',
+				                'action' => 'detail',
+				                'visible' => false,
+				                'params' => array(
+				                	'id' => $reqParams['id'], 
+								)
+				            ),
+				            // Language
+				            'language' => array(
+				                'label' => '[i class="zmdi zmdi-layers"][/i] [span]Dịch ngôn ngữ[/span]',
+				                'module' => 'default',
+				                'controller' => 'conf',
+				                'action' => 'language',
+				                'visible' => false,
+				                'params' => array(
+				                	'id' => $reqParams['id'], 
+								)
+				            )
+						)
+		            ),
+		        )
+		    ),
+		    // end.conf //
+			
 			// group //
 		    'group' => array(
 		        'pages' => array(

@@ -49,6 +49,17 @@ return array(
 				                'params' => array(
 				                	'id' => $reqParams['id'], 
 								)
+				            ),
+				            // Language
+				            'language' => array(
+				                'label' => '[i class="zmdi zmdi-layers"][/i] [span]Dịch ngôn ngữ[/span]',
+				                'module' => 'product',
+				                'controller' => 'category',
+				                'action' => 'language',
+				                'visible' => false,
+				                'params' => array(
+				                	'id' => $reqParams['id'], 
+								)
 				            )
 						)
 		            ),
@@ -86,6 +97,17 @@ return array(
 				                'module' => 'product',
 				                'controller' => 'product',
 				                'action' => 'detail',
+				                'visible' => false,
+				                'params' => array(
+				                	'id' => $reqParams['id'], 
+								)
+				            ),
+				            // Language
+				            'language' => array(
+				                'label' => '[i class="zmdi zmdi-layers"][/i] [span]Dịch ngôn ngữ[/span]',
+				                'module' => 'product',
+				                'controller' => 'product',
+				                'action' => 'language',
 				                'visible' => false,
 				                'params' => array(
 				                	'id' => $reqParams['id'], 
