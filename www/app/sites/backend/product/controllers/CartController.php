@@ -110,54 +110,45 @@ class Product_CartController extends K111_Controller_Action
 	}
 	
 	/**
-	 * CRUD
-	 * @param $options array An array of options
+	 * Action: create new data;
 	 * @return void
 	 */
-	protected function _crud(array $options = array()) 
+	public function createAction()
 	{
-		// Get, format options
-		$entity = $options['entity'];
-		// +++ Flag: is update mode?
-		$options['isActUpdate'] = ('update' == $options['act']); 
-		// +++ Flag: is detail mode?
-		$options['isActDetail'] = ('detail' == $options['act']);
+		return $this->_crud();
+	}
+	
+	/**
+	 * Action: update data # logs;
+	 * @return void
+	 */
+	public function updateAction()
+	{
+		// Get params
+		// +++ Data ID;
+		$id = $this->_getParam('id');
 		
-	    // Define var # view's data;
-	    $vData = array();
-		// +++ @var Default_Model_DbTable_Util_Phrase
-		$vData['phrUtil'] = $phrUtil = Default_Model_DbTable_Util_Phrase::getInstance();
-		// +++ @var Default_Model_DbTable_Util_Tag
-		$vData['tagUtil'] = $tagUtil = Default_Model_DbTable_Util_Tag::getInstance();
+		// Define data
+		$vData = array();
 		
-		// Get language info
-		list($langKey, $langData) = Language::getDefault();
+		// Fetch data
+		$entity = $this->_repo->fetchRow(array(
+			'id = ?' => $id
+		));
 		
-	    // Define var # form;
-	    $vData['form'] = $form = new Product_Form_Product_Crud(array(
+		// Check data valid?
+		if (!$entity) {
+			throw new Exception($this->view->translate('Data not found!'), 500);
+		}
+		
+		// Define var # form;
+	    $vData['form'] = $form = new Product_Form_Cart_Log(array(
 	    // +++ Controller's options
 	    	'controllerOptions' => $this->_options
 		));
-		// +++ Load Tagging Tools Elements
-		$phrUtil->buildFormTaggingToolsElements($form);
-		// +++ Load SEO Tools elements
-		$phrUtil->buildFormSEOToolsElements($form);
-		// +++ Disable elements on detail mode
-		if ($options['isActDetail']) {
-			foreach ($form->getElements() as $ele) {
-				$ele->setAttrib('disabled', 'disabled');
-			}
-			unset($ele);
-		}
-		// +++ Category
-		$cateOpts = $this->_repoCategory->flatternDataRecursive(
-			$this->_repoCategory->fetchDataRecursive(),
-			array('build_option' => true)
-		);
-		$form->category_id && $form->category_id->setMultiOptions($cateOpts);
 		
-	    // Process on POST
-	    if ($this->_request->isPost() && !$options['isActDetail']) {
+		// Process on POST
+	    if ($this->_request->isPost()) {
 	        // Get post data
 	        $postData = $this->_request->getPost();
 			
@@ -165,83 +156,23 @@ class Product_CartController extends K111_Controller_Action
 	        if ($form->isValid($postData)) {
 	        	// Get form data;
 	            $formValues = $form->getValues();
-				// +++ type
-				$formValues['type'] = $this->_options['type'];
-				// +++ Make alias
-				$formValues['alias'] = $this->_helper->common->str2Alias(
-					$formValues['alias'] ?: $formValues['name']
-				);
-				
-				// Extract phrase data
-				$phrData = $phrUtil->extractPhrData($formValues);
-				if (!$options['isActUpdate']) {
-					$phrData = array_filter($phrData);
-				}
-					
-				// Check duplicate data!
-				// +++ Code
-		        $dataExists = $this->_repo->checkExistsByCode(
-		        	$formValues['code'], array('exclude_id' => array($entity->id))
-				);
-	            if ($dataExists) {
-		            $form->getElement('code')
-						->addError($txt = $this->view->translate('Mã giỏ hàng đã tồn tại!'))
-		            ;
-	            }
-				// +++ Sku
-		        $dataExists = $this->_repo->checkExistsBySku(
-		        	$formValues['sku'], array('exclude_id' => array($entity->id))
-				);
-	            if ($dataExists) {
-		            $form->getElement('code')
-						->addError($txt = $this->view->translate('Mã sku đã tồn tại!'))
-		            ;
-	            }
 				
 	            // Form has no errors?
 	            if (!$form->hasErrors()) {
 	                // Create new entity (if not any)
-    	            $entity = $entity ?: $this->_repo->fetchNew();
+    	            $cartLogEnt = $this->_repoCartLog->fetchNew();
     	            // Fill entity data 
-    	            $entity->setFromArray(array_merge($formValues,
-						$options['isActUpdate']
-					// +++ Case: update
-						? array(
-							'last_modified_account_id' => $this->_authIdentity->id,
-	    	                'last_modified_time' => date('Y-m-d H:i:s'),
-						) 
-					// +++ Case: create
-	    	            : array(
-	    	                'create_account_id' => $this->_authIdentity->id,
-	    	            )
-					));
+    	            $cartLogEnt->setFromArray(array_merge($formValues, array(
+    	            	'cart_id' => $entity->id,
+    	                'create_account_id' => $this->_authIdentity->id,
+    	            )));
     	            // +++ Get last insert id (if any)
-    	            $entityId = $entity->save();
+    	            $cartLogId = $cartLogEnt->save();
 					
-					// Save ProductCategory data
-					$this->_repoCartDetail->insertProductCategory(
-						$entity->id, $formValues['category_id'], array(
-						// Opitons
-						// +++ clean old product data
-							'clean_old_product_data' => true,
-						// +++ Creator
-							'create_account_id' => $this->_authIdentity->id
-						)
-					);
-					
-					// Save phrase data?
-					if ($langKey && !empty($phrData)) {
-						$phrUtil->savePhrase(
-							Product_Model_DbTable_Product::PHRASE,
-							$entity->id, $langKey, $phrData
-						);
-					}
-					
-					// Save tag data?
-					$tagUtil->saveTag(
-						Product_Model_DbTable_Product::TAG,
-						$entity->id, $phrData['tags_str']
-					);
+					// Reupdate cart's process status
+					$entity->process_status = $cartLogEnt->process_status;
+					$entity->process_log = $cartLogEnt->content;
+					$entity->save();
 					
     	            // Inform
     	            $this->_helper->flashMessenger->addMessage(
@@ -281,71 +212,21 @@ class Product_CartController extends K111_Controller_Action
     	            }
 	            }
 	        }
-
-		// Case: on page's first load
-	    } else {
-	    	// Fill form's data;
-	    	if ($entity) {
-		    	// +++ 
-				$formData = $entity->toArray();
-				// +++ Category
-				$arrCategoryRowByProduct = $entity->findChildrenProductCategory();
-				$formData['category_id'] = array_keys($arrCategoryRowByProduct);
-				// +++ Phrase Data # SEO TOOLS
-				$phrData = (array)$entity->findChildrenEntry($langKey);
-				$formData = array_merge($formData, $phrUtil->prefixPhrData($phrData));
-				// +++ 
-				$form->populate($formData);
-			}
-		}
-	    
-	    // Render view
+	    }
+		
+		// Render view
 	    $this->view->assign(array_merge($vData, array(
 	    // +++ Controller options
-	    	'contOpts' => $options
+	    	'contOpts' => $options,
+	    // +++ Entity data
+	    	'entity' => $entity
 		)));
 		// +++ Render script
-		$this->renderScript('index/crud.phtml');
+		$this->renderScript('cart/update.phtml');
 	}
 	
 	/**
-	 * Action: create new data;
-	 * @return void
-	 */
-	public function createAction()
-	{
-		return $this->_crud();
-	}
-	
-	/**
-	 * Action: update data;
-	 * @return void
-	 */
-	public function updateAction()
-	{
-		// Get params
-		// +++ Data ID;
-		$id = $this->_getParam('id');
-		
-		// Fetch data
-		$entity = $this->_repo->fetchRow(array(
-			'id = ?' => $id, 'type = ?' => $this->_options['type']
-		));
-		
-		// Check data valid?
-		if (!$entity) {
-			throw new Exception($this->view->translate('Data not found!'), 500);
-		}
-		
-		// Forward request;
-		return $this->_crud(array(
-			'entity' => $entity,
-			'act' => 'update' 
-		));
-	}
-	
-	/**
-	 * Action: update data;
+	 * Action: view detail;
 	 * @return void 
 	 */
 	public function detailAction() 
@@ -354,9 +235,12 @@ class Product_CartController extends K111_Controller_Action
 		// +++ Data ID;
 		$id = $this->_getParam('id');
 		
+		// Define data
+		$vData = array();
+		
 		// Fetch data
 		$entity = $this->_repo->fetchRow(array(
-			'id = ?' => $id, 'type = ?' => $this->_options['type']
+			'id = ?' => $id
 		));
 		
 		// Check data valid?
@@ -364,191 +248,26 @@ class Product_CartController extends K111_Controller_Action
 			throw new Exception($this->view->translate('Data not found!'), 500);
 		}
 		
-		// Forward request;
-		return $this->_crud(array(
-			'entity' => $entity,
-			'act' => 'detail' 
+		// Define var # form;
+	    $vData['form'] = $form = new Product_Form_Cart_Crud(array(
+	    // +++ Controller's options
+	    	'controllerOptions' => $this->_options
 		));
-	}
-	
-	/**
-	 * Action: delete;
-	 * @return void
-	 */
-	public function deleteAction()
-	{
-		// Get params
-		// +++ Data ID;
-		$id = (array)$this->_request->getPost('id');
-		$id = array_filter($id);
-		
-		// Fetch data
-		$entities = $this->_repo->fetchAll(array(
-			'id IN (?)' => $id, 'type = ?' => $this->_options['type']
-		));
-		
-		// Check data valid?
-		if (!count($entities)) {
-			throw new Exception($this->view->translate('Data not found!'), 500);
+		foreach ($form->getElements() as $ele) {
+			$ele->setAttrib('disabled', 'disabled');
 		}
-		if (count($id) != count($entities)) {
-			throw new Exception($this->view->translate('Data count not matched!'), 500);
-		}
+		unset($ele);
+		// +++ Fill form's data
+		$form->populate($entity->toArray());
 		
-		// Loop, delete data;
-		foreach ($entities as $entity) {
-			$entity->delete();
-		}
-		
-		// Inform
-        $this->_helper->flashMessenger->addMessage(
-            $this->view->translate('Xóa dữ liệu thành công!'),
-            'layout-messages'
-        );
-		
-		// Redirect
-		if ($_SERVER['HTTP_REFERER']) {
-			header("Location: {$_SERVER['HTTP_REFERER']}");
-			die();
-		}
-		$this->_helper->redirector(
-            null,
-            $this->_request->getControllerName(),
-            $this->_request->getModuleName(),
-            array('id' => null)
-        );
-	}
-
-	/**
-	 * Action: language;
-	 * @return void
-	 */
-	public function languageAction()
-	{
-		// Get params
-		// +++ Data ID;
-		$id = $this->_getParam('id');
-		// +++ Selected lang;
-		$lang = $this->_getParam('lang');
-		
-		// Fetch data
-		$entity = $this->_repo->fetchRow(array(
-			'id = ?' => $id, 'type = ?' => $this->_options['type']
-		));
-		
-		// Check data valid?
-		if (!$entity) {
-			throw new Exception($this->view->translate('Data not found!'), 500);
-		}
-		
-	    // Define var # view's data;
-	    $vData = array();
-		// +++ Entity object
-		$vData['entity'] = $entity;
-		// +++ @var Default_Model_DbTable_Util_Phrase
-		$vData['phrUtil'] = $phrUtil = Default_Model_DbTable_Util_Phrase::getInstance();
-		// +++ @var Default_Model_DbTable_Util_Tag
-		$vData['tagUtil'] = $tagUtil = Default_Model_DbTable_Util_Tag::getInstance();
-		
-		// Get language info
-		// +++ List of languages
-		$vData['languages'] = Language::get();
-		// +++ Default language
-		list($dfLangKey) = Language::getDefault();
-		unset($vData['languages'][$dfLangKey]);
-		// +++ Selected language 
-		if ($vData['langData'] = $vData['languages'][$lang]) {
-			$vData['langKey'] = $lang;
-		} else {
-			$vData['langKey'] = key($vData['languages']);
-			$vData['langData'] = $vData['languages'][$vData['langKey']];
-		}
-		
-	    // Define var # form;
-	    $vData['form'] = $form = new Product_Form_Product_Lang();
-		// +++ Load Tagging Tools elements
-		$phrUtil->buildFormTaggingToolsElements($form, array(
-			'element_name_prefix' => ''
-		));
-		// +++ Load SEO Tools elements
-		$phrUtil->buildFormSEOToolsElements($form, array(
-			'element_name_prefix' => ''
-		));
-		
-	    // Process on POST
-	    if ($this->_request->isPost()) {
-	        // Get post data
-	        $postData = $this->_request->getPost();
-	        
-	        // Check form valid?
-	        if ($form->isValid($postData)) {
-	        	// Get form data;
-	            $formValues = $form->getValues();
-				// +++ Make alias
-				$formValues['alias'] = $this->_helper->common->str2Alias(
-					$formValues['alias'] ?: $formValues['name']
-				);
-				
-	            // Form has no errors?
-	            if (!$form->hasErrors()) {
-					// Save phrase data? 
-					$phrUtil->savePhrase(
-						Product_Model_DbTable_Product::PHRASE,
-						$entity->id, $vData['langKey'], $formValues
-					);
-					
-					// Save tag data?
-					$tagUtil->saveTag(
-						Product_Model_DbTable_Product::TAG,
-						$entity->id, $formValues['tags_str']
-					);
-				
-    	            // Inform
-    	            $this->_helper->flashMessenger->addMessage(
-    	                $this->view->translate('Dịch ngôn ngữ thành công!'),
-    	                'layout-messages'
-                    );
-    	            
-    	            // Redirect
-    	            switch ($postData['_act']) {
-    	            	// +++ apply
-    	                case 'apply' : {
-                            $this->_helper->redirector(
-                                $this->_request->getActionName(),
-                                $this->_request->getControllerName(),
-                                $this->_request->getModuleName(),
-                                array(
-                                	'id' => $entity->id,
-                                	'lang' => $vData['langKey']
-								)
-                            );
-    	                } break;
-    	                // +++ save_n_close
-    	                case 'save_n_close' : {
-    	                    $this->_helper->redirector(
-    	                        null,
-    	                        $this->_request->getControllerName(),
-    	                        $this->_request->getModuleName(),
-    	                        array('id' => null, 'lang' => null)
-    	                    );
-    	                } break;
-    	            }
-	            }
-	        }
-
-		// Case: on page's first load
-	    } else {
-	    	// Fill form's data;
-			// +++ Phrase data
-			$phrData = (array)$entity->findChildrenEntry($vData['langKey']);
-			// +++ 
-			$form->populate($phrData);
-		}
-	    
-	    // Render view
+		// Render view
 	    $this->view->assign(array_merge($vData, array(
+	    // +++ Controller options
+	    	'contOpts' => $options,
+	    // +++ Entity data
+	    	'entity' => $entity
 		)));
 		// +++ Render script
-		$this->renderScript('index/language.phtml');
+		$this->renderScript('cart/detail.phtml');
 	}
 }

@@ -1,0 +1,69 @@
+<?php
+/**
+ * Script view: cart # detail
+ * @author khanhdtp
+ */
+// Get K111_AssetsFinder
+$assetsFinder = K111_AssetsFinder::getInstance();
+
+// Toolbars
+$this->Bt3NavLinks(array(
+	$this->Bt3NavLinks()->iconEdit(null, $this->translate('Ghi logs xử lý')),
+    $this->Bt3NavLinks()->iconClose()
+));
+?>
+<div id="controller" class="card">
+	<div class="card-body card-padding">
+	<?php 
+	    // Render form
+	    echo $this->form;
+	?>
+	</div>
+	<?php // Cart details... ?>
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h2 class="panel-title">
+				<a id="cart-details" href="#cart-details"><?php echo $this->translate('Thông tin sản phẩm'); ?>:</a>
+			</h2>
+		</div>
+		<?php 
+		    // Render cart's details
+		    echo $this->partial('cart/detail[cart-details].phtml', null, array(
+		    	'entity' => $this->entity
+			));
+		?>
+	</div>
+	<?php // Cart logs... ?>
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h2 class="panel-title">
+				<a id="cart-logs" href="#cart-logs">
+					<?php echo $this->translate('Thông tin logs'); ?>:
+				</a>
+			</h2>
+		</div>
+		<?php 
+		    // Render cart's details
+		    echo $this->partial('cart/detail[cart-logs].phtml', null, array(
+		    	'entity' => $this->entity
+			));
+		?>
+	</div>
+</div>
+<?php
+// CSS:
+// +++ Inline style;
+$this->HeadStyleAction($this->curRequest, null, array(
+	'module' => 'product',
+	'controller' => 'cart',
+	'action' => 'crud'
+));
+
+// JS:
+// +++ Libs:
+// +++ Inline script;
+$this->HeadScriptAction($this->curRequest, null, array(
+	'module' => 'product',
+	'controller' => 'cart',
+	'action' => 'crud'
+));

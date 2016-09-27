@@ -6,6 +6,10 @@
 // Get Zend_Controller_Front;
 $front = Zend_Controller_Front::getInstance();
 
+// Controller helpers
+/* @var K111_Controller_Action_Helper_Common */
+$commonHelper = $this->curController->getHelper('common');
+
 // Toolbars
 $this->Bt3NavLinks(array(
     $this->Bt3NavLinks()->iconNew(),
@@ -34,19 +38,39 @@ $this->Bt3NavLinks(array(
 					<th width="10" class="text-center">
 						<?php echo $this->Bt3ManageTools()->mToolCheckerToggler(); ?>
 					</th>
-					<th><?php echo $this->Bt3ManageTools()->mToolSorter($this->translate('Tên sản phẩm'), 'name'); ?></th>
-					<th width="10" class="text-nowrap"><?php echo $this->translate('Hình ảnh'); ?></th>
-					<th><?php echo $this->translate('Ghi chú'); ?></th>
-					<th><?php echo $this->translate('Danh mục'); ?></th>
-					<th width="10">
-                    	<abbr title="<?php echo $this->translate('Lượt xem'); ?>">
-                    		<?php echo $this->translate('L.Xem?'); ?>
-                    	</abbr>
+					<th><?php echo $this->Bt3ManageTools()->mToolSorter($this->translate('Mã đơn hàng'), 'code'); ?></th>
+					<th><?php echo $this->translate('Khách hàng'); ?></th>
+					<th>
+						<abbr title="<?php echo $this->translate('Hình thức thanh toán'); ?>">
+							<?php echo $this->translate('H.T Thanh toán'); ?>
+						</abbr>
+					</th>
+					<th>
+						<abbr title="<?php echo $this->translate('Hình thức vận chuyển'); ?>">
+							<?php echo $this->translate('H.T Vận chuyển'); ?>
+						</abbr>
+					</th>
+					<th>
+                   		<?php echo $this->translate('Gói quà'); ?>
                     </th>
-                    <th width="10">
-                    	<abbr title="<?php echo $this->translate('Kích hoạt?'); ?>">
-                    		<?php echo $this->translate('K.Hoạt?'); ?>
-                    	</abbr>
+                    <th>
+                   		<?php echo $this->translate('Hóa đơn'); ?>
+                    </th>
+					<th>
+                   		<?php echo $this->translate('Tổng tiền'); ?>
+                    </th>
+                    <th>
+                   		<abbr title="<?php echo $this->translate('Trạng thái đơn hàng'); ?>">
+                   			<?php echo $this->translate('T.Thái Đ.Hàng'); ?>
+						</abbr>
+                    </th>
+                    <th>
+                   		<abbr title="<?php echo $this->translate('Trạng thái xử lý'); ?>">
+                   			<?php echo $this->translate('T.Thái X.lý'); ?>
+						</abbr>
+                    </th>
+                    <th>
+                    	<?php echo $this->translate('Ghi chú'); ?>
                     </th>
 					<th width="10">
 						<abbr title="<?php echo $this->translate('Quản lý'); ?>">
@@ -60,29 +84,28 @@ $this->Bt3NavLinks(array(
             if ($totalItemsCount):
 				// Manage tools 
 				$manageBtnLinks = array(
-					'lang' => $this->Bt3ManageTools()->mBtnLang(),
 					'detail' => $this->Bt3ManageTools()->mBtnDetail(),
-					'edit' => $this->Bt3ManageTools()->mBtnEdit(),
-					'delete' => $this->Bt3ManageTools()->mBtnDelete(),
+					'edit' => $this->Bt3ManageTools()->mBtnEdit()
 				);
+				// Cart's options
+				// +++ gift 
+				$giftOpts = Product_Model_DbTable_Cart::returnGifts();
+				// +++ invoice
+				$invoiceOpts = Product_Model_DbTable_Cart::returnInvoices();
+				// +++ payment methods
+				$pmtMethodOpts = Product_Model_DbTable_Cart::returnPaymentMethods();
+				// +++ transport methods
+				$transportMethodOpts = Product_Model_DbTable_Cart::returnTransportMethods();
+				// +++ status
+				$statusOpts = Product_Model_DbTable_Cart::returnStatuses();
+				// +++ process status
+				$processStatusOpts = Product_Model_DbTable_Cart::returnProcessStatuses();
                 //
                 $no = 0;
                 //
                 foreach ($this->paginator as $item):
-					// Available languages
-					$availLangs = (array)array_keys($item->findChildrenEntry());
-					
-					// Categories
-					$categoryEntitiesByProduct = (array)$item->findChildrenProductCategory();
-					$itemCateOpts = array_intersect_key((array)$this->cateOpts, $categoryEntitiesByProduct);
-					// +++ 
-					$categoryHtml = empty($itemCateOpts) ? '' : (
-						'<ol><li>' 
-							. implode('</li><li>', $itemCateOpts)
-						. '</li></ol>' 
-					);
-					// +++ 
-					unset($categoryEntitiesByProduct); 
+					// Creator
+					$creatorEnt = $item->findParentCreator();
         ?>
 				<tr>
 					<td align="center" class="text-nowrap"><?php echo ++$no; ?></td>
@@ -90,60 +113,40 @@ $this->Bt3NavLinks(array(
 						<?php echo $this->Bt3ManageTools()->mToolChecker($item->id); ?>
 					</td>
 					<td>
-						<div class="clearfix lang-icons lang-icons-16">
-							<?php echo Language::renderLangIcons($availLangs); ?>
-						</div>
-						<?php echo $item->name; ?><br/>
-						<small class="m-l-10"><i>[<?php echo $item->alias; ?>]</i></small>
+						<?php echo $item->code; ?>
 					</td>
-					<td align="center" class="text-nowrap">
-					<?php 
-						// Images
-						$imgs = (array)$item->returnImgsWebPath();
-						$firstImg = trim($imgs[0]);
-						if ($firstImg):
-					?>
-						<a class="gallery-popup-trigger" href="#" data-imgs="<?php echo empty($imgs) ? '[]' : htmlspecialchars(json_encode($imgs)); ?>">
-							<img src="<?php echo htmlspecialchars($firstImg); ?>" class="img-thumb img-thumb-64" />
-						</a>
-					<?php
-							unset($firstImg); 
-						endif; 
-					?>
-					</td>
-					<td><?php echo $item->note; ?></td>
 					<td>
-					<?php
-						if (!empty($itemCateOpts)):
-							// Case: has multi category
-							if (($count = count($itemCateOpts)) > 1):
-					?>
-						<a class="a-popover" title="<?php echo $this->translate('Danh mục'); ?>" data-placement="top" data-html="true" data-content="<?php echo htmlspecialchars($categoryHtml) ?>" href="javascript:void(0);">
-							<i class="glyphicon glyphicon-list"></i> <?php echo current($itemCateOpts) . ('...(' . $count . ')')  ?>
-						</a>
-					<?php 
-							else:
-					?>
-						<span><?php echo current($itemCateOpts); ?></span>
-					<?php
-							endif;
-							unset($count);
-						endif; 
-					?>
+						<?php echo $creatorEnt->fullname; ?>
 					</td>
-					<td align="center" class="text-nowrap">
-						<?php echo number_format((int)$item->viewed); ?>
+					<td>
+						<?php echo $pmtMethodOpts[$item->payment_method]; ?>
 					</td>
-					<td align="center" class="text-nowrap">
-						<?php echo $this->Bt3ManageTools()->mToolActiveToggler($item->id, $item->active); ?>
+					<td>
+						<?php echo $transportMethodOpts[$item->transport_method]; ?>
+					</td>
+					<td>
+						<?php echo $giftOpts[$item->gift]; ?>
+					</td>
+					<td>
+						<?php echo $invoiceOpts[$item->invoice]; ?>
+					</td>
+					<td>
+						<?php echo $commonHelper->numberFormat($item->total_price); ?>
+					</td>
+					<td>
+						<?php echo $statusOpts[$item->status]; ?>
+					</td>
+					<td>
+						<?php echo $processStatusOpts[$item->process_status]; ?>
+					</td>
+					<td>
+						<?php echo $item->note; ?>
 					</td>
 					<td class="text-nowrap">
 					<?php
 						$manageBtns = array(
-							'__lang_' => str_replace(array('__id__'), array($item->id), $manageBtnLinks['lang']),
 							'__detail_' => str_replace(array('__id__'), array($item->id), $manageBtnLinks['detail']),
 							'__update_' => str_replace(array('__id__'), array($item->id), $manageBtnLinks['edit']),
-							'__delete_' => str_replace(array('__id__'), array($item->id), $manageBtnLinks['delete'])
 						);
 						echo implode("\n", $manageBtns);
 					?>
@@ -170,12 +173,12 @@ $this->Bt3NavLinks(array(
 // +++ Inline style;
 $this->HeadStyleAction($this->curRequest, array(), array(
 	'module' => 'product',
-	'controller' => 'index'
+	'controller' => 'cart'
 ));
 
 // CSS:
 // +++ Inline script;
 $this->HeadScriptAction($this->curRequest, array(), array(
 	'module' => 'product',
-	'controller' => 'index'
+	'controller' => 'cart'
 ));

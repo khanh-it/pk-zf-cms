@@ -4,6 +4,49 @@
 class Product_Model_DbTable_Cart extends K111_Db_Table
 {
 	/**
+	 * @var int|string Payment method: cash 
+	 */
+	 const PMT_METHOD_CASH = 'CASH';
+	 /**
+	  * @var int|string Payment method: transfer 
+	  */
+	 const PMT_METHOD_TRANSFER = 'TRANSFER';
+	 /**
+	 * @var int|string Payment method: E_COMMERCE
+	 */
+	 const PMT_METHOD_E_COMMERCE = 'E_COMMERCE';
+	 /**
+	  * 
+	  * @return array
+	  */
+	 public static function returnPaymentMethods() {
+	 	return array(
+	 		self::PMT_METHOD_CASH => 'Tiền mặt',
+	 		self::PMT_METHOD_TRANSFER => 'Chuyển khoản',
+	 		self::PMT_METHOD_E_COMMERCE => 'Trực tuyến'
+		);
+	 }
+	 
+	 /**
+	 * @var int|string Transport method: buyer
+	 */
+	 const TRANSPORT_METHOD_BUYER = 'BUYER';
+	 /**
+	  * @var int|string Transport method: seller 
+	  */
+	 const TRANSPORT_METHOD_SELLER = 'SELLER';
+	 /**
+	  * 
+	  * @return array
+	  */
+	 public static function returnTransportMethods() {
+	 	return array(
+	 		self::TRANSPORT_METHOD_BUYER => 'Bên mua vận chuyển',
+	 		self::TRANSPORT_METHOD_SELLER => 'Bên bán vận chyển',
+		);
+	 }
+	 
+	/**
 	 * @var int|string Gift flag 1
 	 */
 	 const GIFT_YES = 1;

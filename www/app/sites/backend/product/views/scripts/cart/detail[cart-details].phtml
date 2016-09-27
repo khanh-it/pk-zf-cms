@@ -1,0 +1,84 @@
+<?php
+/**
+ * Script view: cart # cart details
+ * @author khanhdtp
+ */
+// Cart entity
+$cartEnt = $this->entity;
+if ($cartEnt instanceof Product_Model_DbTable_Row_Cart):
+	// Get K111_AssetsFinder
+	$assetsFinder = K111_AssetsFinder::getInstance();
+	
+	// Controller helpers
+	/* @var K111_Controller_Action_Helper_Common */
+	$commonHelper = $this->layout()->getView()->curController->getHelper('common');
+?>
+<div class="card-body table-responsive">
+	<table class="table table-bordered table-condensed table-hover">
+		<thead>
+			<tr>
+				<th width="10">#</th>
+				<th><?php echo $this->translate('Mã sku'); ?></th>
+				<th><?php echo $this->translate('Mã sản phẩm'); ?></th>
+				<th><?php echo $this->translate('Tên sản phẩm'); ?></th>
+				<th><?php echo $this->translate('Đơn giá'); ?></th>
+				<th><?php echo $this->translate('Giá bán'); ?></th>
+				<th><?php echo $this->translate('Số lượng'); ?></th>
+				<th><?php echo $this->translate('Thành tiền'); ?></th>
+				<th><?php echo $this->translate('Ghi chú'); ?></th>
+			</tr>
+		</thead>
+		<tbody>	
+<?php
+	// Cart details entities
+	$arrCartDetailEnt = $cartEnt->findChildrenCartDetails();
+	// 
+	if (!empty($arrCartDetailEnt)):
+		//
+		$no = 0;
+		//
+		foreach ($arrCartDetailEnt as $cartDetailEnt):
+			// 
+			$productEnt = $cartDetailEnt->findParentProduct();
+?>
+			<tr>
+				<td align="center" class="text-nowrap"><?php echo ++$no; ?></td>
+				<td>
+					<?php echo $cartDetailEnt->product_sku; ?>
+				</td>
+				<td>
+					<?php echo $cartDetailEnt->product_code; ?>
+				</td>
+				<td>
+					<?php echo $cartDetailEnt->product_name; ?>
+				</td>
+				<td align="right" class="text-right">
+					<?php echo $commonHelper->numberFormat($cartDetailEnt->product_price); ?>
+				</td>
+				<td align="right" class="text-right">
+					<?php echo $commonHelper->numberFormat($cartDetailEnt->price); ?>
+					<?php if ($cartDetailEnt->promotion): ?>
+						<span class="label label-warning cart-detail-promotion">
+							<?php echo $commonHelper->numberFormat($cartDetailEnt->promotion); ?>
+						</span>
+					<?php endif; ?>
+				</td>
+				<td align="right" class="text-right">
+					<?php echo $commonHelper->numberFormat($cartDetailEnt->qty); ?>
+				</td>
+				<td align="right" class="text-right">
+					<?php echo $commonHelper->numberFormat($cartDetailEnt->subtotal); ?>
+				</td>
+				<td>
+					<?php echo $cartDetailEnt->note; ?>
+				</td>
+			</tr>
+<?php			
+		endforeach;
+	endif;
+?>
+		</tbody>
+	</table>
+</div>
+<?php
+endif;

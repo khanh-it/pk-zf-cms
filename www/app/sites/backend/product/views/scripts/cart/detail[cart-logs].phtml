@@ -1,0 +1,67 @@
+<?php
+/**
+ * Script view: cart # cart logs
+ * @author khanhdtp
+ */
+// Cart entity
+$cartEnt = $this->entity;
+if ($cartEnt instanceof Product_Model_DbTable_Row_Cart):
+	// Get K111_AssetsFinder
+	$assetsFinder = K111_AssetsFinder::getInstance();
+	
+	// Controller helpers
+	/* @var K111_Controller_Action_Helper_Common */
+	$commonHelper = $this->layout()->getView()->curController->getHelper('common');
+
+	// Cart's options
+	// +++ process status
+	$processStatusOpts = Product_Model_DbTable_Cart::returnProcessStatuses();
+?>
+<div class="card-body table-responsive">
+	<table class="table table-bordered table-condensed table-hover">
+		<thead>
+			<tr>
+				<th width="10">#</th>
+				<th><?php echo $this->translate('Nhân viên thao tác'); ?></th>
+				<th><?php echo $this->translate('Thời gian'); ?></th>
+				<th><?php echo $this->translate('Trạng thái xử lý'); ?></th>
+				<th><?php echo $this->translate('Nội dung'); ?></th>
+			</tr>
+		</thead>
+		<tbody>	
+<?php
+	// Cart logs entities
+	$arrCartLogEnt = $cartEnt->findChildrenCartLogs();
+	// 
+	if (!empty($arrCartLogEnt)):
+		//
+		$no = 0;
+		//
+		foreach ($arrCartLogEnt as $cartLogEnt):
+			// Creator
+			$creatorEnt = $cartLogEnt->findParentCreator();
+?>
+			<tr>
+				<td align="center" class="text-nowrap"><?php echo ++$no; ?></td>
+				<td>
+					<?php echo $creatorEnt->fullname; ?>
+				</td>
+				<td>
+					<?php echo $cartLogEnt->created_time; ?>
+				</td>
+				<td>
+					<?php echo $processStatusOpts[$cartLogEnt->process_status]; ?>
+				</td>
+				<td>
+					<?php echo $cartLogEnt->content; ?>
+				</td>
+			</tr>
+<?php			
+		endforeach;
+	endif;
+?>
+		</tbody>
+	</table>
+</div>
+<?php
+endif;

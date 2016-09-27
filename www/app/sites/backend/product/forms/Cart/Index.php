@@ -36,7 +36,7 @@ class Product_Form_Cart_Index extends Twitter_Bootstrap3_Form_Inline
             'class' => 'form-control input-sm selectpicker show-tick',
             'data-live-search' => 'true',
             'data-width' => '',
-            'multiOptions' => array('' => LANG_SELECT) + Product_Model_DbTable_Cart::returnGifts(),
+            'multiOptions' => array('' => LANG_SELECT) + Product_Model_DbTable_Cart::returnPaymentMethods(),
             'order' => ($eleOrder += 100),
         ));
 		// +++ 
@@ -47,7 +47,7 @@ class Product_Form_Cart_Index extends Twitter_Bootstrap3_Form_Inline
             'class' => 'form-control input-sm selectpicker show-tick',
             'data-live-search' => 'true',
             'data-width' => '',
-            'multiOptions' => array('' => LANG_SELECT) + Product_Model_DbTable_Cart::returnGifts(),
+            'multiOptions' => array('' => LANG_SELECT) + Product_Model_DbTable_Cart::returnTransportMethods(),
             'order' => ($eleOrder += 100),
         ));
         // +++ 

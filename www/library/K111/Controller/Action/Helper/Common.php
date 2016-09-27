@@ -121,4 +121,15 @@ class K111_Controller_Action_Helper_Common extends Zend_Controller_Action_Helper
         }
 	    return $string;
 	}
+	
+	/**
+	 * Number format based on locale
+	 * 
+	 * @param $number int|double Number to format
+	 * @param decimals int[optional] Sets the number of decimal points. 
+	 * @return string
+	 */
+	public function numberFormat($number, $decimals = null) {
+		return number_format($number, $decimals);
+	} 
 }

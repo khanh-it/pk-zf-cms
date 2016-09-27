@@ -64,9 +64,10 @@ CREATE TABLE `tbl_cart` (
   `type` varchar(25) NOT NULL DEFAULT '' COMMENT 'Cart''s type',
   `code` varchar(25) DEFAULT NULL COMMENT 'Cart''s code',
   `payment_method` varchar(15) NOT NULL DEFAULT '' COMMENT 'Cart''s payment method',
-  `payment_method_note` varchar(255) NOT NULL DEFAULT '' COMMENT 'Cart''s payment method noted',
+  `payment_note` varchar(255) NOT NULL DEFAULT '' COMMENT 'Cart''s payment noted',
+  `payment_log` text COMMENT 'Cart''s payment log',
   `transport_method` varchar(15) NOT NULL DEFAULT '' COMMENT 'Cart''s transport method',
-  `transport_method_note` varchar(255) NOT NULL DEFAULT '' COMMENT 'Cart''s transport method noted',
+  `transport_note` varchar(255) NOT NULL DEFAULT '' COMMENT 'Cart''s transport noted',
   `gift` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Cart''s use gift?',
   `gift_note` varchar(255) NOT NULL DEFAULT '' COMMENT 'Cart''s use gift noted',
   `invoice` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Cart''s exports invoice?',
@@ -92,16 +93,18 @@ CREATE TABLE `tbl_cart` (
   KEY `IDX_created_time` (`created_time`),
   KEY `IDX_type` (`type`),
   CONSTRAINT `CART__CREATE_ACCOUNT` FOREIGN KEY (`create_account_id`) REFERENCES `tbl_account` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Cart';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='Cart';
 
 /*Data for the table `tbl_cart` */
+
+insert  into `tbl_cart`(`id`,`type`,`code`,`payment_method`,`payment_note`,`payment_log`,`transport_method`,`transport_note`,`gift`,`gift_note`,`invoice`,`invoice_info`,`transport_price`,`total_promotion`,`total_qty`,`total_price`,`status`,`process_status`,`process_log`,`data`,`note`,`create_account_id`,`created_time`) values (1,'PRODUCT','cart00000000001','CASH','Trả tiền mặt khi nhận hàng',NULL,'SELLER','',1,'',0,NULL,0,0,0,128000,0,2,'Xử lý xong, đã thu tiền đầy đủ!',NULL,'@khanhdtp',1,'2016-09-26 13:39:39');
 
 /*Table structure for table `tbl_cart_detail` */
 
 DROP TABLE IF EXISTS `tbl_cart_detail`;
 
 CREATE TABLE `tbl_cart_detail` (
-  `id` bigint(20) NOT NULL COMMENT 'Primary',
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'Primary',
   `cart_id` bigint(20) NOT NULL COMMENT 'Cart''s primary',
   `product_id` bigint(20) DEFAULT NULL COMMENT 'Product''s primary',
   `product_sku` varchar(255) NOT NULL DEFAULT '' COMMENT 'Product''s sku',
@@ -120,21 +123,23 @@ CREATE TABLE `tbl_cart_detail` (
   KEY `IDX_product_info` (`product_sku`,`product_code`,`product_name`),
   CONSTRAINT `CART_DETAIL__CART` FOREIGN KEY (`cart_id`) REFERENCES `tbl_cart` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `CART_DETAIL__PRODUCT` FOREIGN KEY (`product_id`) REFERENCES `tbl_product` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Cart''s details.';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='Cart''s details.';
 
 /*Data for the table `tbl_cart_detail` */
+
+insert  into `tbl_cart_detail`(`id`,`cart_id`,`product_id`,`product_sku`,`product_code`,`product_name`,`product_price`,`promotion`,`price`,`qty`,`subtotal`,`note`,`created_time`) values (1,1,2,'sp_sku_02','sp_code_02','Tên sản phẩm 02',1199999,0,1199999,1,1199999,'@khanhdtp','2016-09-27 15:30:11');
 
 /*Table structure for table `tbl_cart_log` */
 
 DROP TABLE IF EXISTS `tbl_cart_log`;
 
 CREATE TABLE `tbl_cart_log` (
-  `id` bigint(20) NOT NULL COMMENT 'Primary',
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'Primary',
   `cart_id` bigint(20) NOT NULL COMMENT 'Cart''s primary',
   `process_status` tinyint(4) NOT NULL COMMENT 'Cart''s process status',
   `content` text NOT NULL COMMENT 'Cart''s process log',
   `create_account_id` int(11) DEFAULT NULL COMMENT 'Creator id',
-  `created_time` int(11) NOT NULL COMMENT 'Created time',
+  `created_time` datetime NOT NULL COMMENT 'Created time',
   PRIMARY KEY (`id`),
   KEY `CART_LOG__CREATE_ACCOUNT` (`create_account_id`),
   KEY `CART_LOG__CART` (`cart_id`),
@@ -142,9 +147,11 @@ CREATE TABLE `tbl_cart_log` (
   KEY `IDX_created_time` (`created_time`),
   CONSTRAINT `CART_LOG__CART` FOREIGN KEY (`cart_id`) REFERENCES `tbl_cart` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `CART_LOG__CREATE_ACCOUNT` FOREIGN KEY (`create_account_id`) REFERENCES `tbl_account` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Cart''s process log.';
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='Cart''s process log.';
 
 /*Data for the table `tbl_cart_log` */
+
+insert  into `tbl_cart_log`(`id`,`cart_id`,`process_status`,`content`,`create_account_id`,`created_time`) values (3,1,1,'DXL!',1,'2016-09-27 13:20:01'),(4,1,2,'Xử lý xong, đã thu tiền đầy đủ!',1,'2016-09-27 13:20:18');
 
 /*Table structure for table `tbl_category` */
 
@@ -296,7 +303,7 @@ CREATE TABLE `tbl_phrase` (
   PRIMARY KEY (`phr_id`),
   UNIQUE KEY `UNIQUE_ROW` (`phr_context`,`phr_rel_id`,`phr_lang`,`phr_column`),
   KEY `IDX_column_n_data` (`phr_column`,`phr_data`(255))
-) ENGINE=InnoDB AUTO_INCREMENT=73 DEFAULT CHARSET=utf8 COMMENT='Language''s phrases..!';
+) ENGINE=InnoDB AUTO_INCREMENT=67 DEFAULT CHARSET=utf8 COMMENT='Language''s phrases..!';
 
 /*Data for the table `tbl_phrase` */
 

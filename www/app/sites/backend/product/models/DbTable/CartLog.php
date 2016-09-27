@@ -1,7 +1,7 @@
 <?php
 /**
  */
-class Product_Model_DbTable_CartLog extends Category_Model_DbTable_Category
+class Product_Model_DbTable_CartLog extends K111_Db_Table
 {
 	/**
      * The table name.
