@@ -53,7 +53,7 @@ CREATE TABLE `tbl_account` (
 
 /*Data for the table `tbl_account` */
 
-insert  into `tbl_account`(`id`,`group_id_json`,`group_id`,`username`,`password`,`avatar`,`fullname`,`last_login_time`,`settings`,`active`,`draft`,`note`,`create_account_id`,`created_time`,`last_modified_account_id`,`last_modified_time`) values (1,'',9,'admin','e10adc3949ba59abbe56e057f20f883e','/khanh-avatar.jpg','khanhdtp',NULL,NULL,1,NULL,'',NULL,'2016-07-26 11:10:36',NULL,NULL);
+insert  into `tbl_account`(`id`,`group_id_json`,`group_id`,`username`,`password`,`avatar`,`fullname`,`last_login_time`,`settings`,`active`,`draft`,`note`,`create_account_id`,`created_time`,`last_modified_account_id`,`last_modified_time`) values (1,'',9,'admin','e10adc3949ba59abbe56e057f20f883e','/khanh-avatar.jpg','khanhdtp',NULL,'a:1:{s:6:\"DWRefs\";a:2:{s:7:\"DSW1000\";a:2:{s:6:\"offset\";s:4:\"1000\";s:4:\"size\";s:1:\"6\";}s:7:\"DSW1010\";a:2:{s:6:\"offset\";s:4:\"1010\";s:4:\"size\";s:1:\"6\";}}}',1,NULL,'',NULL,'2016-07-26 11:10:36',NULL,NULL);
 
 /*Table structure for table `tbl_cart` */
 
@@ -123,7 +123,7 @@ CREATE TABLE `tbl_cart_detail` (
   KEY `IDX_product_info` (`product_sku`,`product_code`,`product_name`),
   CONSTRAINT `CART_DETAIL__CART` FOREIGN KEY (`cart_id`) REFERENCES `tbl_cart` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `CART_DETAIL__PRODUCT` FOREIGN KEY (`product_id`) REFERENCES `tbl_product` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='Cart''s details.';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='Cart''s details.';
 
 /*Data for the table `tbl_cart_detail` */
 

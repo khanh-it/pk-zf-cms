@@ -16,13 +16,59 @@ class IndexController extends K111_Controller_Action
 	}
 
 	/**
-	 * 
+	 * Dashboard
 	 */
 	public function indexAction()
 	{
-	    \Zend_Debug::dump($this->_authIdentity);
-		//
-		$this->view->readme = file_get_contents($READMEPath = APPLICATION_PATH . '/../README.txt');
+		// Get params
+		// +++ Save dashboard widget refs 
+		$DBWSaveRefs = (array)$this->_getParam('DBW_save_refs');
+		
+		// Define vars 
+		// @var Default_Model_Util_Dashboard
+		$dbUtil = Default_Model_Util_Dashboard::getInstance();
+		// +++ View data
+		$vData = array();
+		
+		// Action: save refs
+		if (!empty($DBWSaveRefs)) {
+			try {
+				$dbUtil->saveUserRefs($DBWSaveRefs, $this->_authIdentity->id);
+				// 
+				return $this->_helper->json(array(
+					'status' => 1, 'message' => 'OK'
+				));
+			} catch (Exception $e) {
+				return $this->_helper->json(array(
+					'status' => 0, 'message' => $e->getMessage()
+				));
+			}
+			exit(0);
+		}
+		
+		// Trigger event, ready for register widgets...
+		$evtRes = $this->_eventManager->trigger('Default.IndexIndex_beforeGetDashboardWidgets');
+		
+		// User's refs
+		$userRefs = $dbUtil->getUserRefs($this->_authIdentity->id);
+		
+		// Get list of dashboard widgets
+	    $widgets = $dbUtil->getWidgets();
+		// +++ sort
+		if (!empty($userRefs)) {
+			$_widgets = array();
+			foreach ($userRefs as $DBWId => $DBWRef) {
+				$_widgets[$DBWRef['offset']] = $widgets[$DBWRef['offset']];
+			}
+			$widgets = $_widgets;
+			unset($_widgets, $DBWId, $DBWRef);
+		}
+		
+		 // Render VIEW;
+	    $this->view->assign(array_merge($vData, array(
+	    	'widgets' => $widgets,
+	    	'userRefs' => $userRefs
+		)));
 	}
 
 	

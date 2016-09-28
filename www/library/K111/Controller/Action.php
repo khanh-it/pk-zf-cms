@@ -32,7 +32,12 @@ abstract class K111_Controller_Action extends Zend_Controller_Action
      */
     public function getAuthIdentity() {
         return $this->_authIdentity;
-    } 
+    }
+
+	/**
+     * @var K111_EventManager_EventManager
+     */
+    protected $_eventManager;
 	
 	/**
 	 * @proxy Zend_Controller_Action::__construct
@@ -46,8 +51,11 @@ abstract class K111_Controller_Action extends Zend_Controller_Action
 	    // Call to parent's constructor 
 	    parent::__construct($request, $response, $invokeArgs);
 	    
-	    // 
+	    // @var stdClass
 	    $this->_authIdentity = Zend_Auth::getInstance()->getIdentity();
+		
+		// @var K111_EventManager_EventManager
+		$this->_eventManager = K111_EventManager_EventManager::getInstance();
 	    
 	    // Assign view's default vars
 	    $this->view->assign(array(
